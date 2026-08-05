@@ -399,21 +399,6 @@
         window.print();
     });
 
-    // ========== TABS & PRINT ==========
-    let activeTab = 'nuvion';
-    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
-        document.querySelectorAll('.tab,.panel').forEach(x => x.classList.remove('active'));
-        t.classList.add('active');
-        document.querySelector('#' + t.dataset.target).classList.add('active');
-        activeTab = t.dataset.target;
-    }));
-
-    document.querySelector('#printBtn').addEventListener('click', () => {
-        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-        document.querySelector('#' + activeTab).classList.add('active');
-        window.print();
-    });
-
     // ========== RESET MODAL ==========
     const confirmModal = document.getElementById('confirmModal');
 
