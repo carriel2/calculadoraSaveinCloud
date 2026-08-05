@@ -1,45 +1,34 @@
-# Calculadora Save in Cloud — Aplicação Web Estática (v2)
+# ☁️ Calculadora de Estimativa — Save in Cloud (v2)
 
-Esta aplicação foi convertida a partir da planilha **Calculadora_SaveinCloud_Versao_Definitiva.xlsx**. Ela funciona integralmente no navegador: não requer banco de dados, PHP, Node.js, API ou configuração adicional no Apache.
+Esta aplicação web interativa foi convertida a partir da planilha **Calculadora_SaveinCloud_Versao_Definitiva.xlsx**. Ela funciona integralmente no lado do cliente (navegador): não requer banco de dados, PHP, Node.js, API ou configurações complexas no Apache.
 
-## Novidades desta versão
+## ✨ Novidades e Funcionalidades desta Versão
 
-1. **Abas separadas** para **Cloudlets Standard** e **Cloudlets Premium**
-2. **4 ambientes simultâneos** em cada aba de Cloudlets (A, B, C, D) — subtotais por ambiente + total da plataforma
-3. **Campo "Tempo de uso" bloqueado** para a linha **IP Fixo (IPv4/IPv6)** nas calculadoras Cloudlets
-4. **Botão Imprimir/Salvar PDF** imprime **apenas a calculadora da aba ativa**
-5. **Logotipo Save in Cloud** inserido no cabeçalho
+1. **Nova Arquitetura Modular:** CSS reestruturado e dividido em módulos para facilitar a manutenção e escalabilidade.
+2. **Abas Separadas e Dinâmicas:** * **Nuvion:** Suporte a adição de múltiplos grupos dinâmicos de VMs.
+   * **Cloudlets (Standard & Premium):** 4 ambientes simultâneos por aba (A, B, C, D) com subtotais por ambiente. O campo "Tempo de uso" foi inteligentemente bloqueado para a linha de *IP Fixo (IPv4/IPv6)*.
+   * **Storin:** Abas exclusivas para simulação de Object Storage.
+3. **Compartilhamento de Orçamento:** Geração de link exclusivo (codificado em Base64) que permite copiar e compartilhar o estado exato preenchido na calculadora.
+4. **Exportação Profissional:**
+   * **Imprimir / Salvar PDF:** Layout de impressão limpo focado apenas na aba ativa.
+5. **Dark Mode & Tooltips:** Suporte nativo a Tema Escuro (salvo no navegador) e ícones de ajuda `[?]` integrados e explicativos para cada recurso.
+6. **Notificações em Toast:** Alertas modernos flutuantes (substituindo os antigos `alerts` nativos do navegador).
 
-## Conteúdo
+## 📂 Estrutura de Pastas e Conteúdo
 
-- `index.html` — página principal da calculadora.
-- `style.css` — layout responsivo, impressão/PDF por aba ativa.
-- `app.js` — regras de cálculo, interface e persistência local.
-- `data.js` — catálogo de recursos, unidades e preços, extraído da planilha definitiva.
-- `logo.png` — logotipo Save in Cloud.
-- `README.md` — este arquivo.
+A aplicação utiliza o padrão de separação de responsabilidades. Mantenha esta estrutura intacta:
 
-## Publicação em Apache
-
-1. Extraia este pacote em seu computador.
-2. Envie **todos os arquivos**, mantendo-os na mesma pasta, por FTP/SFTP/cPanel para o diretório público desejado. Exemplos:
-   - domínio principal: `public_html/calculadora/`
-   - subdomínio: diretório raiz configurado para o subdomínio.
-3. Acesse: `https://seu-dominio.com/calculadora/`
-
-O Apache entregará automaticamente o arquivo `index.html`. Não é necessário alterar `.htaccess`.
-
-## Atualização de preços
-
-Os valores atuais estão centralizados em `data.js`. Ao atualizar a tabela de preços, substitua esse arquivo por uma nova versão gerada a partir da planilha, ou edite as entradas de preço/unidade com cuidado.
-
-## Comportamento da aplicação
-
-- Cálculo em tempo real, conforme as fórmulas da planilha.
-- Dados preenchidos ficam salvos somente no navegador do usuário (`localStorage`); não são enviados para o servidor.
-- Botão de limpar dados e opção de imprimir/salvar como PDF (apenas aba ativa).
-- Interface responsiva para desktop e dispositivos móveis.
-
-## Observação comercial
-
-A aplicação apresenta estimativas. Recomenda-se manter a mensagem de que valores estão sujeitos à validação comercial.
+```text
+/
+├── css/                  # Módulos de estilização
+│   ├── base.css          # (Opcional) Resets e tipografia
+│   ├── components.css    # Botões, inputs, tooltips, toast, tabelas
+│   ├── layout.css        # Estrutura geral, container, topbar
+│   ├── print.css         # Regras exclusivas para geração de PDF
+│   ├── themes.css        # Variáveis de cor (Light e Dark mode)
+│   └── style.css         # Arquivo mestre que importa todos os módulos acima
+├── app.js                # Regras de cálculo, interface e persistência local
+├── data.js               # Catálogo de recursos, unidades e preços extraído da planilha
+├── logo.png              # Logotipo da Save in Cloud
+├── index.html            # Página principal
+└── README.md             # Este arquivo
