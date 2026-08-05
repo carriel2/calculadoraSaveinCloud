@@ -435,13 +435,14 @@
         showToast('Dados limpos com sucesso!');
     });
 
+    // Fecha o modal ao clicar fora da caixinha
     confirmModal.addEventListener('click', (e) => {
         if (e.target === confirmModal) {
             confirmModal.classList.remove('show');
         }
     });
 
-    // ========== THEME & SHARE & CSV ==========
+    // ========== THEME & SHARE ==========
     const themeBtn = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
     if (themeBtn && themeIcon) {
@@ -475,6 +476,7 @@
             }
         });
     }
+
     // ========== INITIAL RENDER ==========
     renderNuvion();
     renderCloudlets();
