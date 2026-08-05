@@ -15,6 +15,17 @@
 <body>
     <div id="toast" class="toast">Link copiado com sucesso.</div>
 
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3>Atenção</h3>
+            <p>Deseja realmente limpar todos os campos da calculadora? Esta ação não pode ser desfeita.</p>
+            <div class="modal-actions">
+                <button id="cancelResetBtn" class="button secondary">Cancelar</button>
+                <button id="confirmResetBtn" class="button danger">Sim, limpar</button>
+            </div>
+        </div>
+    </div>
+
     <header class="topbar">
         <div class="brand"><img src="logo.png" alt="Save in Cloud" class="logo-img"></div>
         <div class="topbar-title">Calculadora de estimativa</div>

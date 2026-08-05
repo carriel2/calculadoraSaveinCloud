@@ -399,14 +399,46 @@
         window.print();
     });
 
+    // ========== TABS & PRINT ==========
+    let activeTab = 'nuvion';
+    document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+        document.querySelectorAll('.tab,.panel').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.querySelector('#' + t.dataset.target).classList.add('active');
+        activeTab = t.dataset.target;
+    }));
+
+    document.querySelector('#printBtn').addEventListener('click', () => {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelector('#' + activeTab).classList.add('active');
+        window.print();
+    });
+
+    // ========== RESET MODAL ==========
+    const confirmModal = document.getElementById('confirmModal');
+
     document.querySelector('#resetAll').addEventListener('click', () => {
-        if (confirm('Deseja limpar todos os campos da calculadora?')) {
-            state = {};
-            persist();
-            renderNuvion();
-            renderCloudlets();
-            renderStorin();
-            showToast('Dados limpos com sucesso!');
+        confirmModal.classList.add('show');
+    });
+
+    document.getElementById('cancelResetBtn').addEventListener('click', () => {
+        confirmModal.classList.remove('show');
+    });
+
+    document.getElementById('confirmResetBtn').addEventListener('click', () => {
+        state = {};
+        persist();
+        renderNuvion();
+        renderCloudlets();
+        renderStorin();
+        confirmModal.classList.remove('show');
+        showToast('Dados limpos com sucesso!');
+    });
+
+    // Fecha o modal ao clicar fora da caixinha
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            confirmModal.classList.remove('show');
         }
     });
 
