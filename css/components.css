@@ -1,0 +1,463 @@
+/* ========== BUTTONS ========== */
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--blue);
+    background: var(--blue);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.button:hover {
+    background: var(--blue2);
+}
+
+.button.secondary {
+    background: var(--panel-bg);
+    color: var(--blue2);
+    border-color: var(--input-border);
+}
+
+.button.secondary:hover {
+    background: var(--line);
+    color: var(--cyan);
+    border-color: var(--cyan);
+}
+
+.button .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--blue2);
+    cursor: pointer;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+    background: var(--line);
+    color: var(--cyan);
+}
+
+[data-theme="dark"] .icon-btn {
+    color: #fbbf24;
+}
+
+
+/* ========== CARDS ========== */
+
+.total-card {
+    padding: 13px 18px;
+    background: var(--green);
+    border-radius: 8px;
+    text-align: right;
+    min-width: 180px;
+}
+
+.total-card span {
+    display: block;
+    color: var(--ink);
+    opacity: 0.8;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.total-card strong {
+    font-size: 22px;
+    color: var(--ink);
+}
+
+@keyframes totalPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.06);
+        filter: brightness(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.total-card.pulse {
+    animation: totalPulse 0.4s ease-in-out;
+}
+
+
+/* ========== TABLES ========== */
+
+.table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+    min-width: 920px;
+}
+
+th {
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    padding: 12px 10px;
+    font-size: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th:first-child {
+    text-align: left;
+}
+
+td {
+    border-top: 1px solid var(--line);
+    padding: 9px 10px;
+    vertical-align: middle;
+}
+
+td:first-child {
+    font-weight: 750;
+    color: var(--text-highlight);
+    min-width: 155px;
+}
+
+td.price,
+td.unit,
+td.subtotal {
+    text-align: center;
+    background: var(--table-bg);
+    white-space: nowrap;
+}
+
+.subtotal {
+    font-weight: 750;
+    color: var(--text-highlight);
+}
+
+tfoot td {
+    background: var(--line);
+    border-top: 2px solid var(--blue2);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--ink);
+}
+
+tfoot td:last-child {
+    text-align: center;
+    color: var(--text-highlight);
+    font-size: 16px;
+}
+
+tr.collapsed-row {
+    display: none !important;
+}
+
+.cell-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+
+/* ========== INPUTS & CONTROLS ========== */
+
+.field {
+    width: 100%;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background: var(--input-bg);
+    padding: 8px;
+    font: inherit;
+    color: var(--input-text);
+    min-width: 130px;
+}
+
+.field:focus {
+    outline: 2px solid var(--cyan);
+    border-color: var(--cyan);
+}
+
+.field:disabled {
+    background: var(--line);
+    color: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+select.field {
+    min-width: 245px;
+}
+
+input.field {
+    min-width: 90px;
+    text-align: right;
+}
+
+select.field:hover,
+input.field:hover {
+    border-color: var(--cyan);
+    cursor: pointer;
+}
+
+select.field:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 2px rgba(39, 180, 218, 0.25);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield !important;
+    appearance: textfield !important;
+}
+
+
+/* ========== QTY COMPONENT ========== */
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    overflow: hidden;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.qty-control:focus-within {
+    outline: 2px solid var(--cyan);
+    border-color: var(--cyan);
+}
+
+.qty-btn {
+    background: transparent;
+    border: none;
+    color: var(--blue2);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+}
+
+.qty-btn:hover {
+    background: var(--line);
+    color: var(--cyan);
+}
+
+[data-theme="dark"] .qty-btn {
+    color: #fbbf24;
+}
+
+.qty-control input.field {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    text-align: center;
+    width: 60px;
+    min-width: unset;
+    padding: 8px 0;
+}
+
+.qty-control input.field:focus {
+    outline: none;
+}
+
+.qty-control.disabled {
+    background: var(--line);
+    opacity: 0.7;
+}
+
+.qty-control.disabled .qty-btn {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+
+/* ========== TOOLTIPS ========== */
+
+.tooltip-icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background: var(--blue2);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 11px;
+    line-height: 16px;
+    margin-left: 6px;
+    cursor: help;
+    position: relative;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.tooltip-icon::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--ink);
+    color: var(--bg);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: normal;
+    width: max-content;
+    max-width: 200px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+    z-index: 999;
+    font-family: Inter, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.tooltip-icon:hover::after {
+    opacity: 1;
+}
+
+
+/* ========== EXTRA ELEMENTS ========== */
+
+.hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 13px 0 0;
+}
+
+.group-title {
+    background: var(--line);
+    border-left: 4px solid var(--blue2);
+    padding: 11px 13px;
+    margin: 22px 0 10px;
+    border-radius: 3px;
+    font-weight: 800;
+    color: var(--ink);
+}
+
+.group-title:first-child {
+    margin-top: 0;
+}
+
+.notes {
+    margin-top: 18px;
+    background: var(--line);
+    border-left: 4px solid var(--cyan);
+    padding: 13px 17px;
+    color: var(--ink);
+}
+
+.notes ul {
+    margin: 7px 0 0;
+    padding-left: 18px;
+}
+
+.notes li {
+    margin: 4px 0;
+}
+
+.env-block {
+    margin: 0 0 28px;
+    padding: 0 0 22px;
+    border-bottom: 1px dashed var(--line);
+}
+
+.env-block:last-child {
+    margin-bottom: 8px;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.env-block .group-title {
+    margin-top: 0;
+}
+
+.toggle-collapse-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 4px;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.toggle-collapse-btn:hover {
+    color: var(--cyan);
+    background: var(--line);
+}
+
+.toggle-collapse-btn.collapsed {
+    transform: rotate(-90deg);
+}
+
+
+/* ========== TOAST ========== */
+
+.toast {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--green);
+    color: #155b3c;
+    padding: 12px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    pointer-events: none;
+}
+
+[data-theme="dark"] .toast {
+    background-color: #064e3b;
+    color: #a7f3d0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.toast.show {
+    top: 20px;
+}

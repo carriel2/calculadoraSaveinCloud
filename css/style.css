@@ -1,0 +1,6 @@
+/* ARQUIVO PRINCIPAL - Importa todos os módulos */
+
+@import url('themes.css');
+@import url('layout.css');
+@import url('components.css');
+@import url('print.css');

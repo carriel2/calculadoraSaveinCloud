@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Calculadora de estimativa Save in Cloud: Nuvion, Cloudlets e Storin.">
+    <title>Calculadora | Save in Cloud</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="icon" type="image/x-icon" href="https://s3.saveincloud.com/images/favicon.ico">
+</head>
+
+<body>
+    <div id="toast" class="toast">Link copiado com sucesso.</div>
+
+    <header class="topbar">
+        <div class="brand"><img src="logo.png" alt="Save in Cloud" class="logo-img"></div>
+        <div class="topbar-title">Calculadora de estimativa</div>
+    </header>
+
+    <main class="container">
+        <section class="intro">
+            <div>
+                <p class="eyebrow">ESTIMATIVA DE CUSTOS</p>
+                <h1>Monte a estimativa de sua infraestrutura</h1>
+                <p>Selecione os recursos, informe consumo e quantidades. Os valores são atualizados em tempo real.</p>
+            </div>
+
+            <div class="actions no-print">
+                <button id="themeToggle" class="icon-btn" type="button" title="Alternar Tema">
+                    <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+                </button>
+                <button id="shareLinkBtn" class="button secondary" type="button">
+                    <span class="material-symbols-outlined">link</span> Link
+                </button>
+                <button id="exportCsvBtn" class="button secondary" type="button">
+                    <span class="material-symbols-outlined">download</span> CSV
+                </button>
+                <button id="resetAll" class="button secondary" type="button">
+                    <span class="material-symbols-outlined">delete</span> Limpar
+                </button>
+                <button id="printBtn" class="button" type="button">
+                    <span class="material-symbols-outlined">print</span> PDF
+                </button>
+            </div>
+        </section>
+
+        <nav class="tabs no-print" aria-label="Plataformas">
+            <button class="tab active" data-target="nuvion">Nuvion <span>Cloud VMs</span></button>
+            <button class="tab" data-target="cloudlets-standard">Cloudlets Standard <span>App Platform</span></button>
+            <button class="tab" data-target="cloudlets-premium">Cloudlets Premium <span>App Platform</span></button>
+            <button class="tab" data-target="storin">Storin <span>Object Storage</span></button>
+        </nav>
+
+        <section id="nuvion" class="panel active" aria-label="Calculadora Nuvion">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">NUVION</p>
+                    <h2>Cloud VMs</h2>
+                    <p>Máquinas virtuais, Block Storage, conectividade e proteção de dados.</p>
+                </div>
+                <div class="total-card" id="nuvion-total-card"><span>Total estimado</span><strong id="nuvion-total">R$ 0,00</strong></div>
+            </div>
+
+            <button id="addVmBtn" class="button secondary no-print" type="button" style="margin-bottom: 15px; font-size: 12px; padding: 6px 12px;">+ Adicionar Grupo de VM</button>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recurso</th>
+                            <th>Seleção do recurso</th>
+                            <th>Preço unitário</th>
+                            <th>Unidade de medida</th>
+                            <th>Quantidade</th>
+                            <th>Multiplicador</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nuvion-body"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="6">TOTAL ESTIMADO</td>
+                            <td id="nuvion-footer">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <p class="hint">Referência: 1 mês = 730 horas. O multiplicador é aplicado a Backup e Snapshot para estimativa de quantidade de retenção.</p>
+        </section>
+
+        <section id="cloudlets-standard" class="panel" aria-label="Calculadora Cloudlets Standard">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">CLOUDLETS STANDARD</p>
+                    <h2>App Platform</h2>
+                    <p>Serviços pré-configurados em instâncias dedicadas.</p>
+                </div>
+                <div class="total-card" id="cloudlets-standard-total-card"><span>Total estimado</span><strong id="cloudlets-standard-total">R$ 0,00</strong></div>
+            </div>
+            <div id="cloudlets-standard-content"></div>
+            <p class="hint">Referência: 1 mês = 730 horas.</p>
+        </section>
+
+        <section id="cloudlets-premium" class="panel" aria-label="Calculadora Cloudlets Premium">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">CLOUDLETS PREMIUM</p>
+                    <h2>App Platform</h2>
+                    <p>Serviços pré-configurados em instâncias dedicadas.</p>
+                </div>
+                <div class="total-card" id="cloudlets-premium-total-card"><span>Total estimado</span><strong id="cloudlets-premium-total">R$ 0,00</strong></div>
+            </div>
+            <div id="cloudlets-premium-content"></div>
+            <p class="hint">Referência: 1 mês = 730 horas.</p>
+        </section>
+
+        <section id="storin" class="panel" aria-label="Calculadora Storin">
+            <div class="panel-head">
+                <div>
+                    <p class="eyebrow">STORIN</p>
+                    <h2>Object Storage (S3)</h2>
+                    <p>Estimativa de armazenamento, tráfego e requisições.</p>
+                </div>
+                <div class="total-card" id="storin-total-card"><span>Total estimado</span><strong id="storin-total">R$ 0,00</strong></div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recurso</th>
+                            <th>Seleção do recurso</th>
+                            <th>Preço unitário</th>
+                            <th>Unidade de medida</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="storin-body"></tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5">TOTAL STORIN</td>
+                            <td id="storin-footer">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="notes">
+                <strong>Notas de uso</strong>
+                <ul>
+                    <li>Armazenamento: informe os GB usados no mês conforme a faixa selecionada.</li>
+                    <li>Tráfego de saída: informe os GB excedentes, conforme sua regra comercial.</li>
+                    <li>GET e PUT: informe a quantidade em blocos de 1.000 requisições acima das franquias indicadas.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>© Save in Cloud · Esta calculadora é uma estimativa comercial. Valores sujeitos a validação.</footer>
+    <script src="/js/data.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+/* ========== PRINT STYLES ========== */
+
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 10mm 8mm;
+    }
+    html,
+    body {
+        background: #fff !important;
+        color: #000;
+        font-size: 10px;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .topbar {
+        background: #07335f !important;
+        min-height: 48px;
+        padding: 6px 12px;
+        box-shadow: none;
+    }
+    .logo-img {
+        height: 28px !important;
+    }
+    .topbar-title {
+        font-size: 11px;
+    }
+    .container {
+        max-width: none;
+        padding: 6px 0 0;
+        margin: 0;
+    }
+    .intro {
+        margin-bottom: 8px;
+        gap: 8px;
+    }
+    .intro h1 {
+        font-size: 16px;
+        margin: 0 0 2px;
+    }
+    .intro p {
+        font-size: 10px;
+    }
+    .eyebrow {
+        font-size: 9px;
+        margin: 0 0 2px;
+    }
+    .no-print,
+    .tabs,
+    footer,
+    .notes,
+    .hint {
+        display: none !important;
+    }
+    .panel {
+        display: none !important;
+        box-shadow: none;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        border-radius: 0;
+        page-break-inside: auto;
+        break-inside: auto;
+    }
+    .panel.active {
+        display: block !important;
+    }
+    .panel-head {
+        margin-bottom: 8px;
+        align-items: flex-start;
+    }
+    .panel-head h2 {
+        font-size: 14px;
+    }
+    .panel-head p:not(.eyebrow) {
+        font-size: 9px;
+    }
+    .total-card {
+        padding: 6px 10px;
+        min-width: 120px;
+        background: #e5f5ee !important;
+    }
+    .total-card span {
+        font-size: 9px;
+        margin-bottom: 1px;
+        color: #49705d;
+    }
+    .total-card strong {
+        font-size: 14px;
+        color: #155b3c;
+    }
+    .table-wrap {
+        overflow: visible;
+        border: 1px solid #9dbbd5;
+        border-radius: 0;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    table {
+        min-width: 0 !important;
+        width: 100%;
+        font-size: 9px;
+        table-layout: fixed;
+    }
+    th,
+    td {
+        padding: 3px 4px !important;
+    }
+    th {
+        font-size: 8px;
+        padding: 4px 3px !important;
+    }
+    td:first-child {
+        min-width: 0;
+        font-size: 8px;
+    }
+    .field {
+        border: 0 !important;
+        background: transparent !important;
+        padding: 0 !important;
+        min-width: 0 !important;
+        font-size: 9px;
+        box-shadow: none;
+    }
+    select.field {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    input.field {
+        text-align: right;
+    }
+    tfoot td {
+        font-size: 9px !important;
+        padding: 4px !important;
+    }
+    tfoot td:last-child {
+        font-size: 10px !important;
+    }
+    .env-block {
+        margin: 0 0 10px;
+        padding: 0 0 8px;
+        border-bottom: 1px solid #c5d4e3;
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+    .env-block .group-title {
+        margin: 0 0 4px;
+        padding: 5px 8px;
+        font-size: 10px;
+        background: #eaf3fa !important;
+        border-left: 3px solid #0d5c9d;
+    }
+    .env-block.print-page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+        margin-top: 0;
+        padding-top: 0;
+    }
+    .panel.active {
+        page-break-inside: auto;
+        break-inside: auto;
+    }
+    .panel-head {
+        page-break-after: avoid;
+        break-after: avoid;
+    }
+}
