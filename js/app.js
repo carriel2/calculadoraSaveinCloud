@@ -444,53 +444,6 @@
             }
         });
     }
-
-    const exportCsvBtn = document.getElementById('exportCsvBtn');
-    if (exportCsvBtn) {
-        exportCsvBtn.addEventListener('click', () => {
-            const activePanel = document.querySelector('.panel.active');
-            if (!activePanel) return;
-
-            let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
-            const rows = activePanel.querySelectorAll('tr');
-
-            rows.forEach(row => {
-                const cols = row.querySelectorAll('th, td');
-                const rowData = [];
-                cols.forEach(col => {
-                    const select = col.querySelector('select');
-                    const input = col.querySelector('input');
-                    let text = '';
-
-                    if (select) {
-                        const selectedOpt = select.options[select.selectedIndex];
-                        text = selectedOpt ? selectedOpt.text : '';
-                    } else if (input) {
-                        text = input.value;
-                    } else {
-                        const clone = col.cloneNode(true);
-                        clone.querySelectorAll('.tooltip-icon, .delete-vm').forEach(el => el.remove());
-                        text = clone.innerText.replace(/[\n\r]+/g, ' ').trim();
-                    }
-                    rowData.push(`"${text.replace(/"/g, '""')}"`);
-                });
-                if (rowData.length > 0) {
-                    csvContent += rowData.join(';') + "\n";
-                }
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', `orcamento-${activeTab}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            showToast('Relatório CSV exportado com sucesso.');
-        });
-    }
-
     // ========== INITIAL RENDER ==========
     renderNuvion();
     renderCloudlets();
