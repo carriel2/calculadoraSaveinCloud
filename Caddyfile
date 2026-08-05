@@ -1,14 +1,10 @@
-10.102.23.145 {
+10.100.36.242 {
     
-    # Gera um certificado SSL automaticamente para a rede interna
     tls internal
 
-    # Aponta para a pasta onde o Docker colocou os arquivos
     root * /srv
 
-    # Ativa o servidor de arquivos estáticos
     file_server
 
-    # Comprime os arquivos para o site carregar super rápido
     encode gzip zstd
 }
