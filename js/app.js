@@ -435,7 +435,6 @@
         showToast('Dados limpos com sucesso!');
     });
 
-    // Fecha o modal ao clicar fora da caixinha
     confirmModal.addEventListener('click', (e) => {
         if (e.target === confirmModal) {
             confirmModal.classList.remove('show');
