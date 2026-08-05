@@ -1,5 +1,5 @@
 calculadorasave.duckdns.org {
-    root * .
+    root * /srv
 
     file_server
 
