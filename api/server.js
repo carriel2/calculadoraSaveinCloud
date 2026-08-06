@@ -23,24 +23,25 @@ app.post('/api/tess', async(req, res) => {
                 'Authorization': `Bearer ${apiKey}`,
                 'x-workspace-id': workspaceId
             },
-
             body: JSON.stringify({
-                variables: {
-                    mensagem: prompt,
-                    dados: context
-                }
+                mensagem: prompt,
+                dados: context,
+                messages: [{
+                    role: 'user',
+                    content: prompt
+                }]
             })
         });
 
         if (!respostaTess.ok) {
             const erroDetalhado = await respostaTess.text();
-            console.error("Erro da Tess:", erroDetalhado);
-            return res.status(respostaTess.status).json({ erro: 'A API da Tess recusou a requisição.' });
+            console.error("Erro da Tess detalhado:", erroDetalhado);
+            return res.status(respostaTess.status).json({ erro: `A API da Tess recusou a requisição. Detalhes: ${erroDetalhado}` });
         }
 
-        const dados = await respostaTess.json();
+        const dadosRetorno = await respostaTess.json();
 
-        res.json({ resposta: dados.reply || dados.response || JSON.stringify(dados) });
+        res.json({ resposta: dadosRetorno.reply || dadosRetorno.response || dadosRetorno.message || JSON.stringify(dadosRetorno) });
 
     } catch (erro) {
         console.error("Erro interno no Node:", erro);
