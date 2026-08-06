@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.post('/api/tess', async(req, res) => {
     const { prompt, context, image } = req.body;
@@ -12,6 +12,7 @@ app.post('/api/tess', async(req, res) => {
     const agentId = process.env.TESS_AGENT_ID;
 
     if (!apiKey || !workspaceId || !agentId) {
+        console.error("Credenciais ausentes no servidor.");
         return res.status(500).json({ erro: 'Credenciais ausentes.' });
     }
 
@@ -20,22 +21,19 @@ app.post('/api/tess', async(req, res) => {
 
         const textoUsuario = prompt || "Analise esta arquitetura/imagem e os dados atuais.";
         const jsonCalculadora = context || "{}";
-
-        const arrayDeConteudo = [
-            { type: 'text', text: textoUsuario }
-        ];
+        let conteudoMensagem = textoUsuario;
 
         if (image) {
-            arrayDeConteudo.push({
-                type: 'image_url',
-                image_url: { url: `data:image/jpeg;base64,${image}` }
-            });
+            conteudoMensagem = [
+                { type: 'text', text: textoUsuario },
+                { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${image}` } }
+            ];
         }
 
         const payload = {
             mensagem: textoUsuario,
             dados: jsonCalculadora,
-            messages: [{ role: 'user', content: arrayDeConteudo }]
+            messages: [{ role: 'user', content: conteudoMensagem }]
         };
 
         const respostaTess = await fetch(tessUrl, {
@@ -50,11 +48,11 @@ app.post('/api/tess', async(req, res) => {
 
         if (!respostaTess.ok) {
             const erroDetalhado = await respostaTess.text();
+            console.error("ERRO DA TESS:", erroDetalhado);
             return res.status(respostaTess.status).json({ erro: `Erro da Tess: ${erroDetalhado}` });
         }
 
         const dadosIniciais = await respostaTess.json();
-
         const execucaoId = dadosIniciais.responses && dadosIniciais.responses[0] ? dadosIniciais.responses[0].id : null;
 
         if (!execucaoId) {
@@ -98,11 +96,11 @@ app.post('/api/tess', async(req, res) => {
         res.json({ resposta: respostaFinal.replace(/\n/g, '<br>') || "A Tess demorou muito para responder." });
 
     } catch (erro) {
-        console.error("ERRO INTERNO:", erro);
+        console.error("ERRO INTERNO NO NODE:", erro);
         res.status(500).json({ erro: 'Falha na comunicação com o servidor da Tess.' });
     }
 });
 
 app.listen(3000, () => {
-    console.log('Backend rodando.');
+    console.log('Backend rodando e suportando imagens pesadas!');
 });
