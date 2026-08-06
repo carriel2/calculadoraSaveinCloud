@@ -6,29 +6,45 @@ app.use(express.json());
 app.post('/api/tess', async(req, res) => {
     const { prompt, context } = req.body;
     const apiKey = process.env.TESS_API_KEY;
+    const workspaceId = process.env.TESS_WORKSPACE_ID;
+    const agentId = process.env.TESS_AGENT_ID;
 
-    if (!apiKey) {
-        return res.status(500).json({ erro: 'Chave da API não configurada no servidor.' });
+    if (!apiKey || !workspaceId || !agentId) {
+        return res.status(500).json({ erro: 'Credenciais da Tess ausentes no servidor.' });
     }
 
     try {
-        // AQUI VOCÊ TROCA PELA URL REAL DA API DA TESS
-        const respostaTess = await fetch('URL_DA_API_DA_TESS', {
+        const tessUrl = `https://api.tess.im/agents/${agentId}/execute`;
+
+        const respostaTess = await fetch(tessUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
+                'Authorization': `Bearer ${apiKey}`,
+                'x-workspace-id': workspaceId
             },
-            body: JSON.stringify({ prompt, context })
+
+            body: JSON.stringify({
+                variables: {
+                    mensagem: prompt,
+                    dados: context
+                }
+            })
         });
+
+        if (!respostaTess.ok) {
+            const erroDetalhado = await respostaTess.text();
+            console.error("Erro da Tess:", erroDetalhado);
+            return res.status(respostaTess.status).json({ erro: 'A API da Tess recusou a requisição.' });
+        }
 
         const dados = await respostaTess.json();
 
-        res.json({ resposta: dados.resposta_da_tess || "Resposta recebida com sucesso." });
+        res.json({ resposta: dados.reply || dados.response || JSON.stringify(dados) });
 
     } catch (erro) {
-        console.error(erro);
-        res.status(500).json({ erro: 'Falha ao se comunicar com a Tess.' });
+        console.error("Erro interno no Node:", erro);
+        res.status(500).json({ erro: 'Falha na comunicação com o servidor da Tess.' });
     }
 });
 

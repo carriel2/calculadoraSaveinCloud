@@ -17,6 +17,8 @@ services:
     container_name: calculadora_backend
     environment:
       - TESS_API_KEY=1580872|aOUL2wWYyBU72GQWvPm89jjks531kamQ7qodjjWzb68f3a9d
+      - TESS_WORKSPACE_ID=1468488
+      - TESS_AGENT_ID=45741
     restart: always
 
 volumes:
