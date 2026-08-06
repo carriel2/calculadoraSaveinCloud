@@ -467,15 +467,46 @@
     const aiPrompt = document.getElementById('aiPrompt');
     const aiResponse = document.getElementById('aiResponse');
 
+    // --- NOVO: Variáveis da Imagem ---
+    const uploadImgBtn = document.getElementById('uploadImgBtn');
+    const aiImageInput = document.getElementById('aiImage');
+    let selectedImageBase64 = null;
+
+    if (aiPrompt && askAiBtn) {
+        aiPrompt.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                askAiBtn.click();
+            }
+        });
+    }
+
+    if (uploadImgBtn && aiImageInput) {
+        uploadImgBtn.addEventListener('click', () => aiImageInput.click());
+
+        aiImageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                selectedImageBase64 = reader.result.split(',')[1]; // Pega só o código da imagem
+                showToast("Imagem anexada com sucesso!");
+                uploadImgBtn.style.color = "var(--green)"; // Dá um feedback visual
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
     if (askAiBtn) {
         askAiBtn.addEventListener('click', async() => {
             const userText = aiPrompt.value.trim();
-            if (!userText) return showToast('Digite o que você precisa antes de consultar.');
+            if (!userText && !selectedImageBase64) return showToast('Digite algo ou anexe uma imagem.');
 
             askAiBtn.disabled = true;
             askAiBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span> Pensando...';
             aiResponse.style.display = 'block';
-            aiResponse.innerHTML = '<em>Analisando sua infraestrutura atual...</em>';
+            aiResponse.innerHTML = '<em>Analisando cenário...</em>';
 
             const contextData = JSON.stringify(state);
 
@@ -483,14 +514,22 @@
                 const response = await fetch('/api/tess', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt: userText, context: contextData })
+                    body: JSON.stringify({
+                        prompt: userText,
+                        context: contextData,
+                        image: selectedImageBase64
+                    })
                 });
 
                 const data = await response.json();
 
-                aiResponse.innerHTML = `<strong>Tess:</strong> ${data.resposta || data.erro}`;
+                aiResponse.innerHTML = `<strong>Tess:</strong><br><br>${data.resposta || data.erro}`;
                 askAiBtn.disabled = false;
                 askAiBtn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span> Consultar';
+
+                selectedImageBase64 = null;
+                uploadImgBtn.style.color = "";
+                aiImageInput.value = "";
 
             } catch (error) {
                 console.error("Erro no frontend:", error);

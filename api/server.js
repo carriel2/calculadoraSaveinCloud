@@ -4,8 +4,8 @@ const app = express();
 app.use(express.json());
 
 app.post('/api/tess', async(req, res) => {
-    const { prompt, context } = req.body;
-    console.log("DADOS RECEBIDOS:", { prompt });
+    const { prompt, context, image } = req.body;
+    console.log("DADOS RECEBIDOS:", { prompt, possuiImagem: !!image });
 
     const apiKey = process.env.TESS_API_KEY;
     const workspaceId = process.env.TESS_WORKSPACE_ID;
@@ -18,10 +18,24 @@ app.post('/api/tess', async(req, res) => {
     try {
         const tessUrl = `https://api.tess.im/agents/${agentId}/execute`;
 
+        const textoUsuario = prompt || "Analise esta arquitetura/imagem e os dados atuais.";
+        const jsonCalculadora = context || "{}";
+
+        const arrayDeConteudo = [
+            { type: 'text', text: textoUsuario }
+        ];
+
+        if (image) {
+            arrayDeConteudo.push({
+                type: 'image_url',
+                image_url: { url: `data:image/jpeg;base64,${image}` }
+            });
+        }
+
         const payload = {
-            mensagem: prompt || "vazio",
-            dados: context || "{}",
-            messages: [{ role: 'user', content: prompt || "vazio" }]
+            mensagem: textoUsuario,
+            dados: jsonCalculadora,
+            messages: [{ role: 'user', content: arrayDeConteudo }]
         };
 
         const respostaTess = await fetch(tessUrl, {
