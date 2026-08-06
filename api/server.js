@@ -5,16 +5,24 @@ app.use(express.json());
 
 app.post('/api/tess', async(req, res) => {
     const { prompt, context } = req.body;
+    console.log("DADOS RECEBIDOS:", { prompt });
+
     const apiKey = process.env.TESS_API_KEY;
     const workspaceId = process.env.TESS_WORKSPACE_ID;
     const agentId = process.env.TESS_AGENT_ID;
 
     if (!apiKey || !workspaceId || !agentId) {
-        return res.status(500).json({ erro: 'Credenciais da Tess ausentes no servidor.' });
+        return res.status(500).json({ erro: 'Credenciais ausentes.' });
     }
 
     try {
         const tessUrl = `https://api.tess.im/agents/${agentId}/execute`;
+
+        const payload = {
+            mensagem: prompt || "vazio",
+            dados: context || "{}",
+            messages: [{ role: 'user', content: prompt || "vazio" }]
+        };
 
         const respostaTess = await fetch(tessUrl, {
             method: 'POST',
@@ -23,32 +31,64 @@ app.post('/api/tess', async(req, res) => {
                 'Authorization': `Bearer ${apiKey}`,
                 'x-workspace-id': workspaceId
             },
-            body: JSON.stringify({
-                mensagem: prompt,
-                dados: context,
-                messages: [{
-                    role: 'user',
-                    content: prompt
-                }]
-            })
+            body: JSON.stringify(payload)
         });
 
         if (!respostaTess.ok) {
             const erroDetalhado = await respostaTess.text();
-            console.error("Erro da Tess detalhado:", erroDetalhado);
-            return res.status(respostaTess.status).json({ erro: `A API da Tess recusou a requisição. Detalhes: ${erroDetalhado}` });
+            return res.status(respostaTess.status).json({ erro: `Erro da Tess: ${erroDetalhado}` });
         }
 
-        const dadosRetorno = await respostaTess.json();
+        const dadosIniciais = await respostaTess.json();
 
-        res.json({ resposta: dadosRetorno.reply || dadosRetorno.response || dadosRetorno.message || JSON.stringify(dadosRetorno) });
+        const execucaoId = dadosIniciais.responses && dadosIniciais.responses[0] ? dadosIniciais.responses[0].id : null;
+
+        if (!execucaoId) {
+            return res.json({ resposta: "Tess não retornou um ID de execução." });
+        }
+
+        console.log(`Processando... (ID: ${execucaoId})... Aguardando...`);
+
+        let respostaFinal = "";
+        let tentativas = 0;
+
+        while (tentativas < 15) {
+            await new Promise(r => setTimeout(r, 2000));
+
+            const pollRes = await fetch(`https://api.tess.im/agent-responses/${execucaoId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'x-workspace-id': workspaceId
+                }
+            });
+
+            const pollData = await pollRes.json();
+            const status = pollData.status;
+
+            console.log(`Tentativa ${tentativas + 1}: Status = ${status}`);
+
+            if (status === 'completed' || status === 'done' || pollData.output) {
+                respostaFinal = pollData.output;
+                break;
+            } else if (status === 'failed' || status === 'error') {
+                respostaFinal = "Ops, a Tess encontrou um erro no meio do caminho.";
+                break;
+            }
+
+            tentativas++;
+        }
+
+        console.log("SUCESSO.");
+
+        res.json({ resposta: respostaFinal.replace(/\n/g, '<br>') || "A Tess demorou muito para responder." });
 
     } catch (erro) {
-        console.error("Erro interno no Node:", erro);
+        console.error("ERRO INTERNO:", erro);
         res.status(500).json({ erro: 'Falha na comunicação com o servidor da Tess.' });
     }
 });
 
 app.listen(3000, () => {
-    console.log('Backend da Calculadora rodando na porta 3000');
+    console.log('Backend rodando.');
 });
