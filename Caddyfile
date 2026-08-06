@@ -1,9 +1,13 @@
+# Config Homolog
+
 calculadorasave.duckdns.org {
     root * /srv
 
     file_server
 
     encode gzip zstd
+
+    reverse_proxy /api/* backend:3000
 
     handle_errors {
         respond "{err.status_code} {err.status_text}"

@@ -462,6 +462,45 @@
         });
     }
 
+    // ========== AI INTEGRATION (TESS) ==========
+    const askAiBtn = document.getElementById('askAiBtn');
+    const aiPrompt = document.getElementById('aiPrompt');
+    const aiResponse = document.getElementById('aiResponse');
+
+    if (askAiBtn) {
+        askAiBtn.addEventListener('click', async() => {
+            const userText = aiPrompt.value.trim();
+            if (!userText) return showToast('Digite o que você precisa antes de consultar.');
+
+            askAiBtn.disabled = true;
+            askAiBtn.innerHTML = '<span class="material-symbols-outlined">hourglass_empty</span> Pensando...';
+            aiResponse.style.display = 'block';
+            aiResponse.innerHTML = '<em>Analisando sua infraestrutura atual...</em>';
+
+            const contextData = JSON.stringify(state);
+
+            try {
+                const response = await fetch('/api/tess', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: userText, context: contextData })
+                });
+
+                const data = await response.json();
+
+                aiResponse.innerHTML = `<strong>Tess:</strong> ${data.resposta || data.erro}`;
+                askAiBtn.disabled = false;
+                askAiBtn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span> Consultar';
+
+            } catch (error) {
+                console.error("Erro no frontend:", error);
+                aiResponse.innerHTML = '<span style="color: red;">Erro de comunicação com o backend. Tente novamente.</span>';
+                askAiBtn.disabled = false;
+                askAiBtn.innerHTML = '<span class="material-symbols-outlined">auto_awesome</span> Consultar';
+            }
+        });
+    }
+
     // ========== INITIAL RENDER ==========
     renderNuvion();
     renderCloudlets();

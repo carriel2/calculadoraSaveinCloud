@@ -55,6 +55,23 @@
             </div>
         </section>
 
+        <section class="panel active no-print" style="margin-bottom: 20px; background: var(--green); border-color: var(--cyan);">
+            <div class="panel-head" style="margin-bottom: 10px;">
+                <div>
+                    <p class="eyebrow">ASSISTENTE INTELIGENTE</p>
+                    <h2>Pergunte à Tess</h2>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="aiPrompt" class="field" placeholder="Ex: Preciso de uma arquitetura para um e-commerce com 500 acessos simultâneos..." style="flex: 1; text-align: left;">
+                <button id="askAiBtn" class="button" type="button" style="background: var(--ink);">
+                    <span class="material-symbols-outlined">auto_awesome</span> Consultar
+                </button>
+            </div>
+            <div id="aiResponse" style="margin-top: 15px; font-size: 13px; color: var(--ink); display: none; padding: 15px; background: var(--white); border-radius: 8px; border: 1px dashed var(--cyan);">
+            </div>
+        </section>
+
         <nav class="tabs no-print" aria-label="Plataformas">
             <button class="tab active" data-target="nuvion">Nuvion <span>Cloud VMs</span></button>
             <button class="tab" data-target="cloudlets-standard">Cloudlets Standard <span>App Platform</span></button>
