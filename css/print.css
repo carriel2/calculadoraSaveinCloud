@@ -49,6 +49,7 @@
         margin: 0 0 2px;
         color: #666666 !important;
     }
+    /* === LISTA DE ITENS ESCONDIDOS (Botões, abas, IA e Tooltips de ?) === */
     .no-print,
     .tabs,
     footer,
@@ -56,7 +57,8 @@
     .hint,
     button,
     #aiResponse,
-    #aiPrompt {
+    #aiPrompt,
+    .tooltip-icon {
         display: none !important;
     }
     .panel {
@@ -156,7 +158,6 @@
         min-width: 0;
         font-size: 8px;
     }
-    /* MÁGICA FINAL: Enganando o Chrome para achar que é um campo de texto puro */
     table input,
     table select,
     table .field,
@@ -180,15 +181,6 @@
         min-width: 0 !important;
         font-size: 9px !important;
     }
-    /* MATANDO AS SETAS NATIVAS DE VEZ (agora com display: none e opacity) */
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none !important;
-        display: none !important;
-        opacity: 0 !important;
-        margin: 0 !important;
-    }
-    /* Escondendo os botões customizados */
     table .qty-btn,
     .qty-btn,
     .qty-minus,
@@ -203,7 +195,6 @@
     .decrement {
         display: none !important;
     }
-    /* Zerando a caixa em volta da quantidade */
     .qty-control {
         border: none !important;
         background: transparent !important;
@@ -211,6 +202,13 @@
         padding: 0 !important;
         margin: 0 !important;
         display: block !important;
+    }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        display: none !important;
+        opacity: 0 !important;
+        margin: 0 !important;
     }
     .env-block {
         margin: 0 0 10px;
