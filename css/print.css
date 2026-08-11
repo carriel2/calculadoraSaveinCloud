@@ -7,17 +7,18 @@
     }
     html,
     body {
-        background: #fff !important;
-        color: #000;
+        background: #ffffff !important;
+        color: #000000 !important;
         font-size: 10px;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
     .topbar {
         background: #07335f !important;
+        color: #ffffff !important;
         min-height: 48px;
         padding: 6px 12px;
-        box-shadow: none;
+        box-shadow: none !important;
     }
     .logo-img {
         height: 28px !important;
@@ -37,25 +38,33 @@
     .intro h1 {
         font-size: 16px;
         margin: 0 0 2px;
+        color: #000000 !important;
     }
     .intro p {
         font-size: 10px;
+        color: #333333 !important;
     }
     .eyebrow {
         font-size: 9px;
         margin: 0 0 2px;
+        color: #666666 !important;
     }
     .no-print,
     .tabs,
     footer,
     .notes,
-    .hint {
+    .hint,
+    button,
+    #aiResponse,
+    #aiPrompt {
         display: none !important;
     }
+    /* Painéis */
     .panel {
         display: none !important;
-        box-shadow: none;
-        border: 0;
+        box-shadow: none !important;
+        border: 0 !important;
+        background: #ffffff !important;
         padding: 0;
         margin: 0;
         border-radius: 0;
@@ -68,59 +77,94 @@
     .panel-head {
         margin-bottom: 8px;
         align-items: flex-start;
+        page-break-after: avoid;
+        break-after: avoid;
     }
     .panel-head h2 {
         font-size: 14px;
+        color: #000000 !important;
     }
     .panel-head p:not(.eyebrow) {
         font-size: 9px;
+        color: #333333 !important;
     }
     .total-card {
         padding: 6px 10px;
         min-width: 120px;
         background: #e5f5ee !important;
+        border: 1px solid #155b3c !important;
     }
     .total-card span {
         font-size: 9px;
         margin-bottom: 1px;
-        color: #49705d;
+        color: #49705d !important;
     }
     .total-card strong {
         font-size: 14px;
-        color: #155b3c;
+        color: #155b3c !important;
     }
     .table-wrap {
         overflow: visible;
-        border: 1px solid #9dbbd5;
+        border: 1px solid #cccccc !important;
         border-radius: 0;
         page-break-inside: avoid;
         break-inside: avoid;
+        background: #ffffff !important;
     }
     table {
         min-width: 0 !important;
         width: 100%;
         font-size: 9px;
         table-layout: fixed;
+        border-collapse: collapse !important;
+        background: #ffffff !important;
+    }
+    thead,
+    thead th {
+        background-color: #f3f4f6 !important;
+        color: #000000 !important;
+        border-bottom: 1px solid #000000 !important;
+    }
+    tbody tr {
+        background-color: #ffffff !important;
+        border-bottom: 1px solid #eeeeee !important;
+    }
+    tbody tr:nth-child(even) {
+        background-color: #f9fafb !important;
     }
     th,
     td {
         padding: 3px 4px !important;
+        color: #000000 !important;
     }
     th {
         font-size: 8px;
         padding: 4px 3px !important;
+        font-weight: bold !important;
     }
     td:first-child {
         min-width: 0;
         font-size: 8px;
+    }
+    tfoot td {
+        font-size: 9px !important;
+        padding: 4px !important;
+        background-color: #f3f4f6 !important;
+        color: #000000 !important;
+        font-weight: bold !important;
+    }
+    tfoot td:last-child {
+        font-size: 10px !important;
     }
     .field {
         border: 0 !important;
         background: transparent !important;
         padding: 0 !important;
         min-width: 0 !important;
-        font-size: 9px;
-        box-shadow: none;
+        font-size: 9px !important;
+        box-shadow: none !important;
+        color: #000000 !important;
+        font-weight: bold !important;
     }
     select.field {
         -webkit-appearance: none;
@@ -128,13 +172,6 @@
     }
     input.field {
         text-align: right;
-    }
-    tfoot td {
-        font-size: 9px !important;
-        padding: 4px !important;
-    }
-    tfoot td:last-child {
-        font-size: 10px !important;
     }
     .env-block {
         margin: 0 0 10px;
@@ -148,20 +185,13 @@
         padding: 5px 8px;
         font-size: 10px;
         background: #eaf3fa !important;
-        border-left: 3px solid #0d5c9d;
+        border-left: 3px solid #0d5c9d !important;
+        color: #000000 !important;
     }
     .env-block.print-page-break {
         page-break-before: always !important;
         break-before: page !important;
         margin-top: 0;
         padding-top: 0;
-    }
-    .panel.active {
-        page-break-inside: auto;
-        break-inside: auto;
-    }
-    .panel-head {
-        page-break-after: avoid;
-        break-after: avoid;
     }
 }
