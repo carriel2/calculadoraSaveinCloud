@@ -179,20 +179,27 @@
         min-width: 0 !important;
         font-size: 9px !important;
     }
+    table .qty-btn,
+    .qty-btn,
+    .qty-minus,
+    .qty-plus,
     table .material-symbols-outlined,
-    /* Se for o ícone do Google */
     table i,
-    /* Se for FontAwesome ou similar */
     table svg,
-    /* Se for um SVG solto */
     table a,
-    /* Se o botão for um link */
     .btn-plus,
-    /* Classes comuns de botões */
     .btn-minus,
     .increment,
     .decrement {
         display: none !important;
+    }
+    .qty-control {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
     }
     input[type=number]::-webkit-inner-spin-button,
     input[type=number]::-webkit-outer-spin-button {
