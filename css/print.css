@@ -156,6 +156,7 @@
         min-width: 0;
         font-size: 8px;
     }
+    /* MÁGICA FINAL: Enganando o Chrome para achar que é um campo de texto puro */
     table input,
     table select,
     table .field,
@@ -168,9 +169,9 @@
         border: none !important;
         border-radius: 0 !important;
         box-shadow: none !important;
-        -webkit-appearance: none !important;
+        -webkit-appearance: textfield !important;
         -moz-appearance: textfield !important;
-        appearance: none !important;
+        appearance: textfield !important;
         padding: 0 !important;
         margin: 0 !important;
         text-align: center !important;
@@ -179,6 +180,15 @@
         min-width: 0 !important;
         font-size: 9px !important;
     }
+    /* MATANDO AS SETAS NATIVAS DE VEZ (agora com display: none e opacity) */
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        display: none !important;
+        opacity: 0 !important;
+        margin: 0 !important;
+    }
+    /* Escondendo os botões customizados */
     table .qty-btn,
     .qty-btn,
     .qty-minus,
@@ -193,6 +203,7 @@
     .decrement {
         display: none !important;
     }
+    /* Zerando a caixa em volta da quantidade */
     .qty-control {
         border: none !important;
         background: transparent !important;
@@ -200,11 +211,6 @@
         padding: 0 !important;
         margin: 0 !important;
         display: block !important;
-    }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
-        -webkit-appearance: none !important;
-        margin: 0 !important;
     }
     .env-block {
         margin: 0 0 10px;
