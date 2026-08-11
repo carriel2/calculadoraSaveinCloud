@@ -59,7 +59,6 @@
     #aiPrompt {
         display: none !important;
     }
-    /* Painéis */
     .panel {
         display: none !important;
         box-shadow: none !important;
@@ -106,7 +105,7 @@
     .table-wrap {
         overflow: visible;
         border: 1px solid #cccccc !important;
-        border-radius: 0;
+        border-radius: 0 !important;
         page-break-inside: avoid;
         break-inside: avoid;
         background: #ffffff !important;
@@ -119,59 +118,65 @@
         border-collapse: collapse !important;
         background: #ffffff !important;
     }
-    thead,
-    thead th {
-        background-color: #f3f4f6 !important;
+    table *,
+    table tr,
+    table td,
+    table th,
+    tbody,
+    thead {
+        background-color: #ffffff !important;
+        background: none !important;
         color: #000000 !important;
-        border-bottom: 1px solid #000000 !important;
+    }
+    thead th,
+    thead tr {
+        background-color: #f3f4f6 !important;
+        border-bottom: 2px solid #000000 !important;
+        font-weight: bold !important;
+    }
+    tfoot td,
+    tfoot tr {
+        background-color: #f3f4f6 !important;
+        border-top: 2px solid #000000 !important;
+        font-weight: bold !important;
+        font-size: 10px !important;
     }
     tbody tr {
-        background-color: #ffffff !important;
         border-bottom: 1px solid #eeeeee !important;
-    }
-    tbody tr:nth-child(even) {
-        background-color: #f9fafb !important;
     }
     th,
     td {
-        padding: 3px 4px !important;
-        color: #000000 !important;
+        padding: 5px 4px !important;
     }
     th {
         font-size: 8px;
-        padding: 4px 3px !important;
         font-weight: bold !important;
     }
     td:first-child {
         min-width: 0;
         font-size: 8px;
     }
-    tfoot td {
-        font-size: 9px !important;
-        padding: 4px !important;
-        background-color: #f3f4f6 !important;
-        color: #000000 !important;
-        font-weight: bold !important;
-    }
-    tfoot td:last-child {
-        font-size: 10px !important;
-    }
-    .field {
-        border: 0 !important;
+    table input,
+    table select,
+    table .field,
+    .field,
+    input.field,
+    select.field {
+        background-color: #ffffff !important;
         background: transparent !important;
+        color: #000000 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        -webkit-appearance: none !important;
+        appearance: none !important;
         padding: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+        font-weight: bold !important;
+        width: 100% !important;
         min-width: 0 !important;
         font-size: 9px !important;
-        box-shadow: none !important;
-        color: #000000 !important;
-        font-weight: bold !important;
-    }
-    select.field {
-        -webkit-appearance: none;
-        appearance: none;
-    }
-    input.field {
-        text-align: right;
     }
     .env-block {
         margin: 0 0 10px;
