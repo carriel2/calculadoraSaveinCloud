@@ -1,7 +1,8 @@
-# Caddyfile.example
-SEU_IP_OU_DOMINIO {
-    tls internal
+:80 {
+
     root * /srv
+
     file_server
+
     encode gzip zstd
 }
