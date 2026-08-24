@@ -74,7 +74,7 @@
         }
     });
 
-    // ========== NUVION ==========
+    // ========== NUVION (COM MÚLTIPLOS GRUPOS) ==========
     const nuvionRowTemplate = [
         { id: 'vm', label: 'TIER VM', opts: D.vm, defaultQty: 730, defaultMult: 1, tip: 'Perfil de processamento e RAM.' },
         { id: 'disk', label: 'DISCO', opts: D.resources.slice(0, 3), defaultQty: 0, defaultMult: 1, tip: 'Armazenamento principal atrelado à VM.' },
@@ -90,6 +90,7 @@
 
     let nuvionGroupCount = 1;
 
+    // Migração de estado para não quebrar orçamentos gerados com o layout antigo
     Object.keys(state).forEach(k => {
         const matchOldVm = k.match(/^n-vm-(\d+)-sel$/);
         if (matchOldVm) {
@@ -107,18 +108,12 @@
 
     const oldBaseKeys = ['disk', 'ip', 'extra', 'traffic', 'additionalDisk', 'additionalIp', 'extra2', 'backup', 'snapshot'];
     oldBaseKeys.forEach(bk => {
-        if (state[`n-${bk}-sel`] !== undefined) {
-            state[`n-g1-${bk}-sel`] = state[`n-${bk}-sel`];
-            delete state[`n-${bk}-sel`];
-        }
-        if (state[`n-${bk}-qty`] !== undefined) {
-            state[`n-g1-${bk}-qty`] = state[`n-${bk}-qty`];
-            delete state[`n-${bk}-qty`];
-        }
-        if (state[`n-${bk}-mult`] !== undefined) {
-            state[`n-g1-${bk}-mult`] = state[`n-${bk}-mult`];
-            delete state[`n-${bk}-mult`];
-        }
+        if (state[`n-${bk}-sel`] !== undefined) { state[`n-g1-${bk}-sel`] = state[`n-${bk}-sel`];
+            delete state[`n-${bk}-sel`]; }
+        if (state[`n-${bk}-qty`] !== undefined) { state[`n-g1-${bk}-qty`] = state[`n-${bk}-qty`];
+            delete state[`n-${bk}-qty`]; }
+        if (state[`n-${bk}-mult`] !== undefined) { state[`n-g1-${bk}-mult`] = state[`n-${bk}-mult`];
+            delete state[`n-${bk}-mult`]; }
     });
 
     function getNuvionRows() {
@@ -149,14 +144,19 @@
             const mult = get(`${stateKey}-mult`, row.defaultMult);
             const itemPrice = item ? item.price : 0;
             const sub = itemPrice * num(qty) * num(mult);
-            const tipHtml = row.tip ? `<span class="tooltip-icon" data-tip="${row.tip}">?</span>` : '';
+            const tipHtml = row.tip ? `<span class="tooltip-icon no-print" data-tip="${row.tip}">?</span>` : '';
 
             const isFirstOfGroup = row.isVmRow;
+            // Botão de deletar apenas para grupos adicionais
             const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
+
+            // Um badge visual (Grupo X) na linha da VM
             const groupBadge = isFirstOfGroup ? `<span style="display:inline-block; margin-left:8px; font-size:10px; background:var(--blue2); color:#fff; padding:2px 6px; border-radius:4px;">Grupo ${row.groupId}</span>` : '';
 
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
             const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
+
+            // Linha visual separadora para novos grupos
             const trStyle = (isFirstOfGroup && row.groupId > 1) ? `border-top: 3px solid var(--blue2);` : '';
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
@@ -230,6 +230,7 @@
         const delBtn = e.target.closest('.delete-vm');
         if (delBtn) {
             const gid = parseInt(delBtn.dataset.groupid);
+            // Ao deletar um grupo no meio, empurra os dados dos grupos seguintes para cima
             for (let i = gid; i < nuvionGroupCount; i++) {
                 nuvionRowTemplate.forEach(tpl => {
                     const currKey = `n-g${i}-${tpl.id}`;
@@ -242,6 +243,7 @@
                     else delete state[`${currKey}-mult`];
                 });
             }
+            // Exclui os resquícios do último grupo que sobrou
             nuvionRowTemplate.forEach(tpl => {
                 delete state[`n-g${nuvionGroupCount}-${tpl.id}-sel`];
                 delete state[`n-g${nuvionGroupCount}-${tpl.id}-qty`];
@@ -299,7 +301,7 @@
 
                 const timeHtml = makeQty('time', `Tempo de uso ${rowDef.label}`, timeVal, locked);
                 const qtyHtml = makeQty('resource-count', `Quantidade de recursos ${rowDef.label}`, qtyVal);
-                const tipHtml = rowDef.tip ? `<span class="tooltip-icon" data-tip="${rowDef.tip}">?</span>` : '';
+                const tipHtml = rowDef.tip ? `<span class="tooltip-icon no-print" data-tip="${rowDef.tip}">?</span>` : '';
 
                 html += `<tr data-cloud="${envPrefix}-${rowDef.id}"><td><div class="cell-label">${rowDef.label}${tipHtml}</div></td>`;
                 html += `<td><select class="field selection" aria-label="${rowDef.label}">${optionHtml(opts, selected)}</select></td>`;
@@ -403,7 +405,7 @@
             const sub = itemPrice * num(qty);
 
             const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
-            const tipHtml = tip ? `<span class="tooltip-icon" data-tip="${tip}">?</span>` : '';
+            const tipHtml = tip ? `<span class="tooltip-icon no-print" data-tip="${tip}">?</span>` : '';
 
             return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td><select class="field selection" aria-label="${label}">${optionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
         }).join('');
@@ -472,7 +474,7 @@
     document.getElementById('confirmResetBtn').addEventListener('click', () => {
         state = {};
         persist();
-        nuvionGroupCount = 1;
+        nuvionGroupCount = 1; // Reseta também a quantidade de grupos de VM
         renderNuvion();
         renderCloudlets();
         renderStorin();
