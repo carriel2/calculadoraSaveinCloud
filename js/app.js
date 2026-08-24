@@ -74,7 +74,7 @@
         }
     });
 
-    // ========== NUVION (COM MÚLTIPLOS GRUPOS) ==========
+    // ========== NUVION (COM MÚLTIPLOS GRUPOS E NOMES CUSTOMIZADOS) ==========
     const nuvionRowTemplate = [
         { id: 'vm', label: 'TIER VM', opts: D.vm, defaultQty: 730, defaultMult: 1, tip: 'Perfil de processamento e RAM.' },
         { id: 'disk', label: 'DISCO', opts: D.resources.slice(0, 3), defaultQty: 0, defaultMult: 1, tip: 'Armazenamento principal atrelado à VM.' },
@@ -90,7 +90,6 @@
 
     let nuvionGroupCount = 1;
 
-    // Migração de estado para não quebrar orçamentos gerados com o layout antigo
     Object.keys(state).forEach(k => {
         const matchOldVm = k.match(/^n-vm-(\d+)-sel$/);
         if (matchOldVm) {
@@ -108,12 +107,18 @@
 
     const oldBaseKeys = ['disk', 'ip', 'extra', 'traffic', 'additionalDisk', 'additionalIp', 'extra2', 'backup', 'snapshot'];
     oldBaseKeys.forEach(bk => {
-        if (state[`n-${bk}-sel`] !== undefined) { state[`n-g1-${bk}-sel`] = state[`n-${bk}-sel`];
-            delete state[`n-${bk}-sel`]; }
-        if (state[`n-${bk}-qty`] !== undefined) { state[`n-g1-${bk}-qty`] = state[`n-${bk}-qty`];
-            delete state[`n-${bk}-qty`]; }
-        if (state[`n-${bk}-mult`] !== undefined) { state[`n-g1-${bk}-mult`] = state[`n-${bk}-mult`];
-            delete state[`n-${bk}-mult`]; }
+        if (state[`n-${bk}-sel`] !== undefined) {
+            state[`n-g1-${bk}-sel`] = state[`n-${bk}-sel`];
+            delete state[`n-${bk}-sel`];
+        }
+        if (state[`n-${bk}-qty`] !== undefined) {
+            state[`n-g1-${bk}-qty`] = state[`n-${bk}-qty`];
+            delete state[`n-${bk}-qty`];
+        }
+        if (state[`n-${bk}-mult`] !== undefined) {
+            state[`n-g1-${bk}-mult`] = state[`n-${bk}-mult`];
+            delete state[`n-${bk}-mult`];
+        }
     });
 
     function getNuvionRows() {
@@ -147,16 +152,15 @@
             const tipHtml = row.tip ? `<span class="tooltip-icon no-print" data-tip="${row.tip}">?</span>` : '';
 
             const isFirstOfGroup = row.isVmRow;
-            // Botão de deletar apenas para grupos adicionais
             const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
 
-            // Um badge visual (Grupo X) na linha da VM
-            const groupBadge = isFirstOfGroup ? `<span style="display:inline-block; margin-left:8px; font-size:10px; background:var(--blue2); color:#fff; padding:2px 6px; border-radius:4px;">Grupo ${row.groupId}</span>` : '';
+            // Aqui está a mágica: Trocamos o badge fixo por um input editável!
+            const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
+            const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." style="margin-left:8px; width:130px; padding:2px 6px; font-size:11px; font-weight:bold; color:var(--blue2); background:transparent; border:1px dashed var(--input-border); min-width:unset; height:24px;">` : '';
 
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
             const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
 
-            // Linha visual separadora para novos grupos
             const trStyle = (isFirstOfGroup && row.groupId > 1) ? `border-top: 3px solid var(--blue2);` : '';
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
@@ -195,6 +199,12 @@
                 calcNuvion();
             };
         });
+        document.querySelectorAll('.group-name').forEach(input => {
+            input.onchange = e => {
+                state[`n-g${e.target.dataset.groupid}-name`] = e.target.value;
+                persist();
+            };
+        });
     }
 
     function calcNuvion() {
@@ -230,8 +240,10 @@
         const delBtn = e.target.closest('.delete-vm');
         if (delBtn) {
             const gid = parseInt(delBtn.dataset.groupid);
-            // Ao deletar um grupo no meio, empurra os dados dos grupos seguintes para cima
             for (let i = gid; i < nuvionGroupCount; i++) {
+                // Sobe o nome
+                if (state[`n-g${i+1}-name`] !== undefined) state[`n-g${i}-name`] = state[`n-g${i+1}-name`];
+                else delete state[`n-g${i}-name`];
                 nuvionRowTemplate.forEach(tpl => {
                     const currKey = `n-g${i}-${tpl.id}`;
                     const nextKey = `n-g${i+1}-${tpl.id}`;
@@ -243,7 +255,7 @@
                     else delete state[`${currKey}-mult`];
                 });
             }
-            // Exclui os resquícios do último grupo que sobrou
+            delete state[`n-g${nuvionGroupCount}-name`];
             nuvionRowTemplate.forEach(tpl => {
                 delete state[`n-g${nuvionGroupCount}-${tpl.id}-sel`];
                 delete state[`n-g${nuvionGroupCount}-${tpl.id}-qty`];
@@ -474,7 +486,7 @@
     document.getElementById('confirmResetBtn').addEventListener('click', () => {
         state = {};
         persist();
-        nuvionGroupCount = 1; // Reseta também a quantidade de grupos de VM
+        nuvionGroupCount = 1;
         renderNuvion();
         renderCloudlets();
         renderStorin();
@@ -482,7 +494,6 @@
         showToast('Dados limpos com sucesso!');
     });
 
-    // Fecha o modal ao clicar fora da caixinha
     confirmModal.addEventListener('click', (e) => {
         if (e.target === confirmModal) {
             confirmModal.classList.remove('show');
