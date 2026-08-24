@@ -75,72 +75,122 @@
     });
 
     // ========== NUVION ==========
-    const nuvionBaseRows = [
-        ['disk', 'DISCO', D.resources.slice(0, 3), 0, 1, 'Armazenamento principal atrelado à VM.'],
-        ['ip', 'IP FIXO', D.resources.filter(x => x.name.startsWith('IPV')), 730, 1, 'Endereço de IP público e estático.'],
-        ['extra', 'RECURSO EXTRA', D.resources.filter(x => ['Gateway', 'VPN', 'Load Balancer Single', 'Load Balancer single + HA Failover'].includes(x.name)), 1, 1, 'Recursos adicionais de rede.'],
-        ['traffic', 'TRÁFEGO', D.resources.filter(x => x.name === 'Trafego In/Out'), 0, 1, 'Franquia de tráfego de dados.'],
-        ['additionalDisk', 'DISCO ADICIONAL', D.resources.slice(0, 3), 0, 1, 'Armazenamento extra (Block Storage).'],
-        ['additionalIp', 'IP FIXO ADICIONAL', D.resources.filter(x => x.name.startsWith('IPV')), 730, 1, 'IPs públicos adicionais.'],
-        ['extra2', 'RECURSO EXTRA 2', D.resources.filter(x => ['Gateway', 'VPN', 'Load Balancer Single', 'Load Balancer single + HA Failover'].includes(x.name)), 1, 1, 'Mais recursos adicionais de rede.'],
-        ['backup', 'BACKUP', D.resources.filter(x => x.name.startsWith('Backup ')), 0, 1, 'Serviço de cópia de segurança.'],
-        ['snapshot', 'SNAPSHOT', D.resources.filter(x => x.name.startsWith('Snapshot ')), 0, 1, 'Imagem instantânea do disco.'],
+    const nuvionRowTemplate = [
+        { id: 'vm', label: 'TIER VM', opts: D.vm, defaultQty: 730, defaultMult: 1, tip: 'Perfil de processamento e RAM.' },
+        { id: 'disk', label: 'DISCO', opts: D.resources.slice(0, 3), defaultQty: 0, defaultMult: 1, tip: 'Armazenamento principal atrelado à VM.' },
+        { id: 'ip', label: 'IP FIXO', opts: D.resources.filter(x => x.name.startsWith('IPV')), defaultQty: 730, defaultMult: 1, tip: 'Endereço de IP público e estático.' },
+        { id: 'extra', label: 'RECURSO EXTRA', opts: D.resources.filter(x => ['Gateway', 'VPN', 'Load Balancer Single', 'Load Balancer single + HA Failover'].includes(x.name)), defaultQty: 1, defaultMult: 1, tip: 'Recursos adicionais de rede.' },
+        { id: 'traffic', label: 'TRÁFEGO', opts: D.resources.filter(x => x.name === 'Trafego In/Out'), defaultQty: 0, defaultMult: 1, tip: 'Franquia de tráfego de dados.' },
+        { id: 'additionalDisk', label: 'DISCO ADICIONAL', opts: D.resources.slice(0, 3), defaultQty: 0, defaultMult: 1, tip: 'Armazenamento extra (Block Storage).' },
+        { id: 'additionalIp', label: 'IP FIXO ADICIONAL', opts: D.resources.filter(x => x.name.startsWith('IPV')), defaultQty: 730, defaultMult: 1, tip: 'IPs públicos adicionais.' },
+        { id: 'extra2', label: 'RECURSO EXTRA 2', opts: D.resources.filter(x => ['Gateway', 'VPN', 'Load Balancer Single', 'Load Balancer single + HA Failover'].includes(x.name)), defaultQty: 1, defaultMult: 1, tip: 'Mais recursos adicionais de rede.' },
+        { id: 'backup', label: 'BACKUP', opts: D.resources.filter(x => x.name.startsWith('Backup ')), defaultQty: 0, defaultMult: 1, tip: 'Serviço de cópia de segurança.' },
+        { id: 'snapshot', label: 'SNAPSHOT', opts: D.resources.filter(x => x.name.startsWith('Snapshot ')), defaultQty: 0, defaultMult: 1, tip: 'Imagem instantânea do disco.' }
     ];
 
-    let nuvionVmCount = 1;
+    let nuvionGroupCount = 1;
+
     Object.keys(state).forEach(k => {
-        const match = k.match(/^n-vm-(\d+)-sel$/);
-        if (match) nuvionVmCount = Math.max(nuvionVmCount, parseInt(match[1]));
+        const matchOldVm = k.match(/^n-vm-(\d+)-sel$/);
+        if (matchOldVm) {
+            nuvionGroupCount = Math.max(nuvionGroupCount, parseInt(matchOldVm[1]));
+            state[`n-g${matchOldVm[1]}-vm-sel`] = state[k];
+            delete state[k];
+            if (state[`n-vm-${matchOldVm[1]}-qty`]) {
+                state[`n-g${matchOldVm[1]}-vm-qty`] = state[`n-vm-${matchOldVm[1]}-qty`];
+                delete state[`n-vm-${matchOldVm[1]}-qty`];
+            }
+        }
+        const matchNew = k.match(/^n-g(\d+)-vm-sel$/);
+        if (matchNew) nuvionGroupCount = Math.max(nuvionGroupCount, parseInt(matchNew[1]));
+    });
+
+    const oldBaseKeys = ['disk', 'ip', 'extra', 'traffic', 'additionalDisk', 'additionalIp', 'extra2', 'backup', 'snapshot'];
+    oldBaseKeys.forEach(bk => {
+        if (state[`n-${bk}-sel`] !== undefined) {
+            state[`n-g1-${bk}-sel`] = state[`n-${bk}-sel`];
+            delete state[`n-${bk}-sel`];
+        }
+        if (state[`n-${bk}-qty`] !== undefined) {
+            state[`n-g1-${bk}-qty`] = state[`n-${bk}-qty`];
+            delete state[`n-${bk}-qty`];
+        }
+        if (state[`n-${bk}-mult`] !== undefined) {
+            state[`n-g1-${bk}-mult`] = state[`n-${bk}-mult`];
+            delete state[`n-${bk}-mult`];
+        }
     });
 
     function getNuvionRows() {
         let rows = [];
-        for (let i = 1; i <= nuvionVmCount; i++) {
-            rows.push([`vm-${i}`, `TIER VM ${i}`, D.vm, 730, 1, 'Perfil de processamento e RAM.']);
+        for (let i = 1; i <= nuvionGroupCount; i++) {
+            nuvionRowTemplate.forEach(tpl => {
+                rows.push({
+                    groupId: i,
+                    rowId: `g${i}-${tpl.id}`,
+                    isVmRow: tpl.id === 'vm',
+                    ...tpl
+                });
+            });
         }
-        return rows.concat(nuvionBaseRows);
+        return rows;
     }
 
     function renderNuvion() {
         const body = document.querySelector('#nuvion-body');
         const rows = getNuvionRows();
-        body.innerHTML = rows.map(([id, label, opts, defaultQty, defaultMult, tip]) => {
-            const selected = get('n-' + id + '-sel', '');
-            const item = find(opts, selected);
-            const qty = get('n-' + id + '-qty', defaultQty);
-            const mult = get('n-' + id + '-mult', defaultMult);
+        let html = '';
+
+        rows.forEach((row) => {
+            const stateKey = `n-${row.rowId}`;
+            const selected = get(`${stateKey}-sel`, '');
+            const item = find(row.opts, selected);
+            const qty = get(`${stateKey}-qty`, row.defaultQty);
+            const mult = get(`${stateKey}-mult`, row.defaultMult);
             const itemPrice = item ? item.price : 0;
             const sub = itemPrice * num(qty) * num(mult);
-            const tipHtml = tip ? `<span class="tooltip-icon" data-tip="${tip}">?</span>` : '';
+            const tipHtml = row.tip ? `<span class="tooltip-icon" data-tip="${row.tip}">?</span>` : '';
 
-            const isExtraVm = id.startsWith('vm-') && id !== 'vm-1';
-            const deleteHtml = isExtraVm ? `<button type="button" class="icon-btn delete-vm" data-vmid="${id.split('-')[1]}" title="Remover este grupo" style="padding:0; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
+            const isFirstOfGroup = row.isVmRow;
+            const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
+            const groupBadge = isFirstOfGroup ? `<span style="display:inline-block; margin-left:8px; font-size:10px; background:var(--blue2); color:#fff; padding:2px 6px; border-radius:4px;">Grupo ${row.groupId}</span>` : '';
 
-            const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
-            const multHtml = ['backup', 'snapshot'].includes(id) ? makeQty('multiplier', `Multiplicador ${label}`, mult) : `<span class="fixed-mult">1</span>`;
+            const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
+            const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
+            const trStyle = (isFirstOfGroup && row.groupId > 1) ? `border-top: 3px solid var(--blue2);` : '';
 
-            return `<tr data-nuvion="${id}"><td><div class="cell-label">${label}${tipHtml}${deleteHtml}</div></td><td><select class="field selection" aria-label="${label}">${optionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td>${multHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
-        }).join('');
+            html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
+                <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
+                <td><select class="field selection" aria-label="${row.label}">${optionHtml(row.opts, selected)}</select></td>
+                <td class="price">${item ? money(item.price) : '—'}</td>
+                <td class="unit">${item ? escape(item.unit) : '—'}</td>
+                <td>${qtyHtml}</td>
+                <td>${multHtml}</td>
+                <td class="subtotal">${money(sub)}</td>
+            </tr>`;
+        });
+
+        body.innerHTML = html;
         bindNuvion();
         calcNuvion();
     }
 
     function bindNuvion() {
-        document.querySelectorAll('[data-nuvion]').forEach(row => {
-            const id = row.dataset.nuvion;
-            row.querySelector('.selection').onchange = e => {
-                state['n-' + id + '-sel'] = e.target.value;
+        document.querySelectorAll('[data-nuvion]').forEach(tr => {
+            const key = `n-${tr.dataset.nuvion}`;
+            tr.querySelector('.selection').onchange = e => {
+                state[`${key}-sel`] = e.target.value;
                 persist();
                 renderNuvion();
             };
-            row.querySelector('.quantity').oninput = e => {
-                state['n-' + id + '-qty'] = e.target.value;
+            tr.querySelector('.quantity').oninput = e => {
+                state[`${key}-qty`] = e.target.value;
                 persist();
                 calcNuvion();
             };
-            const m = row.querySelector('.multiplier');
+            const m = tr.querySelector('.multiplier');
             if (m) m.oninput = e => {
-                state['n-' + id + '-mult'] = e.target.value;
+                state[`${key}-mult`] = e.target.value;
                 persist();
                 calcNuvion();
             };
@@ -150,15 +200,17 @@
     function calcNuvion() {
         let total = 0;
         const rows = getNuvionRows();
-        document.querySelectorAll('[data-nuvion]').forEach(row => {
-            const [, , opts] = rows.find(x => x[0] === row.dataset.nuvion);
-            const i = find(opts, row.querySelector('.selection').value);
+        document.querySelectorAll('[data-nuvion]').forEach(tr => {
+            const rowDef = rows.find(x => x.rowId === tr.dataset.nuvion);
+            if (!rowDef) return;
+
+            const i = find(rowDef.opts, tr.querySelector('.selection').value);
             const itemPrice = i ? i.price : 0;
-            const multiplierInput = row.querySelector('.multiplier');
+            const multiplierInput = tr.querySelector('.multiplier');
             const multValue = multiplierInput ? multiplierInput.value : 1;
 
-            const s = itemPrice * num(row.querySelector('.quantity').value) * num(multValue);
-            row.querySelector('.subtotal').textContent = money(s);
+            const s = itemPrice * num(tr.querySelector('.quantity').value) * num(multValue);
+            tr.querySelector('.subtotal').textContent = money(s);
             total += s;
         });
         document.querySelector('#nuvion-total').textContent = money(total);
@@ -169,7 +221,7 @@
     const addVmBtn = document.getElementById('addVmBtn');
     if (addVmBtn) {
         addVmBtn.addEventListener('click', () => {
-            nuvionVmCount++;
+            nuvionGroupCount++;
             renderNuvion();
         });
     }
@@ -177,18 +229,25 @@
     document.addEventListener('click', e => {
         const delBtn = e.target.closest('.delete-vm');
         if (delBtn) {
-            const vmid = parseInt(delBtn.dataset.vmid);
-            for (let i = vmid; i < nuvionVmCount; i++) {
-                const nextSel = state[`n-vm-${i+1}-sel`];
-                const nextQty = state[`n-vm-${i+1}-qty`];
-                if (nextSel !== undefined) state[`n-vm-${i}-sel`] = nextSel;
-                else delete state[`n-vm-${i}-sel`];
-                if (nextQty !== undefined) state[`n-vm-${i}-qty`] = nextQty;
-                else delete state[`n-vm-${i}-qty`];
+            const gid = parseInt(delBtn.dataset.groupid);
+            for (let i = gid; i < nuvionGroupCount; i++) {
+                nuvionRowTemplate.forEach(tpl => {
+                    const currKey = `n-g${i}-${tpl.id}`;
+                    const nextKey = `n-g${i+1}-${tpl.id}`;
+                    if (state[`${nextKey}-sel`] !== undefined) state[`${currKey}-sel`] = state[`${nextKey}-sel`];
+                    else delete state[`${currKey}-sel`];
+                    if (state[`${nextKey}-qty`] !== undefined) state[`${currKey}-qty`] = state[`${nextKey}-qty`];
+                    else delete state[`${currKey}-qty`];
+                    if (state[`${nextKey}-mult`] !== undefined) state[`${currKey}-mult`] = state[`${nextKey}-mult`];
+                    else delete state[`${currKey}-mult`];
+                });
             }
-            delete state[`n-vm-${nuvionVmCount}-sel`];
-            delete state[`n-vm-${nuvionVmCount}-qty`];
-            nuvionVmCount--;
+            nuvionRowTemplate.forEach(tpl => {
+                delete state[`n-g${nuvionGroupCount}-${tpl.id}-sel`];
+                delete state[`n-g${nuvionGroupCount}-${tpl.id}-qty`];
+                delete state[`n-g${nuvionGroupCount}-${tpl.id}-mult`];
+            });
+            nuvionGroupCount--;
             persist();
             renderNuvion();
         }
@@ -413,6 +472,7 @@
     document.getElementById('confirmResetBtn').addEventListener('click', () => {
         state = {};
         persist();
+        nuvionGroupCount = 1;
         renderNuvion();
         renderCloudlets();
         renderStorin();
