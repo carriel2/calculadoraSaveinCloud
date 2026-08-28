@@ -55,5 +55,7 @@ jobs:
       run: |
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
+        kubectl apply -f k8s/ingress.yaml
         kubectl set image deployment/calculadora-saveincloud frontend=ghcr.io/${{ github.repository }}:sha-${{ github.sha }} -n laboratorio
         kubectl rollout status deployment/calculadora-saveincloud -n laboratorio
+
