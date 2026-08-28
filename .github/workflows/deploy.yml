@@ -27,23 +27,14 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Extract metadata (tags, labels)
-      id: meta
-      uses: docker/metadata-action@v5
-      with:
-        images: ghcr.io/${{ github.repository }}
-        tags: |
-          type=ref,event=branch
-          type=sha,prefix=sha-
-          type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        tags: |
+          ghcr.io/carriel2/calculadorasaveincloud:${{ github.sha }}
+          ghcr.io/carriel2/calculadorasaveincloud:latest
 
     - name: Set Kubernetes Context
       uses: azure/k8s-set-context@v4
@@ -55,7 +46,5 @@ jobs:
       run: |
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
-        kubectl apply -f k8s/ingress.yaml
-        kubectl set image deployment/calculadora-saveincloud frontend=ghcr.io/${{ github.repository }}:sha-${{ github.sha }} -n laboratorio
+        kubectl set image deployment/calculadora-saveincloud frontend=ghcr.io/carriel2/calculadorasaveincloud:${{ github.sha }} -n laboratorio
         kubectl rollout status deployment/calculadora-saveincloud -n laboratorio
-
