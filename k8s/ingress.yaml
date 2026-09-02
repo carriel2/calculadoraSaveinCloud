@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: calculadora-ingress
+  namespace: laboratorio
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host: calculadorasave.duckdns.org
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: calculadora-service
+            port:
+              number: 80
