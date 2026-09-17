@@ -524,6 +524,69 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
+#nuvion table,
+.env-block table {
+    table-layout: fixed;
+}
+
+#nuvion th:nth-child(1),
+.env-block th:nth-child(1) { width: 15%; }
+#nuvion th:nth-child(2),
+.env-block th:nth-child(2) { width: 25%; }
+#nuvion th:nth-child(3),
+.env-block th:nth-child(3) { width: 11%; }
+#nuvion th:nth-child(4),
+.env-block th:nth-child(4) { width: 13%; }
+#nuvion th:nth-child(5),
+.env-block th:nth-child(5) { width: 12%; }
+#nuvion th:nth-child(6),
+.env-block th:nth-child(6) { width: 11%; }
+#nuvion th:nth-child(7),
+.env-block th:nth-child(7) { width: 13%; }
+
+#storin table {
+    table-layout: fixed;
+}
+
+#storin th:nth-child(1) { width: 20%; }
+#storin th:nth-child(2) { width: 30%; }
+#storin th:nth-child(3) { width: 12%; }
+#storin th:nth-child(4) { width: 15%; }
+#storin th:nth-child(5) { width: 11%; }
+#storin th:nth-child(6) { width: 12%; }
+
+select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+td:first-child .cell-label {
+    overflow: hidden;
+}
+
+.table-wrap {
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue2) var(--line);
+}
+
+.table-wrap::-webkit-scrollbar {
+    height: 7px;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+    background: var(--line);
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: var(--blue2);
+    border-radius: 6px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+    background: var(--cyan);
+}
+
 select.field.vm-select {
     min-width: 245px;
     background-color: var(--input-bg) !important;
