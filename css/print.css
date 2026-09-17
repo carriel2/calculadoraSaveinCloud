@@ -1,6 +1,26 @@
 /* ========== PRINT STYLES ========== */
 
 @media print {
+    :root,
+    [data-theme="dark"] {
+        --blue: #0a3c70 !important;
+        --blue2: #0d5c9d !important;
+        --cyan: #0d5c9d !important;
+        --ink: #000000 !important;
+        --muted: #333333 !important;
+        --line: #e5e7eb !important;
+        --bg: #ffffff !important;
+        --yellow: #ffffff !important;
+        --green: #e5f5ee !important;
+        --white: #ffffff !important;
+        --table-bg: #ffffff !important;
+        --panel-bg: #ffffff !important;
+        --input-bg: #ffffff !important;
+        --input-border: #cccccc !important;
+        --input-text: #000000 !important;
+        --text-highlight: #000000 !important;
+    }
+
     @page {
         size: A4 portrait;
         margin: 10mm 8mm;
@@ -180,6 +200,26 @@
         width: 100% !important;
         min-width: 0 !important;
         font-size: 9px !important;
+    }
+    /* O select do TIER VM (vm-select) tem regra própria em components.css
+       usando var(--input-bg), que no tema escuro é azul-marinho. Sem esta
+       sobreposição específica (mesma especificidade, carregada depois),
+       o PDF sairia com o campo de instância em fundo azul escuro. */
+    select.field.vm-select {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+        border-color: #ffffff !important;
+    }
+    select.field.vm-select option {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    .vm-spec-caption,
+    .vm-spec-caption.vm-spec-empty,
+    .vm-spec-tag {
+        color: #333333 !important;
+        border-color: #999999 !important;
+        background: none !important;
     }
     table .qty-btn,
     .qty-btn,

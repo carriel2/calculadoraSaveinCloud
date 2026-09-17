@@ -165,7 +165,7 @@
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
                 <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select></td>
+                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select>${row.isVmRow ? renderVmSpecCaption(item) : ''}</td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -268,7 +268,11 @@
     });
 
     // ========== DESCRIÇÃO DE PERFIL PARA TIER VM ==========
-    // Mantém o <select> nativo: abertura confiável, mesmo tamanho dos demais campos e visual consistente.
+    // Mantém o <select> nativo (abertura confiável). O rótulo dentro do
+    // select fica curto (nome da instância), para nunca ser cortado.
+    // A descrição completa (vCPU, RAM, R$/hora e R$/mês) é exibida por
+    // extenso abaixo do select, na própria célula da tabela — sem criar
+    // nenhum componente novo, painel flutuante ou tabela separada.
     function parseVmName(name) {
         const normalized = name.replace('+RAM', '');
         const [, vcpu, ram] = normalized.split('-');
@@ -283,10 +287,19 @@
     function vmOptionHtml(opts, selected) {
         return `<option value="">Selecione...</option>` + opts.map(vm => {
             const spec = parseVmName(vm.name);
-            const extraRam = spec.hasExtraRam ? ' +RAM' : '';
-            const label = `${vm.name.replace('+RAM', '')}${extraRam} — ${spec.vcpu} vCPU · ${spec.ram} RAM`;
+            const label = vm.name.replace('+RAM', '') + (spec.hasExtraRam ? ' +RAM' : '');
             return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
         }).join('');
+    }
+
+    function renderVmSpecCaption(item) {
+        if (!item) {
+            return `<div class="vm-spec-caption vm-spec-empty">Selecione uma instância para ver vCPU, RAM e valores.</div>`;
+        }
+        const spec = parseVmName(item.name);
+        const monthly = item.price * 730;
+        const tag = spec.hasExtraRam ? ` <span class="vm-spec-tag">+RAM</span>` : '';
+        return `<div class="vm-spec-caption">${spec.vcpu} vCPU · ${spec.ram} RAM${tag} — ${money(item.price)}/hora · ${money(monthly)}/mês</div>`;
     }
 
     // ========== CLOUDLETS ==========

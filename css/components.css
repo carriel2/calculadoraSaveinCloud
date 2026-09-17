@@ -554,6 +554,34 @@ input[type="number"] {
     white-space: nowrap;
 }
 
+/* ========== DESCRIÇÃO COMPLETA DA INSTÂNCIA (TIER VM) ========== */
+
+/* Texto sempre visível por extenso (não é cortado como o select),
+   pois é um parágrafo comum dentro da própria célula da tabela. */
+.vm-spec-caption {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--muted);
+    white-space: normal;
+    text-align: left;
+}
+
+.vm-spec-caption.vm-spec-empty {
+    font-style: italic;
+}
+
+.vm-spec-tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border: 1px solid var(--cyan);
+    border-radius: 999px;
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 700;
+    margin: 0 1px;
+}
+
 /* ========== TIER VM — MESMAS CORES DOS DEMAIS SELECTS ========== */
 
 select.field.vm-select {
