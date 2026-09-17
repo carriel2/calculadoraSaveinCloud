@@ -294,12 +294,11 @@
 
     function renderVmSpecCaption(item) {
         if (!item) {
-            return `<div class="vm-spec-caption vm-spec-empty">Selecione uma instância para ver vCPU, RAM e valores.</div>`;
+            return `<div class="vm-spec-caption vm-spec-empty">Selecione uma instância para ver vCPU e RAM.</div>`;
         }
         const spec = parseVmName(item.name);
-        const monthly = item.price * 730;
         const tag = spec.hasExtraRam ? ` <span class="vm-spec-tag">+RAM</span>` : '';
-        return `<div class="vm-spec-caption">${spec.vcpu} vCPU · ${spec.ram} RAM${tag} — ${money(item.price)}/hora · ${money(monthly)}/mês</div>`;
+        return `<div class="vm-spec-caption">${spec.vcpu} vCPU · ${spec.ram} RAM${tag}</div>`;
     }
 
     // ========== CLOUDLETS ==========
