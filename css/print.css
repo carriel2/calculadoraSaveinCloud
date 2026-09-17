@@ -181,17 +181,6 @@
         min-width: 0 !important;
         font-size: 9px !important;
     }
-    /* Seletor de instância (combobox): oculta o botão/painel e exibe o select nativo com o valor escolhido */
-    .vm-combo-trigger,
-    .vm-combo-panel {
-        display: none !important;
-    }
-    .vm-native-select {
-        display: inline-block !important;
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        pointer-events: none !important;
-    }
     table .qty-btn,
     .qty-btn,
     .qty-minus,

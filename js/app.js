@@ -165,7 +165,7 @@
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
                 <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td>${row.isVmRow ? vmComboHtml(row, selected) : `<select class="field selection" aria-label="${row.label}">${optionHtml(row.opts, selected)}</select>`}</td>
+                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select></td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -177,7 +177,6 @@
         body.innerHTML = html;
         bindNuvion();
         calcNuvion();
-        bindVmCombos();
     }
 
     function bindNuvion() {
@@ -268,126 +267,27 @@
         }
     });
 
-    // ========== SELETOR DE INSTÂNCIA (TIER VM) — COMBOBOX DESCRITIVO ==========
+    // ========== DESCRIÇÃO DE PERFIL PARA TIER VM ==========
+    // Mantém o <select> nativo: abertura confiável, mesmo tamanho dos demais campos e visual consistente.
     function parseVmName(name) {
         const normalized = name.replace('+RAM', '');
-        const parts = normalized.split('-');
-        const vcpu = Number(parts[1]);
-        const ramGb = Number(parts[2]);
+        const [, vcpu, ram] = normalized.split('-');
+        const ramGb = Number(ram);
         return {
-            vcpu,
+            vcpu: Number(vcpu),
             ram: ramGb < 1 ? `${ramGb * 1024} MB` : `${ramGb} GB`,
             hasExtraRam: name.includes('+RAM')
         };
     }
 
-    function vmOptionCardHtml(vm, isSelected) {
-        const details = parseVmName(vm.name);
-        const monthly = vm.price * 730;
-        return `
-            <button type="button" class="vm-option-card ${isSelected ? 'is-selected' : ''}" data-vm-name="${escape(vm.name)}">
-                <span class="vm-option-name">${escape(vm.name.replace('+RAM', ''))}${details.hasExtraRam ? '<small>+RAM</small>' : ''}</span>
-                <span>${details.vcpu}</span>
-                <span>${details.ram}</span>
-                <span>${money(vm.price)}</span>
-                <span class="vm-option-monthly">${money(monthly)}/mês</span>
-            </button>
-        `;
+    function vmOptionHtml(opts, selected) {
+        return `<option value="">Selecione...</option>` + opts.map(vm => {
+            const spec = parseVmName(vm.name);
+            const extraRam = spec.hasExtraRam ? ' +RAM' : '';
+            const label = `${vm.name.replace('+RAM', '')}${extraRam} — ${spec.vcpu} vCPU · ${spec.ram} RAM`;
+            return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
+        }).join('');
     }
-
-    function vmComboHtml(row, selected) {
-        const item = find(row.opts, selected);
-        const details = item ? parseVmName(item.name) : null;
-        const label = item ? item.name.replace('+RAM', '') : 'Selecione...';
-        const meta = details ? `<span class="vm-combo-meta">${details.vcpu} vCPU · ${details.ram}</span>` : '';
-
-        return `
-            <div class="vm-combo">
-                <select class="field selection vm-native-select" aria-label="${row.label}">${optionHtml(row.opts, selected)}</select>
-                <button type="button" class="vm-combo-trigger" aria-haspopup="listbox" aria-expanded="false">
-                    <span class="vm-combo-trigger-text">
-                        <span class="vm-combo-trigger-label">${escape(label)}</span>
-                        ${meta}
-                    </span>
-                    <span class="material-symbols-outlined vm-combo-caret">expand_more</span>
-                </button>
-            </div>
-        `;
-    }
-
-    let activeVmSelect = null;
-
-    function openVmComboPanel(trigger, select) {
-        const panel = document.getElementById('vmComboPanel');
-        const list = document.getElementById('vmComboPanelList');
-        if (!panel || !list || !D.vm) return;
-
-        activeVmSelect = select;
-
-        list.innerHTML = D.vm.map(vm => vmOptionCardHtml(vm, vm.name === select.value)).join('');
-
-        list.querySelectorAll('.vm-option-card').forEach(card => {
-            card.addEventListener('click', () => {
-                if (!activeVmSelect) return;
-                activeVmSelect.value = card.dataset.vmName;
-                activeVmSelect.dispatchEvent(new Event('change', { bubbles: true }));
-                closeVmComboPanel();
-            });
-        });
-
-        const rect = trigger.getBoundingClientRect();
-        const panelWidth = Math.max(rect.width, 480);
-        let left = rect.left;
-        if (left + panelWidth > window.innerWidth - 12) {
-            left = window.innerWidth - panelWidth - 12;
-        }
-        left = Math.max(12, left);
-
-        panel.style.width = panelWidth + 'px';
-        panel.style.top = (rect.bottom + 6) + 'px';
-        panel.style.left = left + 'px';
-        panel.hidden = false;
-
-        trigger.classList.add('open');
-        trigger.setAttribute('aria-expanded', 'true');
-    }
-
-    function closeVmComboPanel() {
-        const panel = document.getElementById('vmComboPanel');
-        if (panel) panel.hidden = true;
-        document.querySelectorAll('.vm-combo-trigger.open').forEach(t => {
-            t.classList.remove('open');
-            t.setAttribute('aria-expanded', 'false');
-        });
-        activeVmSelect = null;
-    }
-
-    function bindVmCombos() {
-        document.querySelectorAll('.vm-combo').forEach(combo => {
-            const trigger = combo.querySelector('.vm-combo-trigger');
-            const select = combo.querySelector('.vm-native-select');
-            if (!trigger || !select) return;
-
-            trigger.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const wasOpen = trigger.classList.contains('open');
-                closeVmComboPanel();
-                if (!wasOpen) openVmComboPanel(trigger, select);
-            });
-        });
-    }
-
-    document.addEventListener('click', (e) => {
-        const panel = document.getElementById('vmComboPanel');
-        if (panel && !panel.hidden && !panel.contains(e.target) && !e.target.closest('.vm-combo-trigger')) {
-            closeVmComboPanel();
-        }
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeVmComboPanel();
-    });
-    window.addEventListener('scroll', () => closeVmComboPanel(), true);
-    window.addEventListener('resize', () => closeVmComboPanel());
 
     // ========== CLOUDLETS ==========
     const ENV_LABELS = ['A', 'B', 'C', 'D'];
