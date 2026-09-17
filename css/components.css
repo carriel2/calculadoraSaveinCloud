@@ -66,7 +66,6 @@
     color: #fbbf24;
 }
 
-
 /* ========== CARDS ========== */
 
 .total-card {
@@ -107,7 +106,6 @@
 .total-card.pulse {
     animation: totalPulse 0.4s ease-in-out;
 }
-
 
 /* ========== TABLES ========== */
 
@@ -190,7 +188,6 @@ tr.collapsed-row {
     white-space: nowrap;
 }
 
-
 /* ========== INPUTS & CONTROLS ========== */
 
 .field {
@@ -246,7 +243,6 @@ input[type="number"] {
     -moz-appearance: textfield !important;
     appearance: textfield !important;
 }
-
 
 /* ========== QTY COMPONENT ========== */
 
@@ -311,7 +307,6 @@ input[type="number"] {
     pointer-events: none;
 }
 
-
 /* ========== TOOLTIPS ========== */
 
 .tooltip-icon {
@@ -356,7 +351,6 @@ input[type="number"] {
 .tooltip-icon:hover::after {
     opacity: 1;
 }
-
 
 /* ========== EXTRA ELEMENTS ========== */
 
@@ -434,7 +428,6 @@ input[type="number"] {
     transform: rotate(-90deg);
 }
 
-
 /* ========== TOAST ========== */
 
 .toast {
@@ -461,7 +454,6 @@ input[type="number"] {
 .toast.show {
     top: 20px;
 }
-
 
 /* ========== MODAL CONFIRM ========== */
 
@@ -530,4 +522,108 @@ input[type="number"] {
 .button.danger:hover {
     background: #dc2626;
     border-color: #dc2626;
+}
+
+
+/* ========== SELETOR VISUAL DE VM (TIER VM) ========== */
+
+.vm-visual-selector {
+    margin-top: 22px;
+    border-top: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+}
+
+.vm-card-header,
+.vm-card {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 1fr 1fr 1.1fr;
+    align-items: center;
+    gap: 16px;
+}
+
+.vm-card-header {
+    padding: 12px 18px;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.vm-card {
+    width: 100%;
+    padding: 10px 18px;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: var(--panel-bg);
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+    transition: background 0.2s ease, outline 0.2s ease;
+}
+
+.vm-card:hover {
+    background: var(--line);
+}
+
+.vm-card.is-selected {
+    background: rgba(39, 180, 218, 0.12);
+    outline: 2px solid var(--cyan);
+    outline-offset: -2px;
+}
+
+.vm-card-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 750;
+    color: var(--text-highlight);
+}
+
+.vm-card-name small {
+    padding: 3px 8px;
+    border: 1px solid var(--cyan);
+    border-radius: 999px;
+    color: var(--cyan);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.vm-card-monthly {
+    justify-self: end;
+    min-width: 130px;
+    padding: 8px 12px;
+    border-radius: 7px;
+    background: var(--blue);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+    font-size: 13px;
+}
+
+.vm-price-note {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 8px 0 0;
+    text-align: right;
+}
+
+@media (max-width: 720px) {
+    .vm-card-header {
+        display: none;
+    }
+    .vm-card {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 14px;
+    }
+    .vm-card-name {
+        grid-column: 1 / -1;
+    }
+    .vm-card-monthly {
+        justify-self: stretch;
+        min-width: auto;
+    }
 }

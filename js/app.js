@@ -177,6 +177,7 @@
         body.innerHTML = html;
         bindNuvion();
         calcNuvion();
+        initVmVisualSelector();
     }
 
     function bindNuvion() {
@@ -266,6 +267,82 @@
             renderNuvion();
         }
     });
+
+    // ========== SELETOR VISUAL DE VM (TIER VM) ==========
+    function parseVmName(name) {
+        const normalized = name.replace('+RAM', '');
+        const parts = normalized.split('-');
+        const vcpu = Number(parts[1]);
+        const ramGb = Number(parts[2]);
+        return {
+            vcpu,
+            ram: ramGb < 1 ? `${ramGb * 1024} MB` : `${ramGb} GB`,
+            hasExtraRam: name.includes('+RAM')
+        };
+    }
+
+    function renderVmCards(vmSelect) {
+        const targetElement = document.getElementById('vmVisualSelector');
+        if (!targetElement || !vmSelect || !D.vm) return;
+
+        targetElement.innerHTML = `
+            <div class="vm-card-header">
+                <span>Nome da Instância</span>
+                <span>vCPU</span>
+                <span>RAM</span>
+                <span>R$/hora</span>
+                <span>R$/mês*</span>
+            </div>
+        `;
+
+        D.vm.forEach((vm) => {
+            const details = parseVmName(vm.name);
+            const monthlyPrice = vm.price * 730;
+
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'vm-card';
+            card.dataset.vmName = vm.name;
+
+            card.innerHTML = `
+                <span class="vm-card-name">
+                    ${escape(vm.name.replace('+RAM', ''))}
+                    ${details.hasExtraRam ? '<small>+RAM</small>' : ''}
+                </span>
+                <span>${details.vcpu}</span>
+                <span>${details.ram}</span>
+                <span>${money(vm.price)}</span>
+                <span class="vm-card-monthly">${money(monthlyPrice)}/mês</span>
+            `;
+
+            card.addEventListener('click', () => {
+                vmSelect.value = vm.name;
+                vmSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+
+            targetElement.appendChild(card);
+        });
+
+        updateVmCardSelection(vmSelect);
+    }
+
+    function updateVmCardSelection(vmSelect) {
+        document.querySelectorAll('.vm-card').forEach((card) => {
+            card.classList.toggle('is-selected', card.dataset.vmName === vmSelect.value);
+        });
+    }
+
+    function initVmVisualSelector() {
+        // Seletor visual vinculado ao TIER VM do Grupo 1
+        const firstVmRow = document.querySelector('[data-nuvion="g1-vm"]');
+        if (!firstVmRow) return;
+        const vmSelect = firstVmRow.querySelector('.selection');
+        if (!vmSelect) return;
+
+        renderVmCards(vmSelect);
+
+        vmSelect.addEventListener('change', () => updateVmCardSelection(vmSelect));
+    }
 
     // ========== CLOUDLETS ==========
     const ENV_LABELS = ['A', 'B', 'C', 'D'];
