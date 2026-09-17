@@ -524,13 +524,19 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
-/* ========== TIER VM — DESCRIÇÃO NO SELECT NATIVO ========== */
-
 select.field.vm-select {
     min-width: 245px;
-    font-weight: 600;
+    background-color: var(--input-bg) !important;
+    color: var(--input-text) !important;
+    border-color: var(--input-border) !important;
 }
 
-select.field.vm-select:valid {
-    color: var(--text-highlight);
+select.field.vm-select:hover,
+select.field.vm-select:focus {
+    border-color: var(--cyan) !important;
+}
+
+select.field.vm-select option {
+    background-color: var(--input-bg);
+    color: var(--input-text);
 }
