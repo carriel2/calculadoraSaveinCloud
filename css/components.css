@@ -524,106 +524,159 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
+/* ========== SELETOR DE INSTÂNCIA (TIER VM) — COMBOBOX DESCRITIVO ========== */
 
-/* ========== SELETOR VISUAL DE VM (TIER VM) ========== */
-
-.vm-visual-selector {
-    margin-top: 22px;
-    border-top: 1px solid var(--line);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid var(--line);
+.vm-combo {
+    position: relative;
+    width: 100%;
 }
 
-.vm-card-header,
-.vm-card {
-    display: grid;
-    grid-template-columns: 1.4fr 0.8fr 1fr 1fr 1.1fr;
+.vm-native-select {
+    display: none;
+}
+
+.vm-combo-trigger {
+    display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    min-width: 245px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    padding: 8px 10px;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s;
 }
 
-.vm-card-header {
-    padding: 12px 18px;
+.vm-combo-trigger:hover,
+.vm-combo-trigger.open {
+    border-color: var(--cyan);
+}
+
+.vm-combo-trigger-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.vm-combo-trigger-label {
+    font-weight: 700;
+    color: var(--text-highlight);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.vm-combo-meta {
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.vm-combo-caret {
+    font-size: 18px;
+    color: var(--blue2);
+    flex-shrink: 0;
+    transition: transform 0.15s ease;
+}
+
+.vm-combo-trigger.open .vm-combo-caret {
+    transform: rotate(180deg);
+}
+
+/* Painel flutuante (ancorado no trigger, fora do fluxo da tabela) */
+
+.vm-combo-panel {
+    position: fixed;
+    z-index: 5000;
+    background: var(--panel-bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.vm-combo-panel-header,
+.vm-option-card {
+    display: grid;
+    grid-template-columns: 1.5fr 0.7fr 0.9fr 0.9fr 1.1fr;
+    align-items: center;
+    gap: 10px;
+}
+
+.vm-combo-panel-header {
+    padding: 10px 14px;
     background: var(--blue);
     color: #fff;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 800;
+    position: sticky;
+    top: 0;
 }
 
-.vm-card {
+.vm-option-card {
     width: 100%;
-    padding: 10px 18px;
     border: 0;
     border-top: 1px solid var(--line);
-    background: var(--panel-bg);
+    background: transparent;
     color: var(--ink);
+    padding: 9px 14px;
     text-align: left;
     cursor: pointer;
     font: inherit;
-    transition: background 0.2s ease, outline 0.2s ease;
+    transition: background 0.15s ease;
 }
 
-.vm-card:hover {
+.vm-option-card:hover {
     background: var(--line);
 }
 
-.vm-card.is-selected {
-    background: rgba(39, 180, 218, 0.12);
-    outline: 2px solid var(--cyan);
-    outline-offset: -2px;
+.vm-option-card.is-selected {
+    background: rgba(39, 180, 218, 0.14);
 }
 
-.vm-card-name {
+.vm-option-name {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 750;
+    gap: 6px;
+    font-weight: 700;
     color: var(--text-highlight);
 }
 
-.vm-card-name small {
-    padding: 3px 8px;
+.vm-option-name small {
+    padding: 2px 6px;
     border: 1px solid var(--cyan);
     border-radius: 999px;
     color: var(--cyan);
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
 }
 
-.vm-card-monthly {
-    justify-self: end;
-    min-width: 130px;
-    padding: 8px 12px;
-    border-radius: 7px;
-    background: var(--blue);
-    color: #fff;
+.vm-option-monthly {
     font-weight: 700;
-    text-align: center;
-    font-size: 13px;
+    color: var(--blue2);
 }
 
-.vm-price-note {
-    font-size: 12px;
-    color: var(--muted);
-    margin: 8px 0 0;
-    text-align: right;
-}
-
-@media (max-width: 720px) {
-    .vm-card-header {
+@media (max-width: 680px) {
+    .vm-combo-panel {
+        left: 12px !important;
+        right: 12px;
+        width: auto !important;
+    }
+    .vm-combo-panel-header {
         display: none;
     }
-    .vm-card {
+    .vm-option-card {
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        padding: 14px;
+        row-gap: 4px;
     }
-    .vm-card-name {
+    .vm-option-name {
         grid-column: 1 / -1;
-    }
-    .vm-card-monthly {
-        justify-self: stretch;
-        min-width: auto;
     }
 }
