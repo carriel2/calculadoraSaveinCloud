@@ -524,38 +524,39 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
+/* ========== TABELA RESPONSIVA SEM SCROLL HORIZONTAL ========== */
+
+/* A tabela deve ocupar apenas a largura disponível do painel. */
 .table-wrap {
-    overflow-x: auto;
-    scrollbar-gutter: stable;
-    scrollbar-width: thin;
-    scrollbar-color: var(--blue2) var(--line);
+    overflow-x: hidden;
 }
 
-.table-wrap::-webkit-scrollbar {
-    height: 7px;
+.table-wrap > table {
+    width: 100%;
+    min-width: 0;
 }
 
-.table-wrap::-webkit-scrollbar-track {
-    background: var(--line);
+/* Dentro da tabela, nenhum campo pode impor largura mínima maior que a
+   própria célula. Isto evita que um valor selecionado alargue a tabela. */
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field,
+.table-wrap select.field.vm-select {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
 }
 
-.table-wrap::-webkit-scrollbar-thumb {
-    background: var(--blue2);
-    border-radius: 6px;
-}
-
-.table-wrap::-webkit-scrollbar-thumb:hover {
-    background: var(--cyan);
-}
-
-select.field {
+/* Nomes extensos ficam visualmente contidos no campo. */
+.table-wrap select.field {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* ========== TIER VM — MESMAS CORES DOS DEMAIS SELECTS ========== */
+
 select.field.vm-select {
-    min-width: 245px;
     background-color: var(--input-bg) !important;
     color: var(--input-text) !important;
     border-color: var(--input-border) !important;
