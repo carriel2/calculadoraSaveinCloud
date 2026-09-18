@@ -141,12 +141,28 @@
         background: #ffffff !important;
     }
 
-    /* Mais espaço para a coluna de seleção (nomes de instância/disco),
-       igual à tela — evita corte de texto no PDF. */
+    /* Mesma distribuição de colunas da tela, para evitar corte de texto
+       e não deixar a tabela desproporcional no PDF (ex.: Backup/Snapshot
+       com coluna de Multiplicador). */
+    #nuvion th:nth-child(1),
+    .env-block th:nth-child(1),
+    #storin th:nth-child(1) {
+        width: 11% !important;
+    }
     #nuvion th:nth-child(2),
     .env-block th:nth-child(2),
     #storin th:nth-child(2) {
-        width: 32% !important;
+        width: 40% !important;
+    }
+    #nuvion th:nth-child(3),
+    .env-block th:nth-child(3),
+    #storin th:nth-child(3) {
+        width: 9% !important;
+    }
+    #nuvion th:nth-child(4),
+    .env-block th:nth-child(4),
+    #storin th:nth-child(4) {
+        width: 9% !important;
     }
     table *,
     table tr,
