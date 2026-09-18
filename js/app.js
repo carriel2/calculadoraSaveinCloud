@@ -287,9 +287,8 @@
     function vmOptionHtml(opts, selected) {
         return `<option value="">Selecione...</option>` + opts.map(vm => {
             const spec = parseVmName(vm.name);
-            const extraRam = spec.hasExtraRam ? ' +RAM' : '';
             const name = vm.name.replace('+RAM', '');
-            const label = `${name}${extraRam} | ${spec.vcpu} vCPU - ${spec.ram} RAM`;
+            const label = `${name} | ${spec.vcpu} vCPU - ${spec.ram}`;
             return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
         }).join('');
     }

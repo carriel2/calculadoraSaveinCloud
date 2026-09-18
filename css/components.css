@@ -558,21 +558,14 @@ select.field {
     white-space: normal;
 }
 
-/* ========== TIER VM — MESMA PALETA E TEXTO COMPACTO ========== */
-
-/* Não redefine fundo, cor, borda ou seta: o TIER VM herda exatamente as
-   mesmas regras de select.field usadas pelos demais recursos. A única
-   exceção é a tipografia menor, necessária para exibir perfil e memória
-   no próprio campo sem gerar scrollbar horizontal. */
 select.field.vm-select {
-    font-size: 8px;
-    font-weight: 500;
-    letter-spacing: -0.2px;
-    padding-left: 5px;
-    padding-right: 18px;
+    font-size: 11px;
+    font-weight: inherit;
+    letter-spacing: normal;
+    padding-left: 8px;
+    padding-right: 30px;
 }
 
-/* O menu aberto continua legível e mostra o texto completo. */
 select.field.vm-select option {
     font-size: 12px;
     letter-spacing: normal;
