@@ -165,7 +165,7 @@
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
                 <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select>${row.isVmRow ? renderVmSpecCaption(item) : ''}</td>
+                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select></td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -287,18 +287,11 @@
     function vmOptionHtml(opts, selected) {
         return `<option value="">Selecione...</option>` + opts.map(vm => {
             const spec = parseVmName(vm.name);
-            const label = vm.name.replace('+RAM', '') + (spec.hasExtraRam ? ' +RAM' : '');
+            const extraRam = spec.hasExtraRam ? ' +RAM' : '';
+            const name = vm.name.replace('+RAM', '');
+            const label = `${spec.vcpu} vCPU · ${spec.ram} RAM${extraRam} — ${name}`;
             return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
         }).join('');
-    }
-
-    function renderVmSpecCaption(item) {
-        if (!item) {
-            return `<div class="vm-spec-caption vm-spec-empty">Selecione uma instância para ver vCPU e RAM.</div>`;
-        }
-        const spec = parseVmName(item.name);
-        const tag = spec.hasExtraRam ? ` <span class="vm-spec-tag">+RAM</span>` : '';
-        return `<div class="vm-spec-caption">${spec.vcpu} vCPU · ${spec.ram} RAM${tag}</div>`;
     }
 
     // ========== CLOUDLETS ==========

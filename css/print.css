@@ -214,13 +214,6 @@
         background-color: #ffffff !important;
         color: #000000 !important;
     }
-    .vm-spec-caption,
-    .vm-spec-caption.vm-spec-empty,
-    .vm-spec-tag {
-        color: #333333 !important;
-        border-color: #999999 !important;
-        background: none !important;
-    }
     table .qty-btn,
     .qty-btn,
     .qty-minus,
