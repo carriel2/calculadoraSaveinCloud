@@ -558,28 +558,22 @@ select.field {
     white-space: normal;
 }
 
-/* ========== TIER VM — MESMAS CORES DOS DEMAIS SELECTS ========== */
+/* ========== TIER VM — MESMA PALETA E TEXTO COMPACTO ========== */
 
-/* O appearance:none do select.field já normaliza a maioria dos casos,
-   mas reforçamos aqui para o TIER VM especificamente, já que é o campo
-   com texto mais longo e mais sensível a herdar estilo nativo do
-   sistema operacional (fundo branco em vez do tema). */
+/* Não redefine fundo, cor, borda ou seta: o TIER VM herda exatamente as
+   mesmas regras de select.field usadas pelos demais recursos. A única
+   exceção é a tipografia menor, necessária para exibir perfil e memória
+   no próprio campo sem gerar scrollbar horizontal. */
 select.field.vm-select {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    background-color: var(--input-bg) !important;
-    color: var(--input-text) !important;
-    border-color: var(--input-border) !important;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    padding-left: 5px;
+    padding-right: 18px;
 }
 
-select.field.vm-select:hover,
-select.field.vm-select:focus {
-    border-color: var(--cyan) !important;
-    background-color: var(--input-bg) !important;
-}
-
+/* O menu aberto continua legível e mostra o texto completo. */
 select.field.vm-select option {
-    background-color: var(--input-bg);
-    color: var(--input-text);
+    font-size: 12px;
+    letter-spacing: normal;
 }

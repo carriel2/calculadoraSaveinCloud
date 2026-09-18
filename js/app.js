@@ -74,6 +74,7 @@
         }
     });
 
+    // ========== NUVION (COM MÚLTIPLOS GRUPOS E NOMES CUSTOMIZADOS) ==========
     const nuvionRowTemplate = [
         { id: 'vm', label: 'TIER VM', opts: D.vm, defaultQty: 730, defaultMult: 1, tip: 'Perfil de processamento e RAM.' },
         { id: 'disk', label: 'DISCO', opts: D.resources.slice(0, 3), defaultQty: 0, defaultMult: 1, tip: 'Armazenamento principal atrelado à VM.' },
@@ -153,6 +154,7 @@
             const isFirstOfGroup = row.isVmRow;
             const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
 
+            // Aqui está a mágica: Trocamos o badge fixo por um input editável!
             const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
             const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." style="margin-left:8px; width:130px; padding:2px 6px; font-size:11px; font-weight:bold; color:var(--blue2); background:transparent; border:1px dashed var(--input-border); min-width:unset; height:24px;">` : '';
 
@@ -239,6 +241,7 @@
         if (delBtn) {
             const gid = parseInt(delBtn.dataset.groupid);
             for (let i = gid; i < nuvionGroupCount; i++) {
+                // Sobe o nome
                 if (state[`n-g${i+1}-name`] !== undefined) state[`n-g${i}-name`] = state[`n-g${i+1}-name`];
                 else delete state[`n-g${i}-name`];
                 nuvionRowTemplate.forEach(tpl => {
@@ -264,6 +267,12 @@
         }
     });
 
+    // ========== DESCRIÇÃO DE PERFIL PARA TIER VM ==========
+    // Mantém o <select> nativo (abertura confiável). O rótulo dentro do
+    // select fica curto (nome da instância), para nunca ser cortado.
+    // A descrição completa (vCPU, RAM, R$/hora e R$/mês) é exibida por
+    // extenso abaixo do select, na própria célula da tabela — sem criar
+    // nenhum componente novo, painel flutuante ou tabela separada.
     function parseVmName(name) {
         const normalized = name.replace('+RAM', '');
         const [, vcpu, ram] = normalized.split('-');
@@ -280,7 +289,7 @@
             const spec = parseVmName(vm.name);
             const extraRam = spec.hasExtraRam ? ' +RAM' : '';
             const name = vm.name.replace('+RAM', '');
-            const label = `${name}${extraRam} — ${spec.vcpu}vCPU/${spec.ram}`;
+            const label = `${name}${extraRam} | ${spec.vcpu} vCPU - ${spec.ram} RAM`;
             return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
         }).join('');
     }

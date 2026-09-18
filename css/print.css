@@ -227,6 +227,14 @@
         text-overflow: unset !important;
         white-space: normal !important;
     }
+    /* Perfil da VM: tamanho compacto somente nesta célula, para manter
+       nome, vCPU e RAM completos no PDF sem alterar as demais colunas. */
+    select.field.vm-select {
+        font-size: 7px !important;
+        font-weight: 500 !important;
+        letter-spacing: -0.25px !important;
+        padding-right: 0 !important;
+    }
     table .qty-btn,
     .qty-btn,
     .qty-minus,
