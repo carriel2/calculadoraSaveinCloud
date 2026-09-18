@@ -222,6 +222,14 @@ select.field {
     background-size: 5px 5px, 5px 5px;
     background-repeat: no-repeat;
     padding-right: 30px;
+    /* Tamanho único para TODOS os selects (Tier VM, Disco, IP Fixo, Backup
+       etc.), sem exceções. Evita que apenas um campo pareça "diferente"
+       dos demais e garante espaço suficiente para textos mais longos. */
+    font-size: 12.5px;
+}
+
+select.field option {
+    font-size: 13px;
 }
 
 input.field {
@@ -533,40 +541,45 @@ input[type="number"] {
 
 /* ========== TABELA SEM SCROLLBAR FORÇADA + TEXTO COMPLETO ========== */
 
-/* Antes a tabela tinha min-width:920px fixo, o que criava a barra de
-   rolagem mesmo quando o conteúdo cabia no painel. Removido acima.
-   Agora a tabela se ajusta ao container naturalmente (table-layout: auto,
-   o padrão), sem cortar texto e sem impor rolagem artificial. */
+/* A tabela se ajusta ao container naturalmente (table-layout: auto, o
+   padrão), sem cortar texto e sem impor rolagem artificial. Aplicado
+   igualmente a todas as tabelas (Nuvion, Cloudlets e Storin) — nenhuma
+   regra é exclusiva do campo TIER VM. */
 .table-wrap {
     overflow-x: visible;
 }
 
-/* Coluna "Seleção do recurso" recebe mais espaço, pois é onde ficam os
-   nomes mais longos (TIER VM, Disco, Backup, Snapshot). As demais
-   colunas (preço, unidade, quantidade...) precisam de pouco espaço,
-   então cedem lugar automaticamente. */
+/* A coluna "Seleção do recurso" recebe a maior parte do espaço, pois é
+   onde ficam os textos mais longos em QUALQUER linha (TIER VM, Disco,
+   Backup, Snapshot etc.). As demais colunas têm conteúdo curto (preço,
+   unidade, números), então cedem espaço proporcionalmente — o mesmo
+   comportamento vale para as três tabelas da calculadora. */
+#nuvion th:nth-child(1),
+.env-block th:nth-child(1),
+#storin th:nth-child(1) {
+    width: 11%;
+}
+
 #nuvion th:nth-child(2),
 .env-block th:nth-child(2),
 #storin th:nth-child(2) {
-    width: 34%;
+    width: 40%;
 }
 
-/* Texto do select sempre completo — sem reticências e sem cortar. */
+#nuvion th:nth-child(3),
+.env-block th:nth-child(3),
+#storin th:nth-child(3) {
+    width: 9%;
+}
+
+#nuvion th:nth-child(4),
+.env-block th:nth-child(4),
+#storin th:nth-child(4) {
+    width: 9%;
+}
+
 select.field {
     overflow: visible;
     text-overflow: unset;
     white-space: normal;
-}
-
-select.field.vm-select {
-    font-size: 11px;
-    font-weight: inherit;
-    letter-spacing: normal;
-    padding-left: 8px;
-    padding-right: 30px;
-}
-
-select.field.vm-select option {
-    font-size: 12px;
-    letter-spacing: normal;
 }

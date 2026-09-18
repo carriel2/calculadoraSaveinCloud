@@ -213,28 +213,6 @@
         text-overflow: unset !important;
         white-space: normal !important;
     }
-    /* O select do TIER VM (vm-select) tem regra própria em components.css
-       usando var(--input-bg), que no tema escuro é azul-marinho. Sem esta
-       sobreposição específica (mesma especificidade, carregada depois),
-       o PDF sairia com o campo de instância em fundo azul escuro. */
-    select.field.vm-select,
-    select.field.vm-select option {
-        background-color: #ffffff !important;
-        background-image: none !important;
-        color: #000000 !important;
-        border-color: #ffffff !important;
-        overflow: visible !important;
-        text-overflow: unset !important;
-        white-space: normal !important;
-    }
-    /* Perfil da VM: tamanho compacto somente nesta célula, para manter
-       nome, vCPU e RAM completos no PDF sem alterar as demais colunas. */
-    select.field.vm-select {
-        font-size: 7px !important;
-        font-weight: 500 !important;
-        letter-spacing: -0.25px !important;
-        padding-right: 0 !important;
-    }
     table .qty-btn,
     .qty-btn,
     .qty-minus,
