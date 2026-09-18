@@ -27,6 +27,18 @@
     const optionHtml = (opts, selected, placeholder = 'Selecione...') => `<option value="">${placeholder}</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name===selected?'selected':''}>${escape(o.name)}</option>`).join('');
     const find = (list, name) => list.find(x => x.name === name) || null;
 
+    const compactSelectionName = name => String(name)
+        .replace('Volume Block Storage ', '')
+        .replace('Backup Block Storage ', 'Backup ')
+        .replace('Snapshot Block Storage ', 'Snapshot ')
+        .replace('Disco Standard Performance p/ backup (sem snapshot) ', 'Disco backup ')
+        .replace('Cloudlet ', '')
+        .replace('Trafego In/Out ', 'Tráfego ')
+        .replace('Trafego de Saída ', 'Saída ')
+        .replace('Requisições ', '')
+        .replace(' (menos discos de bkp)', '');
+    const selectionOptionHtml = (opts, selected, placeholder = 'Selecione...') => `<option value="">${placeholder}</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name===selected?'selected':''}>${escape(compactSelectionName(o.name))}</option>`).join('');
+
     // ========== HELPERS ==========
     const showToast = (msg) => {
         const toast = document.getElementById('toast');
@@ -165,7 +177,7 @@
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
                 <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : optionHtml(row.opts, selected)}</select></td>
+                <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select>${selectionDetail(item, row.isVmRow)}</td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -284,11 +296,17 @@
         };
     }
 
+    function selectionDetail(item, isVm = false) {
+        if (!item) return '';
+        if (!isVm) return `<div class="selection-detail">${escape(item.name)}</div>`;
+        const spec = parseVmName(item.name);
+        const extraRam = spec.hasExtraRam ? ' +RAM' : '';
+        return `<div class="selection-detail">${escape(item.name.replace('+RAM', ''))}${extraRam} | ${spec.vcpu} vCPU - ${spec.ram} RAM</div>`;
+    }
+
     function vmOptionHtml(opts, selected) {
         return `<option value="">Selecione...</option>` + opts.map(vm => {
-            const spec = parseVmName(vm.name);
-            const name = vm.name.replace('+RAM', '');
-            const label = `${name} | ${spec.vcpu} vCPU - ${spec.ram}`;
+            const label = vm.name.replace('+RAM', '');
             return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
         }).join('');
     }
@@ -342,7 +360,7 @@
                 const tipHtml = rowDef.tip ? `<span class="tooltip-icon no-print" data-tip="${rowDef.tip}">?</span>` : '';
 
                 html += `<tr data-cloud="${envPrefix}-${rowDef.id}"><td><div class="cell-label">${rowDef.label}${tipHtml}</div></td>`;
-                html += `<td><select class="field selection" aria-label="${rowDef.label}">${optionHtml(opts, selected)}</select></td>`;
+                html += `<td class="selection-cell"><select class="field selection" aria-label="${rowDef.label}">${selectionOptionHtml(opts, selected)}</select>${selectionDetail(item)}</td>`;
                 html += `<td class="price">${item?money(item.price):'—'}</td>`;
                 html += `<td class="unit">${item?escape(item.unit):'—'}</td>`;
                 html += `<td>${timeHtml}</td>`;
@@ -445,7 +463,7 @@
             const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
             const tipHtml = tip ? `<span class="tooltip-icon no-print" data-tip="${tip}">?</span>` : '';
 
-            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td><select class="field selection" aria-label="${label}">${optionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
+            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select>${selectionDetail(item)}</td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
         }).join('');
         bindStorin();
         calcStorin();

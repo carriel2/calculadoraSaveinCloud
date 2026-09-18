@@ -539,47 +539,85 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
-/* ========== TABELA SEM SCROLLBAR FORÇADA + TEXTO COMPLETO ========== */
+/* ========== TABELA RESPONSIVA, SEM SCROLL HORIZONTAL ========== */
 
-/* A tabela se ajusta ao container naturalmente (table-layout: auto, o
-   padrão), sem cortar texto e sem impor rolagem artificial. Aplicado
-   igualmente a todas as tabelas (Nuvion, Cloudlets e Storin) — nenhuma
-   regra é exclusiva do campo TIER VM. */
+/* A largura é sempre a do painel. Conteúdo longo aumenta a ALTURA da linha,
+   não a largura da tabela. */
 .table-wrap {
-    overflow-x: visible;
+    overflow: hidden;
 }
 
-/* A coluna "Seleção do recurso" recebe a maior parte do espaço, pois é
-   onde ficam os textos mais longos em QUALQUER linha (TIER VM, Disco,
-   Backup, Snapshot etc.). As demais colunas têm conteúdo curto (preço,
-   unidade, números), então cedem espaço proporcionalmente — o mesmo
-   comportamento vale para as três tabelas da calculadora. */
-#nuvion th:nth-child(1),
-.env-block th:nth-child(1),
-#storin th:nth-child(1) {
-    width: 11%;
+.table-wrap table {
+    width: 100%;
+    min-width: 0;
+    table-layout: fixed;
 }
 
-#nuvion th:nth-child(2),
-.env-block th:nth-child(2),
-#storin th:nth-child(2) {
-    width: 40%;
+/* Nuvion e Cloudlets: sete colunas. */
+#nuvion th:nth-child(1), .env-block th:nth-child(1) { width: 16%; }
+#nuvion th:nth-child(2), .env-block th:nth-child(2) { width: 33%; }
+#nuvion th:nth-child(3), .env-block th:nth-child(3) { width: 10%; }
+#nuvion th:nth-child(4), .env-block th:nth-child(4) { width: 13%; }
+#nuvion th:nth-child(5), .env-block th:nth-child(5) { width: 11%; }
+#nuvion th:nth-child(6), .env-block th:nth-child(6) { width: 9%; }
+#nuvion th:nth-child(7), .env-block th:nth-child(7) { width: 8%; }
+
+/* Storin: seis colunas. */
+#storin th:nth-child(1) { width: 16%; }
+#storin th:nth-child(2) { width: 36%; }
+#storin th:nth-child(3) { width: 11%; }
+#storin th:nth-child(4) { width: 15%; }
+#storin th:nth-child(5) { width: 11%; }
+#storin th:nth-child(6) { width: 11%; }
+
+.table-wrap td,
+.table-wrap th {
+    overflow-wrap: anywhere;
 }
 
-#nuvion th:nth-child(3),
-.env-block th:nth-child(3),
-#storin th:nth-child(3) {
-    width: 9%;
+/* Campos não podem impor largura superior à sua própria célula. */
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    font-size: 12px;
+    white-space: nowrap;
 }
 
-#nuvion th:nth-child(4),
-.env-block th:nth-child(4),
-#storin th:nth-child(4) {
-    width: 9%;
+.table-wrap select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-select.field {
-    overflow: visible;
-    text-overflow: unset;
+.selection-cell {
+    min-width: 0;
+}
+
+.selection-detail {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.35;
     white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+@media (max-width: 680px) {
+    .table-wrap {
+        overflow: visible;
+    }
+    .table-wrap table {
+        table-layout: fixed;
+        font-size: 11px;
+    }
+    .table-wrap th,
+    .table-wrap td {
+        padding: 7px 5px;
+    }
+    .selection-detail {
+        font-size: 10px;
+    }
 }

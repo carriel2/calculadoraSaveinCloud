@@ -69,7 +69,6 @@
         margin: 0 0 2px;
         color: #666666 !important;
     }
-    /* === LISTA DE ITENS ESCONDIDOS (Botões, abas, IA e Tooltips de ?) === */
     .no-print,
     .tabs,
     footer,
@@ -136,34 +135,24 @@
         min-width: 0 !important;
         width: 100%;
         font-size: 9px;
-        table-layout: auto;
+        table-layout: fixed;
         border-collapse: collapse !important;
         background: #ffffff !important;
     }
 
-    /* Mesma distribuição de colunas da tela, para evitar corte de texto
-       e não deixar a tabela desproporcional no PDF (ex.: Backup/Snapshot
-       com coluna de Multiplicador). */
-    #nuvion th:nth-child(1),
-    .env-block th:nth-child(1),
-    #storin th:nth-child(1) {
-        width: 11% !important;
-    }
-    #nuvion th:nth-child(2),
-    .env-block th:nth-child(2),
-    #storin th:nth-child(2) {
-        width: 40% !important;
-    }
-    #nuvion th:nth-child(3),
-    .env-block th:nth-child(3),
-    #storin th:nth-child(3) {
-        width: 9% !important;
-    }
-    #nuvion th:nth-child(4),
-    .env-block th:nth-child(4),
-    #storin th:nth-child(4) {
-        width: 9% !important;
-    }
+    #nuvion th:nth-child(1), .env-block th:nth-child(1) { width: 16% !important; }
+    #nuvion th:nth-child(2), .env-block th:nth-child(2) { width: 33% !important; }
+    #nuvion th:nth-child(3), .env-block th:nth-child(3) { width: 10% !important; }
+    #nuvion th:nth-child(4), .env-block th:nth-child(4) { width: 13% !important; }
+    #nuvion th:nth-child(5), .env-block th:nth-child(5) { width: 11% !important; }
+    #nuvion th:nth-child(6), .env-block th:nth-child(6) { width: 9% !important; }
+    #nuvion th:nth-child(7), .env-block th:nth-child(7) { width: 8% !important; }
+    #storin th:nth-child(1) { width: 16% !important; }
+    #storin th:nth-child(2) { width: 36% !important; }
+    #storin th:nth-child(3) { width: 11% !important; }
+    #storin th:nth-child(4) { width: 15% !important; }
+    #storin th:nth-child(5) { width: 11% !important; }
+    #storin th:nth-child(6) { width: 11% !important; }
     table *,
     table tr,
     table td,
@@ -279,4 +268,15 @@
         margin-top: 0;
         padding-top: 0;
     }
+    .selection-detail {
+        display: block !important;
+        margin-top: 2px !important;
+        color: #333333 !important;
+        font-size: 7px !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
 }
