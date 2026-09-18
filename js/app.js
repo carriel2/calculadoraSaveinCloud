@@ -4,7 +4,7 @@
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 4
+        maximumFractionDigits: 2
     });
     const num = v => Math.max(0, Number(String(v).replace(',', '.')) || 0);
     const money = v => brl.format(v || 0);
