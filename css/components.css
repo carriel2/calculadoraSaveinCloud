@@ -119,7 +119,6 @@ table {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
-    min-width: 920px;
 }
 
 th {
@@ -215,6 +214,14 @@ tr.collapsed-row {
 
 select.field {
     min-width: 245px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--blue2) 50%), linear-gradient(135deg, var(--blue2) 50%, transparent 50%);
+    background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 30px;
 }
 
 input.field {
@@ -524,39 +531,43 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
-/* ========== TABELA RESPONSIVA SEM SCROLL HORIZONTAL ========== */
+/* ========== TABELA SEM SCROLLBAR FORÇADA + TEXTO COMPLETO ========== */
 
-/* A tabela deve ocupar apenas a largura disponível do painel. */
+/* Antes a tabela tinha min-width:920px fixo, o que criava a barra de
+   rolagem mesmo quando o conteúdo cabia no painel. Removido acima.
+   Agora a tabela se ajusta ao container naturalmente (table-layout: auto,
+   o padrão), sem cortar texto e sem impor rolagem artificial. */
 .table-wrap {
-    overflow-x: hidden;
+    overflow-x: visible;
 }
 
-.table-wrap > table {
-    width: 100%;
-    min-width: 0;
+/* Coluna "Seleção do recurso" recebe mais espaço, pois é onde ficam os
+   nomes mais longos (TIER VM, Disco, Backup, Snapshot). As demais
+   colunas (preço, unidade, quantidade...) precisam de pouco espaço,
+   então cedem lugar automaticamente. */
+#nuvion th:nth-child(2),
+.env-block th:nth-child(2),
+#storin th:nth-child(2) {
+    width: 34%;
 }
 
-/* Dentro da tabela, nenhum campo pode impor largura mínima maior que a
-   própria célula. Isto evita que um valor selecionado alargue a tabela. */
-.table-wrap .field,
-.table-wrap select.field,
-.table-wrap input.field,
-.table-wrap select.field.vm-select {
-    min-width: 0;
-    width: 100%;
-    max-width: 100%;
-}
-
-/* Nomes extensos ficam visualmente contidos no campo. */
-.table-wrap select.field {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* Texto do select sempre completo — sem reticências e sem cortar. */
+select.field {
+    overflow: visible;
+    text-overflow: unset;
+    white-space: normal;
 }
 
 /* ========== TIER VM — MESMAS CORES DOS DEMAIS SELECTS ========== */
 
+/* O appearance:none do select.field já normaliza a maioria dos casos,
+   mas reforçamos aqui para o TIER VM especificamente, já que é o campo
+   com texto mais longo e mais sensível a herdar estilo nativo do
+   sistema operacional (fundo branco em vez do tema). */
 select.field.vm-select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
     background-color: var(--input-bg) !important;
     color: var(--input-text) !important;
     border-color: var(--input-border) !important;
@@ -565,6 +576,7 @@ select.field.vm-select {
 select.field.vm-select:hover,
 select.field.vm-select:focus {
     border-color: var(--cyan) !important;
+    background-color: var(--input-bg) !important;
 }
 
 select.field.vm-select option {

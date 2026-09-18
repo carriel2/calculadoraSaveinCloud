@@ -136,9 +136,17 @@
         min-width: 0 !important;
         width: 100%;
         font-size: 9px;
-        table-layout: fixed;
+        table-layout: auto;
         border-collapse: collapse !important;
         background: #ffffff !important;
+    }
+
+    /* Mais espaço para a coluna de seleção (nomes de instância/disco),
+       igual à tela — evita corte de texto no PDF. */
+    #nuvion th:nth-child(2),
+    .env-block th:nth-child(2),
+    #storin th:nth-child(2) {
+        width: 32% !important;
     }
     table *,
     table tr,
@@ -186,6 +194,7 @@
     select.field {
         background-color: #ffffff !important;
         background: transparent !important;
+        background-image: none !important;
         color: #000000 !important;
         border: none !important;
         border-radius: 0 !important;
@@ -200,19 +209,23 @@
         width: 100% !important;
         min-width: 0 !important;
         font-size: 9px !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
     }
     /* O select do TIER VM (vm-select) tem regra própria em components.css
        usando var(--input-bg), que no tema escuro é azul-marinho. Sem esta
        sobreposição específica (mesma especificidade, carregada depois),
        o PDF sairia com o campo de instância em fundo azul escuro. */
-    select.field.vm-select {
-        background-color: #ffffff !important;
-        color: #000000 !important;
-        border-color: #ffffff !important;
-    }
+    select.field.vm-select,
     select.field.vm-select option {
         background-color: #ffffff !important;
+        background-image: none !important;
         color: #000000 !important;
+        border-color: #ffffff !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        white-space: normal !important;
     }
     table .qty-btn,
     .qty-btn,
