@@ -166,9 +166,8 @@
             const isFirstOfGroup = row.isVmRow;
             const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
 
-            // Aqui está a mágica: Trocamos o badge fixo por um input editável!
             const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
-            const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." style="margin-left:8px; width:130px; padding:2px 6px; font-size:11px; font-weight:bold; color:var(--blue2); background:transparent; border:1px dashed var(--input-border); min-width:unset; height:24px;">` : '';
+            const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." aria-label="Nome do grupo ${row.groupId}">` : '';
 
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
             const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
@@ -304,12 +303,29 @@
         return `<div class="selection-detail">${escape(item.name.replace('+RAM', ''))}${extraRam} | ${spec.vcpu} vCPU - ${spec.ram} RAM</div>`;
     }
 
+    function formatVmOptionLabel(vm) {
+        const spec = parseVmName(vm.name);
+
+        const sku = vm.name;
+
+        return `${sku} · ${spec.vcpu} vCPU · ${spec.ram} RAM`;
+    }
+
     function vmOptionHtml(opts, selected) {
         return `<option value="">Selecione...</option>` + opts.map(vm => {
-            const label = vm.name.replace('+RAM', '');
-            return `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(label)}</option>`;
+            const label = formatVmOptionLabel(vm);
+
+            return `
+                <option
+                    value="${escape(vm.name)}"
+                    ${vm.name === selected ? 'selected' : ''}
+                >
+                    ${escape(label)}
+                </option>
+            `;
         }).join('');
     }
+
 
     // ========== CLOUDLETS ==========
     const ENV_LABELS = ['A', 'B', 'C', 'D'];

@@ -621,3 +621,248 @@ input[type="number"] {
         font-size: 10px;
     }
 }
+
+/* ==========================================================
+   CORREÇÃO DE LAYOUT DAS TABELAS DA CALCULADORA
+   ========================================================== */
+
+/*
+ * Impede que a tabela gere a barra horizontal inferior.
+ * A tabela será obrigada a respeitar a largura do container.
+ */
+.table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+/* Fallback para navegadores que ainda não suportam overflow: clip. */
+@supports not (overflow: clip) {
+    .table-wrap {
+        overflow-x: hidden;
+    }
+}
+
+/*
+ * O table-layout: fixed distribui as colunas de maneira previsível.
+ * Sem isso, conteúdos como selects e inputs podem forçar a tabela
+ * a ultrapassar a largura do container.
+ */
+.table-wrap table {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+/*
+ * Distribuição das sete colunas da calculadora:
+ *
+ * 1. Recurso
+ * 2. Seleção do recurso
+ * 3. Preço unitário
+ * 4. Unidade
+ * 5. Quantidade / tempo
+ * 6. Multiplicador
+ * 7. Subtotal
+ */
+.table-wrap th:nth-child(1),
+.table-wrap td:nth-child(1) {
+    width: 16%;
+}
+
+.table-wrap th:nth-child(2),
+.table-wrap td:nth-child(2) {
+    width: 33%;
+}
+
+.table-wrap th:nth-child(3),
+.table-wrap td:nth-child(3) {
+    width: 11%;
+}
+
+.table-wrap th:nth-child(4),
+.table-wrap td:nth-child(4) {
+    width: 12%;
+}
+
+.table-wrap th:nth-child(5),
+.table-wrap td:nth-child(5) {
+    width: 10%;
+}
+
+.table-wrap th:nth-child(6),
+.table-wrap td:nth-child(6) {
+    width: 8%;
+}
+
+.table-wrap th:nth-child(7),
+.table-wrap td:nth-child(7) {
+    width: 10%;
+}
+
+/*
+ * Sem min-width: 0, elementos flexíveis e inputs podem expandir
+ * a célula além do espaço disponível e causar overflow horizontal.
+ */
+.table-wrap th,
+.table-wrap td,
+.cell-label,
+.selection-cell {
+    min-width: 0;
+}
+
+/*
+ * O select precisa ocupar somente a largura da própria célula.
+ * Isso evita que opções grandes expandam o layout da tabela.
+ */
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/*
+ * Corrige especificamente o campo "Grupo 1":
+ * antes ele ficava ao lado de "TIER VM" e invadia a coluna seguinte.
+ * Agora ele fica em uma segunda linha, dentro da primeira coluna.
+ */
+.table-wrap .group-name {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 26px;
+    margin: 6px 0 0;
+    padding: 3px 6px;
+    color: var(--blue2);
+    font-size: 11px;
+    font-weight: 700;
+    background: transparent;
+    border: 1px dashed var(--input-border);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/*
+ * Garante que o texto complementar abaixo do select não force
+ * a largura da coluna nem fique sobreposto.
+ */
+.table-wrap .selection-detail {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/*
+ * Select nativo não quebra texto em múltiplas linhas.
+ * Por isso, caso o item selecionado seja muito grande, o browser
+ * apresentará reticências em vez de alargar a tabela.
+ */
+.table-wrap .selection {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================
+   TABELA RESPONSIVA: SEM SCROLL HORIZONTAL EM TELAS MENORES
+   ========================================================== */
+
+@media (max-width: 900px) {
+    .table-wrap {
+        overflow: visible;
+    }
+
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap thead {
+        display: none;
+    }
+
+    /*
+     * Cada linha vira um pequeno card.
+     * Assim, não há sete colunas comprimidas nem scrollbar horizontal.
+     */
+    .table-wrap tr {
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-wrap td {
+        display: grid;
+        grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+        padding: 7px 0;
+        border: 0;
+    }
+
+    .table-wrap td::before {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .table-wrap td:nth-child(1)::before {
+        content: "Recurso";
+    }
+
+    .table-wrap td:nth-child(2)::before {
+        content: "Seleção";
+    }
+
+    .table-wrap td:nth-child(3)::before {
+        content: "Preço unitário";
+    }
+
+    .table-wrap td:nth-child(4)::before {
+        content: "Unidade";
+    }
+
+    .table-wrap td:nth-child(5)::before {
+        content: "Quantidade";
+    }
+
+    .table-wrap td:nth-child(6)::before {
+        content: "Multiplicador";
+    }
+
+    .table-wrap td:nth-child(7)::before {
+        content: "Subtotal";
+    }
+
+    .table-wrap .cell-label {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap .group-name {
+        margin-top: 6px;
+    }
+
+    .table-wrap .selection-detail {
+        grid-column: 2;
+    }
+
+    .table-wrap .qty-control {
+        width: 100%;
+        max-width: 180px;
+    }
+}
