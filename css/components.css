@@ -148,7 +148,10 @@ td.unit,
 td.subtotal {
     text-align: center;
     background: var(--table-bg);
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 11px;
 }
 
 .subtotal {
@@ -275,9 +278,9 @@ input[type="number"] {
     background: transparent;
     border: none;
     color: var(--blue2);
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 8px 12px;
+    padding: 7px 8px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
     user-select: none;
@@ -297,9 +300,9 @@ input[type="number"] {
     border-radius: 0;
     background: transparent;
     text-align: center;
-    width: 60px;
-    min-width: unset;
-    padding: 8px 0;
+    width: 42px;
+    min-width: 42px;
+    padding: 7px 0;
 }
 
 .qty-control input.field:focus {
@@ -556,32 +559,32 @@ input[type="number"] {
 }
 
 #nuvion th:nth-child(1), .env-block th:nth-child(1),
-#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 16%; }
+#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 13%; }
 
 #nuvion th:nth-child(2), .env-block th:nth-child(2),
-#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 33%; }
+#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 25%; }
 
 #nuvion th:nth-child(3), .env-block th:nth-child(3),
-#nuvion td:nth-child(3), .env-block td:nth-child(3) { width: 11%; }
+#nuvion td:nth-child(3), .env-block td:nth-child(3) { width: 10%; }
 
 #nuvion th:nth-child(4), .env-block th:nth-child(4),
-#nuvion td:nth-child(4), .env-block td:nth-child(4) { width: 12%; }
+#nuvion td:nth-child(4), .env-block td:nth-child(4) { width: 14%; }
 
 #nuvion th:nth-child(5), .env-block th:nth-child(5),
-#nuvion td:nth-child(5), .env-block td:nth-child(5) { width: 10%; }
+#nuvion td:nth-child(5), .env-block td:nth-child(5) { width: 14%; }
 
 #nuvion th:nth-child(6), .env-block th:nth-child(6),
-#nuvion td:nth-child(6), .env-block td:nth-child(6) { width: 8%; }
+#nuvion td:nth-child(6), .env-block td:nth-child(6) { width: 12%; }
 
 #nuvion th:nth-child(7), .env-block th:nth-child(7),
-#nuvion td:nth-child(7), .env-block td:nth-child(7) { width: 10%; }
+#nuvion td:nth-child(7), .env-block td:nth-child(7) { width: 12%; }
 
-#storin th:nth-child(1), #storin td:nth-child(1) { width: 16%; }
-#storin th:nth-child(2), #storin td:nth-child(2) { width: 36%; }
-#storin th:nth-child(3), #storin td:nth-child(3) { width: 11%; }
-#storin th:nth-child(4), #storin td:nth-child(4) { width: 15%; }
-#storin th:nth-child(5), #storin td:nth-child(5) { width: 11%; }
-#storin th:nth-child(6), #storin td:nth-child(6) { width: 11%; }
+#storin th:nth-child(1), #storin td:nth-child(1) { width: 13%; }
+#storin th:nth-child(2), #storin td:nth-child(2) { width: 28%; }
+#storin th:nth-child(3), #storin td:nth-child(3) { width: 10%; }
+#storin th:nth-child(4), #storin td:nth-child(4) { width: 16%; }
+#storin th:nth-child(5), #storin td:nth-child(5) { width: 16%; }
+#storin th:nth-child(6), #storin td:nth-child(6) { width: 17%; }
 
 .table-wrap th,
 .table-wrap td,
