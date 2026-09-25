@@ -587,12 +587,45 @@ input[type="number"] {
 #nuvion th:nth-child(7), .env-block th:nth-child(7),
 #nuvion td:nth-child(7), .env-block td:nth-child(7) { width: 12%; }
 
-#storin th:nth-child(1), #storin td:nth-child(1) { width: 13%; }
-#storin th:nth-child(2), #storin td:nth-child(2) { width: 28%; }
-#storin th:nth-child(3), #storin td:nth-child(3) { width: 10%; }
-#storin th:nth-child(4), #storin td:nth-child(4) { width: 16%; }
-#storin th:nth-child(5), #storin td:nth-child(5) { width: 16%; }
-#storin th:nth-child(6), #storin td:nth-child(6) { width: 17%; }
+#storin th:nth-child(1),
+#storin td:nth-child(1) {
+    width: 21%;
+}
+
+#storin th:nth-child(2),
+#storin td:nth-child(2) {
+    width: 25%;
+}
+
+#storin th:nth-child(3),
+#storin td:nth-child(3) {
+    width: 10%;
+}
+
+#storin th:nth-child(4),
+#storin td:nth-child(4) {
+    width: 15%;
+}
+
+#storin th:nth-child(5),
+#storin td:nth-child(5) {
+    width: 16%;
+}
+
+#storin th:nth-child(6),
+#storin td:nth-child(6) {
+    width: 13%;
+}
+
+#storin .cell-label {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+#storin .cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
 
 .table-wrap th,
 .table-wrap td,
