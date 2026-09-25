@@ -195,13 +195,13 @@
         display: none !important;
     }
 
-    #nuvion th:nth-child(1), .env-block th:nth-child(1) { width: 16% !important; }
-    #nuvion th:nth-child(2), .env-block th:nth-child(2) { width: 33% !important; }
+    #nuvion th:nth-child(1), .env-block th:nth-child(1) { width: 15% !important; }
+    #nuvion th:nth-child(2), .env-block th:nth-child(2) { width: 28% !important; }
     #nuvion th:nth-child(3), .env-block th:nth-child(3) { width: 10% !important; }
     #nuvion th:nth-child(4), .env-block th:nth-child(4) { width: 13% !important; }
     #nuvion th:nth-child(5), .env-block th:nth-child(5) { width: 11% !important; }
-    #nuvion th:nth-child(6), .env-block th:nth-child(6) { width: 9% !important; }
-    #nuvion th:nth-child(7), .env-block th:nth-child(7) { width: 8% !important; }
+    #nuvion th:nth-child(6), .env-block th:nth-child(6) { width: 8% !important; }
+    #nuvion th:nth-child(7), .env-block th:nth-child(7) { width: 15% !important; }
 
     #storin th:nth-child(1) { width: 16% !important; }
     #storin th:nth-child(2) { width: 36% !important; }
@@ -239,7 +239,19 @@
     tbody tr { border-bottom: 1px solid #eeeeee !important; }
 
     th,
-    td { padding: 5px 4px !important; }
+    td {
+        padding: 5px 4px !important;
+    }
+
+    th:last-child,
+    td.subtotal,
+    tfoot td:last-child {
+        font-size: 9px !important;
+        padding-right: 8px !important;
+        padding-left: 8px !important;
+        text-align: right !important;
+        white-space: nowrap !important;
+    }
 
     th {
         font-size: 8px;
