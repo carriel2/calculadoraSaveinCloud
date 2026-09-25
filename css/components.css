@@ -785,21 +785,6 @@ input[type="number"] {
     box-sizing: border-box;
 }
 
-.table-wrap .vm-group-header .vm-group-subtotal {
-    margin-left: auto;
-    padding: 4px 8px;
-    color: var(--text-highlight);
-    font-size: 12px;
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.table-wrap .vm-group-header .delete-vm {
-    margin-left: 0;
-    padding: 4px;
-    color: #ef4444;
-}
-
 .table-wrap .vm-group-header .delete-vm {
     margin-left: auto;
     padding: 4px;
