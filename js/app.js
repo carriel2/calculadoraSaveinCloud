@@ -4,7 +4,7 @@
         style: 'currency',
         currency: 'BRL',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 4
+        maximumFractionDigits: 2
     });
     const num = v => Math.max(0, Number(String(v).replace(',', '.')) || 0);
     const money = v => brl.format(v || 0);
@@ -26,6 +26,18 @@
     const escape = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
     const optionHtml = (opts, selected, placeholder = 'Selecione...') => `<option value="">${placeholder}</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name===selected?'selected':''}>${escape(o.name)}</option>`).join('');
     const find = (list, name) => list.find(x => x.name === name) || null;
+
+    const compactSelectionName = name => String(name)
+        .replace('Volume Block Storage ', '')
+        .replace('Backup Block Storage ', 'Backup ')
+        .replace('Snapshot Block Storage ', 'Snapshot ')
+        .replace('Disco Standard Performance p/ backup (sem snapshot) ', 'Disco backup ')
+        .replace('Cloudlet ', '')
+        .replace('Trafego In/Out ', 'Tráfego ')
+        .replace('Trafego de Saída ', 'Saída ')
+        .replace('Requisições ', '')
+        .replace(' (menos discos de bkp)', '');
+    const selectionOptionHtml = (opts, selected, placeholder = 'Selecione...') => `<option value="">${placeholder}</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name===selected?'selected':''}>${escape(compactSelectionName(o.name))}</option>`).join('');
 
     // ========== HELPERS ==========
     const showToast = (msg) => {
@@ -140,8 +152,26 @@
         const body = document.querySelector('#nuvion-body');
         const rows = getNuvionRows();
         let html = '';
+        let currentGroupId = 0;
 
         rows.forEach((row) => {
+            if (row.groupId !== currentGroupId) {
+                currentGroupId = row.groupId;
+
+                const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
+                const deleteGroupHtml = row.groupId > 1 ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" aria-label="Remover Grupo ${row.groupId}"><span class="material-symbols-outlined">delete</span></button>` : '';
+
+                html += `<tr class="vm-group-row">
+                    <td colspan="7">
+                        <div class="vm-group-header">
+                            <div class="vm-group-title">Grupo ${row.groupId}</div>
+                            <input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Ex.: Produção, ERP, Homologação..." aria-label="Nome do grupo ${row.groupId}">
+                            ${deleteGroupHtml}
+                        </div>
+                    </td>
+                </tr>`;
+            }
+
             const stateKey = `n-${row.rowId}`;
             const selected = get(`${stateKey}-sel`, '');
             const item = find(row.opts, selected);
@@ -151,21 +181,12 @@
             const sub = itemPrice * num(qty) * num(mult);
             const tipHtml = row.tip ? `<span class="tooltip-icon no-print" data-tip="${row.tip}">?</span>` : '';
 
-            const isFirstOfGroup = row.isVmRow;
-            const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
-
-            // Aqui está a mágica: Trocamos o badge fixo por um input editável!
-            const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
-            const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." style="margin-left:8px; width:130px; padding:2px 6px; font-size:11px; font-weight:bold; color:var(--blue2); background:transparent; border:1px dashed var(--input-border); min-width:unset; height:24px;">` : '';
-
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
             const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
 
-            const trStyle = (isFirstOfGroup && row.groupId > 1) ? `border-top: 3px solid var(--blue2);` : '';
-
-            html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
-                <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td><select class="field selection" aria-label="${row.label}">${optionHtml(row.opts, selected)}</select></td>
+            html += `<tr data-nuvion="${row.rowId}">
+                <td><div class="cell-label">${row.label}${tipHtml}</div></td>
+                <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select></td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -267,6 +288,41 @@
         }
     });
 
+    function parseVmName(name) {
+        const normalized = name.replace('+RAM', '');
+        const [, vcpu, ram] = normalized.split('-');
+        const ramGb = Number(ram);
+        return {
+            vcpu: Number(vcpu),
+            ram: ramGb < 1 ? `${ramGb * 1024} MB` : `${ramGb} GB`,
+            hasExtraRam: name.includes('+RAM')
+        };
+    }
+
+    function formatVmOptionLabel(vm) {
+        const spec = parseVmName(vm.name);
+
+        const sku = vm.name;
+
+        return `${sku} · ${spec.vcpu} vCPU · ${spec.ram} RAM`;
+    }
+
+    function vmOptionHtml(opts, selected) {
+        return `<option value="">Selecione...</option>` + opts.map(vm => {
+            const label = formatVmOptionLabel(vm);
+
+            return `
+                <option
+                    value="${escape(vm.name)}"
+                    ${vm.name === selected ? 'selected' : ''}
+                >
+                    ${escape(label)}
+                </option>
+            `;
+        }).join('');
+    }
+
+
     // ========== CLOUDLETS ==========
     const ENV_LABELS = ['A', 'B', 'C', 'D'];
     const cloudletsRowDefs = [
@@ -316,7 +372,7 @@
                 const tipHtml = rowDef.tip ? `<span class="tooltip-icon no-print" data-tip="${rowDef.tip}">?</span>` : '';
 
                 html += `<tr data-cloud="${envPrefix}-${rowDef.id}"><td><div class="cell-label">${rowDef.label}${tipHtml}</div></td>`;
-                html += `<td><select class="field selection" aria-label="${rowDef.label}">${optionHtml(opts, selected)}</select></td>`;
+                html += `<td class="selection-cell"><select class="field selection" aria-label="${rowDef.label}">${selectionOptionHtml(opts, selected)}</select></td>`;
                 html += `<td class="price">${item?money(item.price):'—'}</td>`;
                 html += `<td class="unit">${item?escape(item.unit):'—'}</td>`;
                 html += `<td>${timeHtml}</td>`;
@@ -419,7 +475,7 @@
             const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
             const tipHtml = tip ? `<span class="tooltip-icon no-print" data-tip="${tip}">?</span>` : '';
 
-            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td><select class="field selection" aria-label="${label}">${optionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
+            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
         }).join('');
         bindStorin();
         calcStorin();

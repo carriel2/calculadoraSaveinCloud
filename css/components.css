@@ -45,15 +45,15 @@
 }
 
 .icon-btn {
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--blue2);
-    cursor: pointer;
-    padding: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 8px;
+    border: 1px solid transparent;
     border-radius: 50%;
+    background: transparent;
+    color: var(--blue2);
+    cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
 
@@ -66,39 +66,40 @@
     color: #fbbf24;
 }
 
-
 /* ========== CARDS ========== */
 
 .total-card {
-    padding: 13px 18px;
-    background: var(--green);
-    border-radius: 8px;
-    text-align: right;
     min-width: 180px;
+    padding: 13px 18px;
+    border-radius: 8px;
+    background: var(--green);
+    text-align: right;
 }
 
 .total-card span {
     display: block;
+    margin-bottom: 3px;
     color: var(--ink);
     opacity: 0.8;
     font-size: 12px;
     font-weight: 700;
-    margin-bottom: 3px;
 }
 
 .total-card strong {
-    font-size: 22px;
     color: var(--ink);
+    font-size: 22px;
 }
 
 @keyframes totalPulse {
     0% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.06);
         filter: brightness(1.15);
     }
+
     100% {
         transform: scale(1);
     }
@@ -108,31 +109,23 @@
     animation: totalPulse 0.4s ease-in-out;
 }
 
-
 /* ========== TABLES ========== */
-
-.table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-}
 
 table {
     width: 100%;
     border-spacing: 0;
     border-collapse: collapse;
-    min-width: 920px;
 }
 
 th {
-    background: var(--blue);
-    color: #fff;
-    text-align: center;
-    padding: 12px 10px;
-    font-size: 12px;
     position: sticky;
     top: 0;
     z-index: 10;
+    padding: 12px 10px;
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -141,41 +134,51 @@ th:first-child {
 }
 
 td {
-    border-top: 1px solid var(--line);
     padding: 9px 10px;
+    border-top: 1px solid var(--line);
     vertical-align: middle;
 }
 
 td:first-child {
-    font-weight: 750;
+    min-width: 0;
     color: var(--text-highlight);
-    min-width: 155px;
+    font-weight: 750;
 }
 
 td.price,
-td.unit,
 td.subtotal {
-    text-align: center;
     background: var(--table-bg);
+    text-align: center;
     white-space: nowrap;
 }
 
+td.unit {
+    background: var(--table-bg);
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 11px;
+}
+
 .subtotal {
-    font-weight: 750;
     color: var(--text-highlight);
+    font-weight: 750;
 }
 
 tfoot td {
-    background: var(--line);
+    padding: 9px 10px;
     border-top: 2px solid var(--blue2);
-    font-weight: 800;
-    font-size: 14px;
+    background: var(--line);
     color: var(--ink);
+    font-size: 14px;
+    font-weight: 800;
 }
 
 tfoot td:last-child {
-    text-align: center;
     color: var(--text-highlight);
+    text-align: center;
     font-size: 16px;
 }
 
@@ -183,25 +186,35 @@ tr.collapsed-row {
     display: none !important;
 }
 
+/*
+ * Label do recurso + tooltip.
+ * O ícone ? sempre mantém 16px de largura e não invade o select.
+ */
 .cell-label {
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
     white-space: nowrap;
+    flex-wrap: nowrap;
 }
 
+.cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
 
 /* ========== INPUTS & CONTROLS ========== */
 
 .field {
     width: 100%;
+    min-width: 130px;
+    padding: 8px;
     border: 1px solid var(--input-border);
     border-radius: 5px;
     background: var(--input-bg);
-    padding: 8px;
-    font: inherit;
     color: var(--input-text);
-    min-width: 130px;
+    font: inherit;
 }
 
 .field:focus {
@@ -218,6 +231,23 @@ tr.collapsed-row {
 
 select.field {
     min-width: 245px;
+    padding-right: 30px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--blue2) 50%),
+        linear-gradient(135deg, var(--blue2) 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) calc(1em + 2px),
+        calc(100% - 13px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 12.5px;
+}
+
+select.field option {
+    font-size: 13px;
 }
 
 input.field {
@@ -238,27 +268,26 @@ select.field:focus {
 
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none !important;
     margin: 0 !important;
+    -webkit-appearance: none !important;
 }
 
 input[type="number"] {
-    -moz-appearance: textfield !important;
     appearance: textfield !important;
+    -moz-appearance: textfield !important;
 }
-
 
 /* ========== QTY COMPONENT ========== */
 
 .qty-control {
     display: flex;
     align-items: center;
-    background: var(--input-bg);
-    border: 1px solid var(--input-border);
-    border-radius: 5px;
-    overflow: hidden;
     width: fit-content;
     margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background: var(--input-bg);
 }
 
 .qty-control:focus-within {
@@ -267,15 +296,15 @@ input[type="number"] {
 }
 
 .qty-btn {
-    background: transparent;
+    padding: 7px 8px;
     border: none;
+    background: transparent;
     color: var(--blue2);
-    font-size: 16px;
-    font-weight: bold;
-    padding: 8px 12px;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    font-size: 14px;
+    font-weight: bold;
     user-select: none;
+    transition: background 0.2s, color 0.2s;
 }
 
 .qty-btn:hover {
@@ -288,13 +317,13 @@ input[type="number"] {
 }
 
 .qty-control input.field {
+    width: 42px;
+    min-width: 42px;
+    padding: 7px 0;
     border: none;
     border-radius: 0;
     background: transparent;
     text-align: center;
-    width: 60px;
-    min-width: unset;
-    padding: 8px 0;
 }
 
 .qty-control input.field:focus {
@@ -311,69 +340,68 @@ input[type="number"] {
     pointer-events: none;
 }
 
-
 /* ========== TOOLTIPS ========== */
 
 .tooltip-icon {
+    position: relative;
     display: inline-block;
+    flex-shrink: 0;
     width: 16px;
     height: 16px;
-    background: var(--blue2);
-    color: white;
+    margin-left: 0;
     border-radius: 50%;
-    text-align: center;
-    font-size: 11px;
-    line-height: 16px;
-    margin-left: 6px;
+    background: var(--blue2);
+    color: #fff;
     cursor: help;
-    position: relative;
     font-family: monospace;
+    font-size: 11px;
     font-weight: bold;
+    line-height: 16px;
+    text-align: center;
 }
 
 .tooltip-icon::after {
-    content: attr(data-tip);
     position: absolute;
-    left: 26px;
     top: 50%;
-    transform: translateY(-50%);
-    background: var(--ink);
-    color: var(--bg);
-    padding: 6px 10px;
-    border-radius: 4px;
-    font-size: 11px;
-    white-space: normal;
+    left: 26px;
+    z-index: 999;
     width: max-content;
     max-width: 200px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: var(--ink);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: var(--bg);
+    content: attr(data-tip);
+    font-family: Inter, sans-serif;
+    font-size: 11px;
     opacity: 0;
     pointer-events: none;
+    transform: translateY(-50%);
     transition: opacity 0.2s;
-    z-index: 999;
-    font-family: Inter, sans-serif;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    white-space: normal;
 }
 
 .tooltip-icon:hover::after {
     opacity: 1;
 }
 
-
 /* ========== EXTRA ELEMENTS ========== */
 
 .hint {
-    font-size: 12px;
-    color: var(--muted);
     margin: 13px 0 0;
+    color: var(--muted);
+    font-size: 12px;
 }
 
 .group-title {
-    background: var(--line);
-    border-left: 4px solid var(--blue2);
-    padding: 11px 13px;
     margin: 22px 0 10px;
+    padding: 11px 13px;
+    border-left: 4px solid var(--blue2);
     border-radius: 3px;
-    font-weight: 800;
+    background: var(--line);
     color: var(--ink);
+    font-weight: 800;
 }
 
 .group-title:first-child {
@@ -382,9 +410,9 @@ input[type="number"] {
 
 .notes {
     margin-top: 18px;
-    background: var(--line);
-    border-left: 4px solid var(--cyan);
     padding: 13px 17px;
+    border-left: 4px solid var(--cyan);
+    background: var(--line);
     color: var(--ink);
 }
 
@@ -414,26 +442,25 @@ input[type="number"] {
 }
 
 .toggle-collapse-btn {
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     padding: 2px;
+    border: none;
     border-radius: 4px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
     transition: transform 0.2s, color 0.2s;
 }
 
 .toggle-collapse-btn:hover {
-    color: var(--cyan);
     background: var(--line);
+    color: var(--cyan);
 }
 
 .toggle-collapse-btn.collapsed {
     transform: rotate(-90deg);
 }
-
 
 /* ========== TOAST ========== */
 
@@ -441,41 +468,40 @@ input[type="number"] {
     position: fixed;
     top: -60px;
     left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--green);
-    color: #155b3c;
+    z-index: 9999;
     padding: 12px 24px;
     border-radius: 8px;
+    background-color: var(--green);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    z-index: 9999;
-    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    color: #155b3c;
     pointer-events: none;
+    transform: translateX(-50%);
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 [data-theme="dark"] .toast {
     background-color: #064e3b;
-    color: #a7f3d0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: #a7f3d0;
 }
 
 .toast.show {
     top: 20px;
 }
 
-
 /* ========== MODAL CONFIRM ========== */
 
 .modal-overlay {
     position: fixed;
     top: 0;
-    left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    left: 0;
+    z-index: 10000;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10000;
+    background: rgba(0, 0, 0, 0.4);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -488,15 +514,15 @@ input[type="number"] {
 }
 
 .modal-content {
-    background: var(--panel-bg);
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
     width: 90%;
+    max-width: 400px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     transform: translateY(20px);
     transition: transform 0.2s ease;
-    border: 1px solid var(--line);
 }
 
 .modal-overlay.show .modal-content {
@@ -504,13 +530,13 @@ input[type="number"] {
 }
 
 .modal-content h3 {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     color: var(--ink);
     font-size: 18px;
 }
 
 .modal-content p {
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     color: var(--muted);
     font-size: 14px;
     line-height: 1.5;
@@ -523,11 +549,363 @@ input[type="number"] {
 }
 
 .button.danger {
-    background: #ef4444;
     border-color: #ef4444;
+    background: #ef4444;
 }
 
 .button.danger:hover {
-    background: #dc2626;
     border-color: #dc2626;
+    background: #dc2626;
+}
+
+/* ==========================================================
+   TABELAS DA CALCULADORA
+   ========================================================== */
+
+.table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+@supports not (overflow: clip) {
+    .table-wrap {
+        overflow-x: hidden;
+    }
+}
+
+.table-wrap table {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table-wrap th,
+.table-wrap td,
+.selection-cell {
+    min-width: 0;
+}
+
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.table-wrap select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================
+   NUVION — 7 COLUNAS
+   ========================================================== */
+
+#nuvion th:nth-child(1),
+#nuvion td:nth-child(1) {
+    width: 16%;
+}
+
+#nuvion th:nth-child(2),
+#nuvion td:nth-child(2) {
+    width: 22%;
+}
+
+#nuvion th:nth-child(3),
+#nuvion td:nth-child(3) {
+    width: 10%;
+}
+
+#nuvion th:nth-child(4),
+#nuvion td:nth-child(4) {
+    width: 14%;
+}
+
+#nuvion th:nth-child(5),
+#nuvion td:nth-child(5) {
+    width: 14%;
+}
+
+#nuvion th:nth-child(6),
+#nuvion td:nth-child(6) {
+    width: 12%;
+}
+
+#nuvion th:nth-child(7),
+#nuvion td:nth-child(7) {
+    width: 12%;
+}
+
+/* ==========================================================
+   CLOUDLETS — 7 COLUNAS
+   Primeira coluna maior devido aos labels extensos.
+   ========================================================== */
+
+.env-block th:nth-child(1),
+.env-block td:nth-child(1) {
+    width: 22%;
+}
+
+.env-block th:nth-child(2),
+.env-block td:nth-child(2) {
+    width: 21%;
+}
+
+.env-block th:nth-child(3),
+.env-block td:nth-child(3) {
+    width: 10%;
+}
+
+.env-block th:nth-child(4),
+.env-block td:nth-child(4) {
+    width: 14%;
+}
+
+.env-block th:nth-child(5),
+.env-block td:nth-child(5) {
+    width: 13%;
+}
+
+.env-block th:nth-child(6),
+.env-block td:nth-child(6) {
+    width: 11%;
+}
+
+.env-block th:nth-child(7),
+.env-block td:nth-child(7) {
+    width: 9%;
+}
+
+.env-block td:first-child {
+    font-size: 11px;
+}
+
+.env-block .cell-label {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+.env-block .cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
+
+/* ==========================================================
+   STORIN — 6 COLUNAS
+   ========================================================== */
+
+#storin th:nth-child(1),
+#storin td:nth-child(1) {
+    width: 21%;
+}
+
+#storin th:nth-child(2),
+#storin td:nth-child(2) {
+    width: 25%;
+}
+
+#storin th:nth-child(3),
+#storin td:nth-child(3) {
+    width: 10%;
+}
+
+#storin th:nth-child(4),
+#storin td:nth-child(4) {
+    width: 15%;
+}
+
+#storin th:nth-child(5),
+#storin td:nth-child(5) {
+    width: 16%;
+}
+
+#storin th:nth-child(6),
+#storin td:nth-child(6) {
+    width: 13%;
+}
+
+#storin .cell-label {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+#storin .cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
+
+/* ==========================================================
+   CABEÇALHO DE GRUPO DE VM
+   Compatível com .vm-group-row / .vm-group-header.
+   ========================================================== */
+
+.table-wrap .vm-group-row td {
+    padding: 8px 10px;
+    background: var(--line);
+}
+
+.table-wrap .vm-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.table-wrap .vm-group-title {
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.table-wrap .group-name {
+    flex: 1;
+    width: auto;
+    min-width: 140px;
+    max-width: 260px;
+    height: 28px;
+    margin: 0;
+    padding: 3px 8px;
+    border: 1px dashed var(--input-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--blue2);
+    font-size: 11px;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+.table-wrap .vm-group-header .delete-vm {
+    margin-left: auto;
+    padding: 4px;
+    color: #ef4444;
+}
+
+/* ==========================================================
+   RESPONSIVIDADE — TABELAS COMO CARDS EM TELAS MENORES
+   ========================================================== */
+
+@media (max-width: 900px) {
+    .table-wrap {
+        overflow: visible;
+        border: 0;
+    }
+
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap thead {
+        display: none;
+    }
+
+    .table-wrap tr {
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-wrap td {
+        display: grid;
+        grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+        padding: 7px 0;
+        border: 0;
+        font-size: 11px;
+    }
+
+    .table-wrap td::before {
+        color: var(--muted);
+        content: "";
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .table-wrap td:nth-child(1)::before {
+        content: "Recurso";
+    }
+
+    .table-wrap td:nth-child(2)::before {
+        content: "Seleção";
+    }
+
+    .table-wrap td:nth-child(3)::before {
+        content: "Preço unitário";
+    }
+
+    .table-wrap td:nth-child(4)::before {
+        content: "Unidade";
+    }
+
+    .table-wrap td:nth-child(5)::before {
+        content: "Quantidade";
+    }
+
+    .table-wrap td:nth-child(6)::before {
+        content: "Multiplicador";
+    }
+
+    .table-wrap td:nth-child(7)::before {
+        content: "Subtotal";
+    }
+
+    .table-wrap .cell-label {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap .cell-label .tooltip-icon {
+        display: inline-block;
+        margin-left: 6px;
+    }
+
+    .table-wrap .vm-group-row {
+        display: block !important;
+        margin: 0 0 12px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .table-wrap .vm-group-row td {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: var(--line);
+    }
+
+    .table-wrap .vm-group-row td::before {
+        display: none;
+        content: none;
+    }
+
+    .table-wrap .group-name {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .table-wrap .qty-control {
+        width: 100%;
+        max-width: 180px;
+    }
 }
