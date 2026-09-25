@@ -109,12 +109,6 @@
 
 /* ========== TABLES ========== */
 
-.table-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-}
-
 table {
     width: 100%;
     border-spacing: 0;
@@ -539,100 +533,17 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
-/* ========== TABELA RESPONSIVA, SEM SCROLL HORIZONTAL ========== */
-
-/* A largura é sempre a do painel. Conteúdo longo aumenta a ALTURA da linha,
-   não a largura da tabela. */
-.table-wrap {
-    overflow: hidden;
-}
-
-.table-wrap table {
-    width: 100%;
-    min-width: 0;
-    table-layout: fixed;
-}
-
-/* Nuvion e Cloudlets: sete colunas. */
-#nuvion th:nth-child(1), .env-block th:nth-child(1) { width: 16%; }
-#nuvion th:nth-child(2), .env-block th:nth-child(2) { width: 33%; }
-#nuvion th:nth-child(3), .env-block th:nth-child(3) { width: 10%; }
-#nuvion th:nth-child(4), .env-block th:nth-child(4) { width: 13%; }
-#nuvion th:nth-child(5), .env-block th:nth-child(5) { width: 11%; }
-#nuvion th:nth-child(6), .env-block th:nth-child(6) { width: 9%; }
-#nuvion th:nth-child(7), .env-block th:nth-child(7) { width: 8%; }
-
-/* Storin: seis colunas. */
-#storin th:nth-child(1) { width: 16%; }
-#storin th:nth-child(2) { width: 36%; }
-#storin th:nth-child(3) { width: 11%; }
-#storin th:nth-child(4) { width: 15%; }
-#storin th:nth-child(5) { width: 11%; }
-#storin th:nth-child(6) { width: 11%; }
-
-.table-wrap td,
-.table-wrap th {
-    overflow-wrap: anywhere;
-}
-
-/* Campos não podem impor largura superior à sua própria célula. */
-.table-wrap .field,
-.table-wrap select.field,
-.table-wrap input.field {
-    min-width: 0;
-    max-width: 100%;
-    width: 100%;
-    font-size: 12px;
-    white-space: nowrap;
-}
-
-.table-wrap select.field {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.selection-cell {
-    min-width: 0;
-}
-
-.selection-detail {
-    margin-top: 5px;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.35;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-@media (max-width: 680px) {
-    .table-wrap {
-        overflow: visible;
-    }
-    .table-wrap table {
-        table-layout: fixed;
-        font-size: 11px;
-    }
-    .table-wrap th,
-    .table-wrap td {
-        padding: 7px 5px;
-    }
-    .selection-detail {
-        font-size: 10px;
-    }
-}
-
 /* ==========================================================
    CORREÇÃO DE LAYOUT DAS TABELAS DA CALCULADORA
+   (fonte única de verdade — evita tabela empurrando scrollbar
+   horizontal para fora do container)
    ========================================================== */
 
-/*
- * Impede que a tabela gere a barra horizontal inferior.
- * A tabela será obrigada a respeitar a largura do container.
- */
 .table-wrap {
     width: 100%;
     max-width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
     overflow-x: clip;
 }
 
@@ -643,11 +554,6 @@ input[type="number"] {
     }
 }
 
-/*
- * O table-layout: fixed distribui as colunas de maneira previsível.
- * Sem isso, conteúdos como selects e inputs podem forçar a tabela
- * a ultrapassar a largura do container.
- */
 .table-wrap table {
     width: 100%;
     max-width: 100%;
@@ -657,50 +563,40 @@ input[type="number"] {
 }
 
 /*
- * Distribuição das sete colunas da calculadora:
- *
- * 1. Recurso
- * 2. Seleção do recurso
- * 3. Preço unitário
- * 4. Unidade
- * 5. Quantidade / tempo
- * 6. Multiplicador
- * 7. Subtotal
+ * Nuvion e Cloudlets: 7 colunas
+ * (Recurso, Seleção, Preço, Unidade, Qtd, Multiplicador, Subtotal)
  */
-.table-wrap th:nth-child(1),
-.table-wrap td:nth-child(1) {
-    width: 16%;
-}
+#nuvion th:nth-child(1), .env-block th:nth-child(1),
+#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 16%; }
 
-.table-wrap th:nth-child(2),
-.table-wrap td:nth-child(2) {
-    width: 33%;
-}
+#nuvion th:nth-child(2), .env-block th:nth-child(2),
+#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 33%; }
 
-.table-wrap th:nth-child(3),
-.table-wrap td:nth-child(3) {
-    width: 11%;
-}
+#nuvion th:nth-child(3), .env-block th:nth-child(3),
+#nuvion td:nth-child(3), .env-block td:nth-child(3) { width: 11%; }
 
-.table-wrap th:nth-child(4),
-.table-wrap td:nth-child(4) {
-    width: 12%;
-}
+#nuvion th:nth-child(4), .env-block th:nth-child(4),
+#nuvion td:nth-child(4), .env-block td:nth-child(4) { width: 12%; }
 
-.table-wrap th:nth-child(5),
-.table-wrap td:nth-child(5) {
-    width: 10%;
-}
+#nuvion th:nth-child(5), .env-block th:nth-child(5),
+#nuvion td:nth-child(5), .env-block td:nth-child(5) { width: 10%; }
 
-.table-wrap th:nth-child(6),
-.table-wrap td:nth-child(6) {
-    width: 8%;
-}
+#nuvion th:nth-child(6), .env-block th:nth-child(6),
+#nuvion td:nth-child(6), .env-block td:nth-child(6) { width: 8%; }
 
-.table-wrap th:nth-child(7),
-.table-wrap td:nth-child(7) {
-    width: 10%;
-}
+#nuvion th:nth-child(7), .env-block th:nth-child(7),
+#nuvion td:nth-child(7), .env-block td:nth-child(7) { width: 10%; }
+
+/*
+ * Storin: 6 colunas
+ * (Recurso, Seleção, Preço, Unidade, Qtd, Subtotal)
+ */
+#storin th:nth-child(1), #storin td:nth-child(1) { width: 16%; }
+#storin th:nth-child(2), #storin td:nth-child(2) { width: 36%; }
+#storin th:nth-child(3), #storin td:nth-child(3) { width: 11%; }
+#storin th:nth-child(4), #storin td:nth-child(4) { width: 15%; }
+#storin th:nth-child(5), #storin td:nth-child(5) { width: 11%; }
+#storin th:nth-child(6), #storin td:nth-child(6) { width: 11%; }
 
 /*
  * Sem min-width: 0, elementos flexíveis e inputs podem expandir
@@ -711,10 +607,11 @@ input[type="number"] {
 .cell-label,
 .selection-cell {
     min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 /*
- * O select precisa ocupar somente a largura da própria célula.
+ * O select/input precisa ocupar somente a largura da própria célula.
  * Isso evita que opções grandes expandam o layout da tabela.
  */
 .table-wrap .field,
@@ -724,12 +621,24 @@ input[type="number"] {
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    font-size: 12px;
 }
 
 /*
- * Corrige especificamente o campo "Grupo 1":
- * antes ele ficava ao lado de "TIER VM" e invadia a coluna seguinte.
- * Agora ele fica em uma segunda linha, dentro da primeira coluna.
+ * Select nativo não quebra texto em múltiplas linhas.
+ * Por isso, caso o item selecionado seja muito grande, o browser
+ * apresentará reticências em vez de alargar a tabela.
+ */
+.table-wrap select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*
+ * Corrige o campo "Grupo 1": antes ele ficava ao lado de "TIER VM"
+ * e invadia a coluna seguinte. Agora ele fica em uma segunda linha,
+ * dentro da própria coluna "Recurso".
  */
 .table-wrap .group-name {
     display: block;
@@ -746,29 +655,6 @@ input[type="number"] {
     border: 1px dashed var(--input-border);
     border-radius: 4px;
     box-sizing: border-box;
-}
-
-/*
- * Garante que o texto complementar abaixo do select não force
- * a largura da coluna nem fique sobreposto.
- */
-.table-wrap .selection-detail {
-    display: block;
-    width: 100%;
-    margin-top: 5px;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-/*
- * Select nativo não quebra texto em múltiplas linhas.
- * Por isso, caso o item selecionado seja muito grande, o browser
- * apresentará reticências em vez de alargar a tabela.
- */
-.table-wrap .selection {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 /* ==========================================================
@@ -811,6 +697,7 @@ input[type="number"] {
         align-items: center;
         padding: 7px 0;
         border: 0;
+        font-size: 11px;
     }
 
     .table-wrap td::before {
@@ -855,10 +742,6 @@ input[type="number"] {
 
     .table-wrap .group-name {
         margin-top: 6px;
-    }
-
-    .table-wrap .selection-detail {
-        grid-column: 2;
     }
 
     .table-wrap .qty-control {

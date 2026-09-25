@@ -176,7 +176,7 @@
 
             html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
                 <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
-                <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select>${selectionDetail(item, row.isVmRow)}</td>
+                <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select></td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
@@ -278,12 +278,8 @@
         }
     });
 
-    // ========== DESCRIÇÃO DE PERFIL PARA TIER VM ==========
-    // Mantém o <select> nativo (abertura confiável). O rótulo dentro do
-    // select fica curto (nome da instância), para nunca ser cortado.
-    // A descrição completa (vCPU, RAM, R$/hora e R$/mês) é exibida por
-    // extenso abaixo do select, na própria célula da tabela — sem criar
-    // nenhum componente novo, painel flutuante ou tabela separada.
+    // ========== FORMATAÇÃO DE TIER VM ==========
+    
     function parseVmName(name) {
         const normalized = name.replace('+RAM', '');
         const [, vcpu, ram] = normalized.split('-');
@@ -293,14 +289,6 @@
             ram: ramGb < 1 ? `${ramGb * 1024} MB` : `${ramGb} GB`,
             hasExtraRam: name.includes('+RAM')
         };
-    }
-
-    function selectionDetail(item, isVm = false) {
-        if (!item) return '';
-        if (!isVm) return `<div class="selection-detail">${escape(item.name)}</div>`;
-        const spec = parseVmName(item.name);
-        const extraRam = spec.hasExtraRam ? ' +RAM' : '';
-        return `<div class="selection-detail">${escape(item.name.replace('+RAM', ''))}${extraRam} | ${spec.vcpu} vCPU - ${spec.ram} RAM</div>`;
     }
 
     function formatVmOptionLabel(vm) {
@@ -376,7 +364,7 @@
                 const tipHtml = rowDef.tip ? `<span class="tooltip-icon no-print" data-tip="${rowDef.tip}">?</span>` : '';
 
                 html += `<tr data-cloud="${envPrefix}-${rowDef.id}"><td><div class="cell-label">${rowDef.label}${tipHtml}</div></td>`;
-                html += `<td class="selection-cell"><select class="field selection" aria-label="${rowDef.label}">${selectionOptionHtml(opts, selected)}</select>${selectionDetail(item)}</td>`;
+                html += `<td class="selection-cell"><select class="field selection" aria-label="${rowDef.label}">${selectionOptionHtml(opts, selected)}</select></td>`;
                 html += `<td class="price">${item?money(item.price):'—'}</td>`;
                 html += `<td class="unit">${item?escape(item.unit):'—'}</td>`;
                 html += `<td>${timeHtml}</td>`;
@@ -479,7 +467,7 @@
             const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
             const tipHtml = tip ? `<span class="tooltip-icon no-print" data-tip="${tip}">?</span>` : '';
 
-            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select>${selectionDetail(item)}</td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
+            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
         }).join('');
         bindStorin();
         calcStorin();
