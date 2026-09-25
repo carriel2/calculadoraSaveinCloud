@@ -166,7 +166,6 @@
                         <div class="vm-group-header">
                             <div class="vm-group-title">Grupo ${row.groupId}</div>
                             <input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Ex.: Produção, ERP, Homologação..." aria-label="Nome do grupo ${row.groupId}">
-                            <span class="vm-group-subtotal" id="n-g${row.groupId}-subtotal">Subtotal: R$ 0,00</span>
                             ${deleteGroupHtml}
                         </div>
                     </td>
@@ -231,9 +230,7 @@
 
     function calcNuvion() {
         let total = 0;
-        const groupSubtotals = {};
         const rows = getNuvionRows();
-
         document.querySelectorAll('[data-nuvion]').forEach(tr => {
             const rowDef = rows.find(x => x.rowId === tr.dataset.nuvion);
             if (!rowDef) return;
@@ -246,18 +243,18 @@
             const s = itemPrice * num(tr.querySelector('.quantity').value) * num(multValue);
             tr.querySelector('.subtotal').textContent = money(s);
             total += s;
-
-            groupSubtotals[rowDef.groupId] = (groupSubtotals[rowDef.groupId] || 0) + s;
         });
-
-        Object.keys(groupSubtotals).forEach(gid => {
-            const el = document.getElementById(`n-g${gid}-subtotal`);
-            if (el) el.textContent = `Subtotal: ${money(groupSubtotals[gid])}`;
-        });
-
         document.querySelector('#nuvion-total').textContent = money(total);
         document.querySelector('#nuvion-footer').textContent = money(total);
         pulseCard('nuvion-total-card');
+    }
+
+    const addVmBtn = document.getElementById('addVmBtn');
+    if (addVmBtn) {
+        addVmBtn.addEventListener('click', () => {
+            nuvionGroupCount++;
+            renderNuvion();
+        });
     }
 
     document.addEventListener('click', e => {
