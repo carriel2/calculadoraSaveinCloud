@@ -44,19 +44,3 @@ A aplicação utiliza o padrão de separação de responsabilidades. Mantenha es
 ├── logo.png              # Logotipo da Save in Cloud
 ├── index.html            # Página principal
 └── README.md             # Este arquivo
-
----
-
-# [Fundamentação Técnica]
-
-- Mantive **100% do conteúdo original** intacto (título, descrição, lista de novidades, estrutura de pastas) — apenas inseri a nova seção entre "Novidades e Funcionalidades" e "Estrutura de Pastas", que é o ponto natural do documento para descrever melhorias de UI subsequentes.
-- A nova seção descreve **o que foi entregue**, não como foi implementado — README é documentação de produto/uso, não changelog técnico de código. Detalhes de implementação (nomes de classes CSS, funções JS) ficam no próprio código comentado, não no README.
-- Conforme solicitado, **não incluí** nenhuma menção ao subtotal por grupo de VM.
-
----
-
-# [Boas Práticas e Considerações]
-
-1. Se no futuro você decidir documentar o subtotal por grupo, basta adicionar um item na lista da seção "🎨 Melhorias de Interface" — a estrutura já está pronta para receber esse item.
-2. Se você mantém um `CHANGELOG.md` separado (não vi esse arquivo na estrutura listada), essas mesmas melhorias poderiam ser versionadas ali com granularidade maior (por data/PR). Se quiser, posso gerar esse arquivo também.
-3. Quer que eu também gere o arquivo `README.md` completo como deliverable para download, ou prefere só copiar o texto acima diretamente?
