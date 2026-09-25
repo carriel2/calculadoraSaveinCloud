@@ -181,7 +181,14 @@ tr.collapsed-row {
     display: flex;
     align-items: center;
     gap: 6px;
+    min-width: 0;
     white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
 }
 
 /* ========== INPUTS & CONTROLS ========== */
@@ -331,7 +338,8 @@ input[type="number"] {
     text-align: center;
     font-size: 11px;
     line-height: 16px;
-    margin-left: 6px;
+    margin-left: 0px;
+    flex-shrink: 0;
     cursor: help;
     position: relative;
     font-family: monospace;
@@ -559,10 +567,10 @@ input[type="number"] {
 }
 
 #nuvion th:nth-child(1), .env-block th:nth-child(1),
-#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 13%; }
+#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 16%; }
 
 #nuvion th:nth-child(2), .env-block th:nth-child(2),
-#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 25%; }
+#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 22%; }
 
 #nuvion th:nth-child(3), .env-block th:nth-child(3),
 #nuvion td:nth-child(3), .env-block td:nth-child(3) { width: 10%; }
