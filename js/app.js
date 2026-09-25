@@ -152,8 +152,26 @@
         const body = document.querySelector('#nuvion-body');
         const rows = getNuvionRows();
         let html = '';
+        let currentGroupId = 0;
 
         rows.forEach((row) => {
+            if (row.groupId !== currentGroupId) {
+                currentGroupId = row.groupId;
+
+                const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
+                const deleteGroupHtml = row.groupId > 1 ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" aria-label="Remover Grupo ${row.groupId}"><span class="material-symbols-outlined">delete</span></button>` : '';
+
+                html += `<tr class="vm-group-row">
+                    <td colspan="7">
+                        <div class="vm-group-header">
+                            <div class="vm-group-title">Grupo ${row.groupId}</div>
+                            <input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Ex.: Produção, ERP, Homologação..." aria-label="Nome do grupo ${row.groupId}">
+                            ${deleteGroupHtml}
+                        </div>
+                    </td>
+                </tr>`;
+            }
+
             const stateKey = `n-${row.rowId}`;
             const selected = get(`${stateKey}-sel`, '');
             const item = find(row.opts, selected);
@@ -163,19 +181,11 @@
             const sub = itemPrice * num(qty) * num(mult);
             const tipHtml = row.tip ? `<span class="tooltip-icon no-print" data-tip="${row.tip}">?</span>` : '';
 
-            const isFirstOfGroup = row.isVmRow;
-            const deleteHtml = (isFirstOfGroup && row.groupId > 1) ? `<button type="button" class="icon-btn delete-vm no-print" data-groupid="${row.groupId}" title="Remover este grupo" style="padding:0; margin-left:8px; color:#ef4444;"><span class="material-symbols-outlined" style="font-size:18px;">delete</span></button>` : '';
-
-            const customName = get(`n-g${row.groupId}-name`, `Grupo ${row.groupId}`);
-            const groupBadge = isFirstOfGroup ? `<input type="text" class="field group-name" data-groupid="${row.groupId}" value="${escape(customName)}" placeholder="Nome do grupo..." aria-label="Nome do grupo ${row.groupId}">` : '';
-
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
             const multHtml = ['backup', 'snapshot'].includes(row.id) ? makeQty('multiplier', `Multiplicador ${row.label}`, mult) : `<span class="fixed-mult">1</span>`;
 
-            const trStyle = (isFirstOfGroup && row.groupId > 1) ? `border-top: 3px solid var(--blue2);` : '';
-
-            html += `<tr data-nuvion="${row.rowId}" style="${trStyle}">
-                <td><div class="cell-label">${row.label}${groupBadge}${tipHtml}${deleteHtml}</div></td>
+            html += `<tr data-nuvion="${row.rowId}">
+                <td><div class="cell-label">${row.label}${tipHtml}</div></td>
                 <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select></td>
                 <td class="price">${item ? money(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
@@ -278,8 +288,12 @@
         }
     });
 
-    // ========== FORMATAÇÃO DE TIER VM ==========
-    
+    // ========== DESCRIÇÃO DE PERFIL PARA TIER VM ==========
+    // Mantém o <select> nativo (abertura confiável). O rótulo dentro do
+    // select fica curto (nome da instância), para nunca ser cortado.
+    // A descrição completa (vCPU, RAM, R$/hora e R$/mês) é exibida por
+    // extenso abaixo do select, na própria célula da tabela — sem criar
+    // nenhum componente novo, painel flutuante ou tabela separada.
     function parseVmName(name) {
         const normalized = name.replace('+RAM', '');
         const [, vcpu, ram] = normalized.split('-');

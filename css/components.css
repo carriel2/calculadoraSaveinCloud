@@ -533,150 +533,129 @@ input[type="number"] {
     border-color: #dc2626;
 }
 
-/* ==========================================================
-   TABELAS DA CALCULADORA
-   Desktop com colunas naturais e sem barra horizontal aparente.
-   Mobile em formato de cards.
-   ========================================================== */
-
 .table-wrap {
     width: 100%;
     max-width: 100%;
     border: 1px solid var(--line);
     border-radius: 8px;
-    overflow-x: hidden;
+    overflow-x: clip;
 }
 
-/*
- * No desktop, NÃO usamos table-layout: fixed.
- *
- * A tabela precisa calcular naturalmente o espaço das colunas,
- * principalmente para preço, unidade, quantidade e multiplicador.
- * Isso evita cortar valores, quebrar "Multiplicador" e esconder
- * o valor entre os botões - e +.
- */
+@supports not (overflow: clip) {
+    .table-wrap {
+        overflow-x: hidden;
+    }
+}
+
 .table-wrap table {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    table-layout: fixed;
     border-collapse: collapse;
 }
 
-/*
- * Evita que o primeiro campo tenha largura insuficiente.
- * O texto "TIER VM", o input de grupo e o tooltip ficam alinhados.
- */
-.table-wrap td:first-child {
-    min-width: 155px;
-}
+#nuvion th:nth-child(1), .env-block th:nth-child(1),
+#nuvion td:nth-child(1), .env-block td:nth-child(1) { width: 16%; }
 
-/*
- * A célula de seleção precisa comportar o select sem expandir
- * indevidamente o container.
- */
+#nuvion th:nth-child(2), .env-block th:nth-child(2),
+#nuvion td:nth-child(2), .env-block td:nth-child(2) { width: 33%; }
+
+#nuvion th:nth-child(3), .env-block th:nth-child(3),
+#nuvion td:nth-child(3), .env-block td:nth-child(3) { width: 11%; }
+
+#nuvion th:nth-child(4), .env-block th:nth-child(4),
+#nuvion td:nth-child(4), .env-block td:nth-child(4) { width: 12%; }
+
+#nuvion th:nth-child(5), .env-block th:nth-child(5),
+#nuvion td:nth-child(5), .env-block td:nth-child(5) { width: 10%; }
+
+#nuvion th:nth-child(6), .env-block th:nth-child(6),
+#nuvion td:nth-child(6), .env-block td:nth-child(6) { width: 8%; }
+
+#nuvion th:nth-child(7), .env-block th:nth-child(7),
+#nuvion td:nth-child(7), .env-block td:nth-child(7) { width: 10%; }
+
+#storin th:nth-child(1), #storin td:nth-child(1) { width: 16%; }
+#storin th:nth-child(2), #storin td:nth-child(2) { width: 36%; }
+#storin th:nth-child(3), #storin td:nth-child(3) { width: 11%; }
+#storin th:nth-child(4), #storin td:nth-child(4) { width: 15%; }
+#storin th:nth-child(5), #storin td:nth-child(5) { width: 11%; }
+#storin th:nth-child(6), #storin td:nth-child(6) { width: 11%; }
+
+.table-wrap th,
+.table-wrap td,
+.cell-label,
 .selection-cell {
-    min-width: 245px;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
-/*
- * Mantém todos os selects visualmente consistentes.
- * O select pode ocupar a largura disponível da sua coluna,
- * sem forçar uma largura maior que a tabela.
- */
-.table-wrap .selection-cell .field,
-.table-wrap .selection-cell select.field {
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field {
     width: 100%;
-    min-width: 245px;
     max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
+    font-size: 12px;
 }
 
-/*
- * Campo de nome do grupo:
- * agora fica abaixo de "TIER VM", em sua própria linha,
- * sem deslocar o tooltip ou invadir a coluna de seleção.
- */
-.table-wrap .cell-label {
+.table-wrap select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-wrap .vm-group-row td {
+    background: var(--line);
+    padding: 8px 10px;
+}
+
+.table-wrap .vm-group-header {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
-    white-space: normal;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.table-wrap .vm-group-title {
+    font-weight: 800;
+    font-size: 12px;
+    color: var(--ink);
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .table-wrap .group-name {
-    flex-basis: 100%;
-    width: 100%;
-    min-width: 0;
-    height: 26px;
+    flex: 1;
+    min-width: 140px;
+    max-width: 260px;
+    height: 28px;
     margin: 0;
-    padding: 3px 6px;
-    box-sizing: border-box;
-
+    padding: 3px 8px;
     color: var(--blue2);
     font-size: 11px;
     font-weight: 700;
-
     background: transparent;
     border: 1px dashed var(--input-border);
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
-/*
- * Preço, unidade e subtotal não podem quebrar em linhas.
- * Isso evita casos como "R$ 0,72" ficar deslocado ou escapar
- * da própria coluna.
- */
-.table-wrap td.price,
-.table-wrap td.unit,
-.table-wrap td.subtotal {
-    white-space: nowrap;
-}
-
-/*
- * Os controles de quantidade/multiplicador não devem encolher.
- * Assim, o valor interno continua visível entre os botões.
- */
-.table-wrap .qty-control {
-    min-width: 112px;
-    flex-shrink: 0;
-}
-
-/*
- * O input do controle de quantidade mantém largura suficiente
- * para mostrar valores como 730, 120 ou 1.
- */
-.table-wrap .qty-control input.field {
-    width: 52px;
-    min-width: 52px;
-}
-
-/*
- * A coluna de multiplicador precisa reservar largura suficiente
- * para o controle de Backup e Snapshot.
- */
-#nuvion th:nth-child(6),
-#nuvion td:nth-child(6),
-.env-block th:nth-child(6),
-.env-block td:nth-child(6) {
-    min-width: 112px;
-    white-space: nowrap;
-}
-
-/*
- * Cabeçalho de multiplicador não deve quebrar em duas linhas.
- */
-#nuvion th:nth-child(6),
-.env-block th:nth-child(6) {
-    white-space: nowrap;
+.table-wrap .vm-group-header .delete-vm {
+    margin-left: auto;
+    color: #ef4444;
+    padding: 4px;
 }
 
 /* ==========================================================
-   RESPONSIVIDADE: TABELAS COMO CARDS EM TELAS PEQUENAS
+   TABELA RESPONSIVA: SEM SCROLL HORIZONTAL EM TELAS MENORES
    ========================================================== */
 
 @media (max-width: 900px) {
     .table-wrap {
         overflow: visible;
-        border: 0;
     }
 
     .table-wrap table,
@@ -706,7 +685,7 @@ input[type="number"] {
         align-items: center;
         padding: 7px 0;
         border: 0;
-        min-width: 0;
+        font-size: 11px;
     }
 
     .table-wrap td::before {
@@ -744,28 +723,26 @@ input[type="number"] {
         content: "Subtotal";
     }
 
-    .table-wrap .selection-cell {
-        min-width: 0;
-    }
-
-    .table-wrap .selection-cell .field,
-    .table-wrap .selection-cell select.field {
-        min-width: 0;
-        width: 100%;
-    }
-
     .table-wrap .cell-label {
         display: block;
         width: 100%;
     }
 
+    .table-wrap .vm-group-row td {
+        display: block;
+        padding: 8px;
+    }
+
+    .table-wrap .vm-group-header {
+        flex-wrap: wrap;
+    }
+
     .table-wrap .group-name {
-        margin-top: 6px;
+        max-width: 100%;
     }
 
     .table-wrap .qty-control {
         width: 100%;
-        min-width: 112px;
         max-width: 180px;
     }
 }
