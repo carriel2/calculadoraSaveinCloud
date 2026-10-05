@@ -7,7 +7,16 @@
         maximumFractionDigits: 2
     });
     const num = v => Math.max(0, Number(String(v).replace(',', '.')) || 0);
-    const money = v => brl.format(v || 0);
+        const money = v => brl.format(v || 0);
+    const brlPrice = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 5
+    });
+    const moneyPrice = v => brlPrice.format(v || 0);
+    const roundMoney = v => Math.round(Number(((v || 0) * 100).toPrecision(12))) / 100;
+
     const key = 'saveincloud-calculadora-v2';
 
     // ========== SHARED STATE ==========
@@ -178,7 +187,7 @@
             const qty = get(`${stateKey}-qty`, row.defaultQty);
             const mult = get(`${stateKey}-mult`, row.defaultMult);
             const itemPrice = item ? item.price : 0;
-            const sub = itemPrice * num(qty) * num(mult);
+            const sub = roundMoney(itemPrice * num(qty) * num(mult));
             const tipHtml = row.tip ? `<span class="tooltip-icon no-print" data-tip="${row.tip}">?</span>` : '';
 
             const qtyHtml = makeQty('quantity', `Quantidade ${row.label}`, qty);
@@ -187,7 +196,7 @@
             html += `<tr data-nuvion="${row.rowId}">
                 <td><div class="cell-label">${row.label}${tipHtml}</div></td>
                 <td class="selection-cell"><select class="field selection ${row.isVmRow ? 'vm-select' : ''}" aria-label="${row.label}">${row.isVmRow ? vmOptionHtml(row.opts, selected) : selectionOptionHtml(row.opts, selected)}</select></td>
-                <td class="price">${item ? money(item.price) : '—'}</td>
+                <td class="price">${item ? moneyPrice(item.price) : '—'}</td>
                 <td class="unit">${item ? escape(item.unit) : '—'}</td>
                 <td>${qtyHtml}</td>
                 <td>${multHtml}</td>
@@ -240,7 +249,7 @@
             const multiplierInput = tr.querySelector('.multiplier');
             const multValue = multiplierInput ? multiplierInput.value : 1;
 
-            const s = itemPrice * num(tr.querySelector('.quantity').value) * num(multValue);
+            const s = roundMoney(itemPrice * num(tr.querySelector('.quantity').value) * num(multValue));
             tr.querySelector('.subtotal').textContent = money(s);
             total += s;
         });
@@ -364,7 +373,7 @@
                 const timeVal = get(keyTime, rowDef.defaultTime);
                 const qtyVal = get(keyQty, rowDef.defaultQty);
                 const itemPrice = item ? item.price : 0;
-                const sub = itemPrice * num(timeVal) * num(qtyVal);
+                const sub = roundMoney(itemPrice * num(timeVal) * num(qtyVal));
                 const locked = rowDef.lockedTime ? 'disabled' : '';
 
                 const timeHtml = makeQty('time', `Tempo de uso ${rowDef.label}`, timeVal, locked);
@@ -373,7 +382,7 @@
 
                 html += `<tr data-cloud="${envPrefix}-${rowDef.id}"><td><div class="cell-label">${rowDef.label}${tipHtml}</div></td>`;
                 html += `<td class="selection-cell"><select class="field selection" aria-label="${rowDef.label}">${selectionOptionHtml(opts, selected)}</select></td>`;
-                html += `<td class="price">${item?money(item.price):'—'}</td>`;
+                html += `<td class="price">${item ? moneyPrice(item.price) : '—'}</td>`;
                 html += `<td class="unit">${item?escape(item.unit):'—'}</td>`;
                 html += `<td>${timeHtml}</td>`;
                 html += `<td>${qtyHtml}</td>`;
@@ -440,7 +449,7 @@
                     });
                     const item = find(opts, row.querySelector('.selection').value);
                     const itemPrice = item ? item.price : 0;
-                    const s = itemPrice * num(row.querySelector('.time').value) * num(row.querySelector('.resource-count').value);
+                    const s = roundMoney(itemPrice * num(row.querySelector('.time').value) * num(row.querySelector('.resource-count').value));
 
                     row.querySelector('.subtotal').textContent = money(s);
                     envSubtotal += s;
@@ -470,12 +479,12 @@
             const item = find(opts, selected);
             const qty = get('s-' + id + '-qty', qtyDefault);
             const itemPrice = item ? item.price : 0;
-            const sub = itemPrice * num(qty);
+            const sub = roundMoney(itemPrice * num(qty));
 
             const qtyHtml = makeQty('quantity', `Quantidade ${label}`, qty);
             const tipHtml = tip ? `<span class="tooltip-icon no-print" data-tip="${tip}">?</span>` : '';
 
-            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select></td><td class="price">${item?money(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
+            return `<tr data-storin="${id}"><td><div class="cell-label">${label}${tipHtml}</div></td><td class="selection-cell"><select class="field selection" aria-label="${label}">${selectionOptionHtml(opts,selected)}</select></td><td class="price">${item?moneyPrice(item.price):'—'}</td><td class="unit">${item?escape(item.unit):'—'}</td><td>${qtyHtml}</td><td class="subtotal">${money(sub)}</td></tr>`;
         }).join('');
         bindStorin();
         calcStorin();
@@ -503,7 +512,7 @@
             const [, , opts] = storinRows.find(x => x[0] === row.dataset.storin);
             const item = find(opts, row.querySelector('.selection').value);
             const itemPrice = item ? item.price : 0;
-            const s = itemPrice * num(row.querySelector('.quantity').value);
+            const s = roundMoney(itemPrice * num(row.querySelector('.quantity').value));
 
             row.querySelector('.subtotal').textContent = money(s);
             total += s;
