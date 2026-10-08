@@ -148,7 +148,7 @@
             <td class="num">${esc(money(r.sub))}</td>
         </tr>`).join('');
         return `<table class="inv items">
-            <colgroup><col style="width:17%"><col style="width:33%"><col style="width:18%"><col style="width:15%"><col style="width:17%"></colgroup>
+            <colgroup><col style="width:19%"><col style="width:31%"><col style="width:17%"><col style="width:15%"><col style="width:18%"></colgroup>
             <thead>
                 <tr class="grp"><th colspan="5">${esc(title)}</th></tr>
                 <tr class="cols"><th>Recurso</th><th>Especificação</th><th class="num">Preço unitário</th><th class="num">Quantidade</th><th class="num">Subtotal</th></tr>
@@ -188,7 +188,7 @@
             ? `<p><strong>Responsável Save in Cloud:</strong> ${esc(s.responsavel)}${s.emailResp ? ` &nbsp;|&nbsp; <strong>Contato:</strong> ${esc(s.emailResp)}` : ''}</p>` : '';
 
         // Conteúdo em blocos soltos; paginate() distribui pelas folhas do papel timbrado.
-        // data-break força o bloco a começar numa folha nova.
+        // O conteúdo flui contínuo; data-break (botão "Quebra de página") força uma folha nova.
         return `
         <article class="sheet">
             <h1 class="doc-title">${esc(s.titulo || 'Proposta Comercial')}</h1>
@@ -204,11 +204,11 @@
             <h2>3. Escopo de implantação</h2>
             <ol>${lines(s.escopo).map(l => `<li>${esc(l)}</li>`).join('')}</ol>
 
-            <h2 data-break="1">4. Investimento</h2>
-            <p>Valores mensais estimados com base na calculadora Save in Cloud (referência: 1 mês = 730 horas).</p>
+            <h2>4. Investimento</h2>
+            <p class="keep-next">Valores mensais estimados com base na calculadora Save in Cloud (referência: 1 mês = 730 horas).</p>
             ${investimento}
 
-            <h3 data-break="1">Resumo do investimento</h3>
+            <h3>Resumo do investimento</h3>
                 <table class="inv">
                     <thead><tr class="cols"><th>Plataforma</th><th class="num">Valor mensal</th></tr></thead>
                     <tbody>
@@ -230,16 +230,37 @@
 
     /* ---- paginação no papel timbrado ----
        Cada .sheet é uma folha A4 com o timbrado de fundo; a área útil é o content-box (fora do cabeçalho e rodapé). */
+    // getBoundingClientRect já vem com o zoom de tela aplicado; padding/margin do getComputedStyle não.
+    const reportZoom = () => parseFloat(report.style.zoom) || 1;
     function sheetLimit(sh) {
         const cs = getComputedStyle(sh);
-        return sh.getBoundingClientRect().bottom - parseFloat(cs.paddingBottom) - parseFloat(cs.borderBottomWidth);
+        return sh.getBoundingClientRect().bottom - (parseFloat(cs.paddingBottom) + parseFloat(cs.borderBottomWidth)) * reportZoom();
     }
     function overflows(sh) {
         const last = sh.lastElementChild;
         if (!last) return false;
-        return last.getBoundingClientRect().bottom + parseFloat(getComputedStyle(last).marginBottom) > sheetLimit(sh) + 1;
+        return last.getBoundingClientRect().bottom + parseFloat(getComputedStyle(last).marginBottom) * reportZoom() > sheetLimit(sh) + 1;
     }
     const checkOverflow = () => report.querySelectorAll('.sheet').forEach(sh => sh.classList.toggle('overflowing', overflows(sh)));
+
+    // Títulos e textos de introdução não ficam sozinhos no fim da folha: vão junto com o bloco seguinte.
+    const keepsWithNext = el => /^H[1-6]$/.test(el.tagName) || el.classList.contains('keep-next');
+
+    // Na tela, reduz as folhas proporcionalmente quando a janela é mais estreita que um A4
+    // (em vez de espremer o conteúdo). Na impressão o zoom é anulado pelo CSS.
+    const A4_WIDTH_PX = 210 * 96 / 25.4;
+    function fitReport() {
+        const avail = document.documentElement.clientWidth - 24;
+        report.style.zoom = String(Math.min(1, avail / A4_WIDTH_PX));
+    }
+
+    // Bloco (filho direto da folha) onde está o cursor.
+    function blockAtSelection() {
+        const sel = window.getSelection();
+        let node = sel && sel.anchorNode;
+        while (node && !(node.parentElement && node.parentElement.classList.contains('sheet'))) node = node.parentElement;
+        return node && node.nodeType === 1 && report.contains(node) ? node : null;
+    }
 
     function newSheet() {
         const a = document.createElement('article');
@@ -281,7 +302,7 @@
             if (sheet.children.length > 1 && overflows(sheet)) {
                 sheet.removeChild(b);
                 const carry = [];
-                while (sheet.children.length > 1 && /^H[1-6]$/.test(sheet.lastElementChild.tagName)) carry.unshift(sheet.removeChild(sheet.lastElementChild));
+                while (sheet.children.length > 1 && keepsWithNext(sheet.lastElementChild)) carry.unshift(sheet.removeChild(sheet.lastElementChild));
                 sheet = newSheet();
                 carry.forEach(c => sheet.appendChild(c));
                 sheet.appendChild(b);
@@ -298,6 +319,7 @@
         $('#printBtn').hidden = false; $('#printHint').hidden = false;
         $('#generateLabel').textContent = 'Regerar proposta';
         report.querySelectorAll('.sheet').forEach(sh => { sh.contentEditable = 'true'; sh.spellcheck = true; sh.lang = 'pt-BR'; });
+        fitReport();
         const run = () => (repaginate ? paginate() : checkOverflow());
         // espera o timbrado/fontes para medir certo
         (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(run, 0));
@@ -331,6 +353,13 @@
         if (b.dataset.cmd) document.execCommand(b.dataset.cmd, false, null);
         if (b.dataset.block) document.execCommand('formatBlock', false, b.dataset.block);
         if (b.dataset.act === 'paginate') { paginate(); showToast('Páginas reorganizadas.'); }
+        if (b.dataset.act === 'break') {
+            const blk = blockAtSelection();
+            if (!blk) { showToast('Clique no trecho que deve começar numa nova página.'); return; }
+            if (blk.dataset.break) delete blk.dataset.break; else blk.dataset.break = '1';
+            paginate();
+            showToast(blk.dataset.break ? 'Quebra de página inserida.' : 'Quebra de página removida.');
+        }
         reportDirty = true; checkOverflow(); scheduleSave();
     });
 
@@ -438,5 +467,5 @@
         history.replaceState({}, document.title, location.pathname);
     }
 
-    window.addEventListener('resize', checkOverflow);
+    window.addEventListener('resize', () => { fitReport(); checkOverflow(); });
 })();
