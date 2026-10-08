@@ -26,7 +26,7 @@
     const blankState = () => ({
         titulo: 'Proposta Comercial',
         cliente: '', contato: '', cargo: '',
-        data: today(), validade: 60, prazo: 36,
+        data: today(), validade: 60, prazo: 1, // propostas são mensais; o prazo pode ser aumentado no Resumo
         responsavel: '', emailResp: '', foco: '',
         escopo: DEFAULT_ESCOPO,
         consideracoes: DEFAULT_CONSIDERACOES,
@@ -129,7 +129,8 @@
 
     function updateSummary() {
         const c = Calc.collect();
-        const prazo = Math.max(0, num(state.prazo));
+        const prazo = Math.max(1, Math.round(num(state.prazo)) || 1);
+        $('#prazo-unit').textContent = prazo === 1 ? 'mês' : 'meses';
         Object.entries(c.totals).forEach(([k, v]) => { $('#sum-' + k).textContent = money(v); });
         $('#sum-monthly').textContent = money(c.monthly);
         $('#grand-total-label').textContent = `Total do contrato (${prazo} ${prazo === 1 ? 'mês' : 'meses'})`;
@@ -165,7 +166,7 @@
     };
 
     function buildDocument(s, c) {
-        const prazo = Math.max(0, num(s.prazo));
+        const prazo = Math.max(1, Math.round(num(s.prazo)) || 1);
         const total = roundMoney(c.monthly * prazo);
         const cliente = esc(s.cliente || '[cliente]');
         const contato = [s.contato, s.cargo].filter(Boolean).map(esc).join(' | ');

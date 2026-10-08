@@ -1,0 +1,911 @@
+/* ========== BUTTONS ========== */
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--blue);
+    background: var(--blue);
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 7px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+    font-family: inherit;
+}
+
+.button:hover {
+    background: var(--blue2);
+}
+
+.button.secondary {
+    background: var(--panel-bg);
+    color: var(--blue2);
+    border-color: var(--input-border);
+}
+
+.button.secondary:hover {
+    background: var(--line);
+    color: var(--cyan);
+    border-color: var(--cyan);
+}
+
+.button .material-symbols-outlined {
+    font-size: 18px;
+}
+
+.icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--blue2);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+    background: var(--line);
+    color: var(--cyan);
+}
+
+[data-theme="dark"] .icon-btn {
+    color: #fbbf24;
+}
+
+/* ========== CARDS ========== */
+
+.total-card {
+    min-width: 180px;
+    padding: 13px 18px;
+    border-radius: 8px;
+    background: var(--green);
+    text-align: right;
+}
+
+.total-card span {
+    display: block;
+    margin-bottom: 3px;
+    color: var(--ink);
+    opacity: 0.8;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.total-card strong {
+    color: var(--ink);
+    font-size: 22px;
+}
+
+@keyframes totalPulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.06);
+        filter: brightness(1.15);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.total-card.pulse {
+    animation: totalPulse 0.4s ease-in-out;
+}
+
+/* ========== TABLES ========== */
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 12px 10px;
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th:first-child {
+    text-align: left;
+}
+
+td {
+    padding: 9px 10px;
+    border-top: 1px solid var(--line);
+    vertical-align: middle;
+}
+
+td:first-child {
+    min-width: 0;
+    color: var(--text-highlight);
+    font-weight: 750;
+}
+
+td.price,
+td.subtotal {
+    background: var(--table-bg);
+    text-align: center;
+    white-space: nowrap;
+}
+
+td.unit {
+    background: var(--table-bg);
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 11px;
+}
+
+.subtotal {
+    color: var(--text-highlight);
+    font-weight: 750;
+}
+
+tfoot td {
+    padding: 9px 10px;
+    border-top: 2px solid var(--blue2);
+    background: var(--line);
+    color: var(--ink);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+tfoot td:last-child {
+    color: var(--text-highlight);
+    text-align: center;
+    font-size: 16px;
+}
+
+tr.collapsed-row {
+    display: none !important;
+}
+
+/*
+ * Label do recurso + tooltip.
+ * O ícone ? sempre mantém 16px de largura e não invade o select.
+ */
+.cell-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+}
+
+.cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
+
+/* ========== INPUTS & CONTROLS ========== */
+
+.field {
+    width: 100%;
+    min-width: 130px;
+    padding: 8px;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    font: inherit;
+}
+
+.field:focus {
+    outline: 2px solid var(--cyan);
+    border-color: var(--cyan);
+}
+
+.field:disabled {
+    background: var(--line);
+    color: var(--muted);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+select.field {
+    min-width: 245px;
+    padding-right: 30px;
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--blue2) 50%),
+        linear-gradient(135deg, var(--blue2) 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) calc(1em + 2px),
+        calc(100% - 13px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 12.5px;
+}
+
+select.field option {
+    font-size: 13px;
+}
+
+input.field {
+    min-width: 90px;
+    text-align: right;
+}
+
+select.field:hover,
+input.field:hover {
+    border-color: var(--cyan);
+    cursor: pointer;
+}
+
+select.field:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 2px rgba(39, 180, 218, 0.25);
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    margin: 0 !important;
+    -webkit-appearance: none !important;
+}
+
+input[type="number"] {
+    appearance: textfield !important;
+    -moz-appearance: textfield !important;
+}
+
+/* ========== QTY COMPONENT ========== */
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid var(--input-border);
+    border-radius: 5px;
+    background: var(--input-bg);
+}
+
+.qty-control:focus-within {
+    outline: 2px solid var(--cyan);
+    border-color: var(--cyan);
+}
+
+.qty-btn {
+    padding: 7px 8px;
+    border: none;
+    background: transparent;
+    color: var(--blue2);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    user-select: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.qty-btn:hover {
+    background: var(--line);
+    color: var(--cyan);
+}
+
+[data-theme="dark"] .qty-btn {
+    color: #fbbf24;
+}
+
+.qty-control input.field {
+    width: 42px;
+    min-width: 42px;
+    padding: 7px 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    text-align: center;
+}
+
+.qty-control input.field:focus {
+    outline: none;
+}
+
+.qty-control.disabled {
+    background: var(--line);
+    opacity: 0.7;
+}
+
+.qty-control.disabled .qty-btn {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ========== TOOLTIPS ========== */
+
+.tooltip-icon {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-left: 0;
+    border-radius: 50%;
+    background: var(--blue2);
+    color: #fff;
+    cursor: help;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 16px;
+    text-align: center;
+}
+
+.tooltip-icon::after {
+    position: absolute;
+    top: 50%;
+    left: 26px;
+    z-index: 999;
+    width: max-content;
+    max-width: 200px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    background: var(--ink);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: var(--bg);
+    content: attr(data-tip);
+    font-family: Inter, sans-serif;
+    font-size: 11px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%);
+    transition: opacity 0.2s;
+    white-space: normal;
+}
+
+.tooltip-icon:hover::after {
+    opacity: 1;
+}
+
+/* ========== EXTRA ELEMENTS ========== */
+
+.hint {
+    margin: 13px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.group-title {
+    margin: 22px 0 10px;
+    padding: 11px 13px;
+    border-left: 4px solid var(--blue2);
+    border-radius: 3px;
+    background: var(--line);
+    color: var(--ink);
+    font-weight: 800;
+}
+
+.group-title:first-child {
+    margin-top: 0;
+}
+
+.notes {
+    margin-top: 18px;
+    padding: 13px 17px;
+    border-left: 4px solid var(--cyan);
+    background: var(--line);
+    color: var(--ink);
+}
+
+.notes ul {
+    margin: 7px 0 0;
+    padding-left: 18px;
+}
+
+.notes li {
+    margin: 4px 0;
+}
+
+.env-block {
+    margin: 0 0 28px;
+    padding: 0 0 22px;
+    border-bottom: 1px dashed var(--line);
+}
+
+.env-block:last-child {
+    margin-bottom: 8px;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.env-block .group-title {
+    margin-top: 0;
+}
+
+.toggle-collapse-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.toggle-collapse-btn:hover {
+    background: var(--line);
+    color: var(--cyan);
+}
+
+.toggle-collapse-btn.collapsed {
+    transform: rotate(-90deg);
+}
+
+/* ========== TOAST ========== */
+
+.toast {
+    position: fixed;
+    top: -60px;
+    left: 50%;
+    z-index: 9999;
+    padding: 12px 24px;
+    border-radius: 8px;
+    background-color: var(--green);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    color: #155b3c;
+    pointer-events: none;
+    transform: translateX(-50%);
+    transition: top 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+[data-theme="dark"] .toast {
+    background-color: #064e3b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    color: #a7f3d0;
+}
+
+.toast.show {
+    top: 20px;
+}
+
+/* ========== MODAL CONFIRM ========== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    backdrop-filter: blur(3px);
+}
+
+.modal-overlay.show {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-content {
+    width: 90%;
+    max-width: 400px;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    transform: translateY(20px);
+    transition: transform 0.2s ease;
+}
+
+.modal-overlay.show .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h3 {
+    margin: 0 0 10px;
+    color: var(--ink);
+    font-size: 18px;
+}
+
+.modal-content p {
+    margin: 0 0 20px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.button.danger {
+    border-color: #ef4444;
+    background: #ef4444;
+}
+
+.button.danger:hover {
+    border-color: #dc2626;
+    background: #dc2626;
+}
+
+/* ==========================================================
+   TABELAS DA CALCULADORA
+   ========================================================== */
+
+.table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+@supports not (overflow: clip) {
+    .table-wrap {
+        overflow-x: hidden;
+    }
+}
+
+.table-wrap table {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table-wrap th,
+.table-wrap td,
+.selection-cell {
+    min-width: 0;
+}
+
+.table-wrap .field,
+.table-wrap select.field,
+.table-wrap input.field {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    font-size: 12px;
+}
+
+.table-wrap select.field {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ==========================================================
+   NUVION — 7 COLUNAS
+   ========================================================== */
+
+#nuvion th:nth-child(1),
+#nuvion td:nth-child(1) {
+    width: 16%;
+}
+
+#nuvion th:nth-child(2),
+#nuvion td:nth-child(2) {
+    width: 22%;
+}
+
+#nuvion th:nth-child(3),
+#nuvion td:nth-child(3) {
+    width: 10%;
+}
+
+#nuvion th:nth-child(4),
+#nuvion td:nth-child(4) {
+    width: 14%;
+}
+
+#nuvion th:nth-child(5),
+#nuvion td:nth-child(5) {
+    width: 14%;
+}
+
+#nuvion th:nth-child(6),
+#nuvion td:nth-child(6) {
+    width: 12%;
+}
+
+#nuvion th:nth-child(7),
+#nuvion td:nth-child(7) {
+    width: 12%;
+}
+
+/* ==========================================================
+   CLOUDLETS — 7 COLUNAS
+   Primeira coluna maior devido aos labels extensos.
+   ========================================================== */
+
+.env-block th:nth-child(1),
+.env-block td:nth-child(1) {
+    width: 22%;
+}
+
+.env-block th:nth-child(2),
+.env-block td:nth-child(2) {
+    width: 21%;
+}
+
+.env-block th:nth-child(3),
+.env-block td:nth-child(3) {
+    width: 10%;
+}
+
+.env-block th:nth-child(4),
+.env-block td:nth-child(4) {
+    width: 14%;
+}
+
+.env-block th:nth-child(5),
+.env-block td:nth-child(5) {
+    width: 13%;
+}
+
+.env-block th:nth-child(6),
+.env-block td:nth-child(6) {
+    width: 11%;
+}
+
+.env-block th:nth-child(7),
+.env-block td:nth-child(7) {
+    width: 9%;
+}
+
+.env-block td:first-child {
+    font-size: 11px;
+}
+
+.env-block .cell-label {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+.env-block .cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
+
+/* ==========================================================
+   STORIN — 6 COLUNAS
+   ========================================================== */
+
+#storin th:nth-child(1),
+#storin td:nth-child(1) {
+    width: 21%;
+}
+
+#storin th:nth-child(2),
+#storin td:nth-child(2) {
+    width: 25%;
+}
+
+#storin th:nth-child(3),
+#storin td:nth-child(3) {
+    width: 10%;
+}
+
+#storin th:nth-child(4),
+#storin td:nth-child(4) {
+    width: 15%;
+}
+
+#storin th:nth-child(5),
+#storin td:nth-child(5) {
+    width: 16%;
+}
+
+#storin th:nth-child(6),
+#storin td:nth-child(6) {
+    width: 13%;
+}
+
+#storin .cell-label {
+    min-width: 0;
+    flex-wrap: nowrap;
+}
+
+#storin .cell-label .tooltip-icon {
+    flex: 0 0 16px;
+    margin-left: 0;
+}
+
+/* ==========================================================
+   CABEÇALHO DE GRUPO DE VM
+   Compatível com .vm-group-row / .vm-group-header.
+   ========================================================== */
+
+.table-wrap .vm-group-row td {
+    padding: 8px 10px;
+    background: var(--line);
+}
+
+.table-wrap .vm-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.table-wrap .vm-group-title {
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.table-wrap .group-name {
+    flex: 1;
+    width: auto;
+    min-width: 140px;
+    max-width: 260px;
+    height: 28px;
+    margin: 0;
+    padding: 3px 8px;
+    border: 1px dashed var(--input-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--blue2);
+    font-size: 11px;
+    font-weight: 700;
+    box-sizing: border-box;
+}
+
+.table-wrap .vm-group-header .delete-vm {
+    margin-left: auto;
+    padding: 4px;
+    color: #ef4444;
+}
+
+/* ==========================================================
+   RESPONSIVIDADE — TABELAS COMO CARDS EM TELAS MENORES
+   ========================================================== */
+
+@media (max-width: 900px) {
+    .table-wrap {
+        overflow: visible;
+        border: 0;
+    }
+
+    .table-wrap table,
+    .table-wrap tbody,
+    .table-wrap tr,
+    .table-wrap td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap thead {
+        display: none;
+    }
+
+    .table-wrap tr {
+        margin-bottom: 12px;
+        padding: 10px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .table-wrap td {
+        display: grid;
+        grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
+        gap: 8px;
+        align-items: center;
+        padding: 7px 0;
+        border: 0;
+        font-size: 11px;
+    }
+
+    .table-wrap td::before {
+        color: var(--muted);
+        content: "";
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .table-wrap td:nth-child(1)::before {
+        content: "Recurso";
+    }
+
+    .table-wrap td:nth-child(2)::before {
+        content: "Seleção";
+    }
+
+    .table-wrap td:nth-child(3)::before {
+        content: "Preço unitário";
+    }
+
+    .table-wrap td:nth-child(4)::before {
+        content: "Unidade";
+    }
+
+    .table-wrap td:nth-child(5)::before {
+        content: "Quantidade";
+    }
+
+    .table-wrap td:nth-child(6)::before {
+        content: "Multiplicador";
+    }
+
+    .table-wrap td:nth-child(7)::before {
+        content: "Subtotal";
+    }
+
+    .table-wrap .cell-label {
+        display: block;
+        width: 100%;
+    }
+
+    .table-wrap .cell-label .tooltip-icon {
+        display: inline-block;
+        margin-left: 6px;
+    }
+
+    .table-wrap .vm-group-row {
+        display: block !important;
+        margin: 0 0 12px;
+        padding: 0;
+        border: 0;
+        background: transparent;
+    }
+
+    .table-wrap .vm-group-row td {
+        display: block;
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: var(--line);
+    }
+
+    .table-wrap .vm-group-row td::before {
+        display: none;
+        content: none;
+    }
+
+    .table-wrap .group-name {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .table-wrap .qty-control {
+        width: 100%;
+        max-width: 180px;
+    }
+}

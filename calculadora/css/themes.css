@@ -1,0 +1,42 @@
+/* ========== LIGHT THEME (BASE) ========== */
+
+:root {
+    --blue: #0a3c70;
+    --blue2: #0d5c9d;
+    --cyan: #27b4da;
+    --ink: #16324a;
+    --muted: #607286;
+    --line: #dce5ee;
+    --bg: #f4f7fa;
+    --yellow: #fff6d7;
+    --green: #e5f5ee;
+    --white: #fff;
+    --table-bg: #f8fafc;
+    --panel-bg: var(--white);
+    --input-bg: var(--yellow);
+    --input-border: #cbd8e5;
+    --input-text: var(--ink);
+    --text-highlight: #24435e;
+}
+
+
+/* ========== DARK THEME ========== */
+
+[data-theme="dark"] {
+    --blue: #1c528a;
+    --blue2: #4fa8f7;
+    --cyan: #27b4da;
+    --ink: #e2e8f0;
+    --muted: #94a3b8;
+    --line: #334155;
+    --bg: #0f172a;
+    --yellow: #1e293b;
+    --green: #064e3b;
+    --white: #1e293b;
+    --table-bg: #0f172a;
+    --panel-bg: #1e293b;
+    --input-bg: #1e293b;
+    --input-border: #475569;
+    --input-text: #f8fafc;
+    --text-highlight: #60a5fa;
+}

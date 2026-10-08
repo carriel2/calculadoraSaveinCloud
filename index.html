@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="css/calc.css">
     <link rel="stylesheet" href="css/proposal.css">
+    <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="icon" type="image/x-icon" href="https://s3.saveincloud.com/images/favicon.ico">
 </head>
@@ -43,7 +44,10 @@
     <div class="app-chrome">
         <header class="topbar">
             <div class="brand"><img src="assets/logo.png" alt="Save in Cloud" class="logo-img"></div>
-            <div class="topbar-title">Gerador de propostas</div>
+            <nav class="topnav" aria-label="Navegação">
+                <a href="./" class="topnav-link active" aria-current="page">Propostas</a>
+                <a href="calculadora/" class="topnav-link">Calculadora</a>
+            </nav>
         </header>
 
         <main class="container">
@@ -93,7 +97,6 @@
                     <label>Título do documento <input class="field" type="text" data-bind="titulo"></label>
                     <label>Responsável Save in Cloud <input class="field" type="text" data-bind="responsavel" placeholder="Nome"></label>
                     <label>E-mail do responsável <input class="field" type="text" data-bind="emailResp" placeholder="nome@saveincloud.com"></label>
-                    <label>Prazo do contrato (meses) <input class="field" type="number" min="1" data-bind="prazo"></label>
                     <label class="span-3">Foco da solução <em>(entra no texto do Objetivo)</em>
                         <input class="field" type="text" data-bind="foco" placeholder="Ex.: Armazenamento de Backups, Máquinas Virtuais e Redundância para DR">
                     </label>
@@ -146,7 +149,7 @@
                     <div>
                         <p class="eyebrow">3 · RESUMO</p>
                         <h2>Investimento</h2>
-                        <p>Total mensal dos produtos multiplicado pelo prazo do contrato.</p>
+                        <p>Total mensal dos produtos multiplicado pelo prazo do contrato (padrão: 1 mês).</p>
                     </div>
                     <div class="total-card" id="grand-total-card"><span id="grand-total-label">Total do contrato</span><strong id="grand-total">R$ 0,00</strong></div>
                 </div>
@@ -156,6 +159,17 @@
                     <div class="summary-item"><span>Cloudlets Premium</span><strong id="sum-cloudletsPremium">R$ 0,00</strong></div>
                     <div class="summary-item"><span>Storin</span><strong id="sum-storin">R$ 0,00</strong></div>
                     <div class="summary-item strong"><span>Total mensal</span><strong id="sum-monthly">R$ 0,00</strong></div>
+                    <div class="summary-item prazo-item">
+                        <span>Prazo do contrato</span>
+                        <div class="prazo-row">
+                            <div class="qty-control">
+                                <button type="button" class="qty-btn qty-minus" tabindex="-1" aria-label="Menos um mês">−</button>
+                                <input class="field" type="number" min="1" step="1" data-bind="prazo" aria-label="Prazo do contrato em meses">
+                                <button type="button" class="qty-btn qty-plus" tabindex="-1" aria-label="Mais um mês">+</button>
+                            </div>
+                            <small id="prazo-unit">mês</small>
+                        </div>
+                    </div>
                 </div>
                 <div class="actions generate-actions">
                     <button id="generateBtn" class="button" type="button">

@@ -1,0 +1,36 @@
+/* Menu do topo, compartilhado entre o gerador de propostas (/) e a calculadora (/calculadora/). */
+.topnav {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.topnav-link {
+    padding: 7px 14px;
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+}
+
+.topnav-link:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.topnav-link.active {
+    color: #07335f;
+    background: #fff;
+}
+
+@media (max-width: 680px) {
+    .topnav-link {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+}
