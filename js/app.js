@@ -220,11 +220,26 @@
                     </tbody>
                 </table>
             ${consideracoes.length ? `<div class="doc-notes"><h4>Considerações a respeito da estimativa</h4><ol>${consideracoes.map(l => `<li>${esc(l)}</li>`).join('')}</ol></div>` : ''}
-            <div class="sign">
+            <div class="sign keep-next">
                 <h2>5. Próximos passos</h2>
                 <p>Após a aprovação, as partes confirmarão o escopo, o cronograma e as condições contratuais para iniciar a implantação.</p>
                 ${responsavel}
-                <p><strong>Aceite do cliente:</strong> _____________________________________ &nbsp; <strong>Data:</strong> ____/____/______</p>
+            </div>
+            <div class="signatures">
+                <p class="sig-intro">De acordo com os termos desta proposta,</p>
+                <p class="sig-place">Local e data: ______________________________________, _____ de ____________________ de ________.</p>
+                <div class="sig-cols">
+                    <div class="sig">
+                        <div class="sig-line"></div>
+                        <strong>SaveInCloud</strong>
+                        <span>${esc(s.responsavel || 'Responsável comercial')}</span>
+                    </div>
+                    <div class="sig">
+                        <div class="sig-line"></div>
+                        <strong>${cliente}</strong>
+                        <span>${[s.contato, s.cargo].filter(Boolean).map(esc).join(' · ') || 'Nome e cargo do responsável'}</span>
+                    </div>
+                </div>
             </div>
         </article>`;
     }
