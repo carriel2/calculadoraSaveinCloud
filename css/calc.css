@@ -1,3 +1,243 @@
+/* Estilos da CalculadoraSave (themes.css + layout.css + components.css), copiados sem alterações
+   para que a calculadora embutida fique idêntica à original. */
+
+/* ========== LIGHT THEME (BASE) ========== */
+
+:root {
+    --blue: #0a3c70;
+    --blue2: #0d5c9d;
+    --cyan: #27b4da;
+    --ink: #16324a;
+    --muted: #607286;
+    --line: #dce5ee;
+    --bg: #f4f7fa;
+    --yellow: #fff6d7;
+    --green: #e5f5ee;
+    --white: #fff;
+    --table-bg: #f8fafc;
+    --panel-bg: var(--white);
+    --input-bg: var(--yellow);
+    --input-border: #cbd8e5;
+    --input-text: var(--ink);
+    --text-highlight: #24435e;
+}
+
+
+/* ========== DARK THEME ========== */
+
+[data-theme="dark"] {
+    --blue: #1c528a;
+    --blue2: #4fa8f7;
+    --cyan: #27b4da;
+    --ink: #e2e8f0;
+    --muted: #94a3b8;
+    --line: #334155;
+    --bg: #0f172a;
+    --yellow: #1e293b;
+    --green: #064e3b;
+    --white: #1e293b;
+    --table-bg: #0f172a;
+    --panel-bg: #1e293b;
+    --input-bg: #1e293b;
+    --input-border: #475569;
+    --input-text: #f8fafc;
+    --text-highlight: #60a5fa;
+}
+
+/* ========== BASE & LAYOUT ========== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.topbar {
+    min-height: 66px;
+    background: #07335f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 max(24px, calc((100vw - 1240px) / 2));
+    box-shadow: 0 2px 10px #0002;
+}
+
+.brand {
+    font-size: 20px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand b {
+    color: #55d3ed;
+}
+
+.logo-img {
+    height: 38px;
+    width: auto;
+    display: block;
+}
+
+.topbar-title {
+    font-size: 14px;
+    opacity: 0.82;
+}
+
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 34px 24px 44px;
+}
+
+.intro {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    align-items: flex-end;
+    margin-bottom: 28px;
+}
+
+.eyebrow {
+    color: var(--blue2);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+    margin: 0 0 7px;
+}
+
+h1 {
+    font-size: 30px;
+    line-height: 1.15;
+    margin: 0 0 9px;
+}
+
+h2 {
+    font-size: 22px;
+    margin: 0 0 4px;
+}
+
+.intro p:not(.eyebrow),
+.panel-head p:not(.eyebrow) {
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+/* ========== TABS ========== */
+
+.tabs {
+    display: flex;
+    gap: 7px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+}
+
+.tab {
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    padding: 14px 19px 11px;
+    color: var(--muted);
+    font-weight: 800;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.tab span {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 3px;
+}
+
+.tab.active {
+    color: var(--blue2);
+    border-color: var(--cyan);
+}
+
+
+/* ========== PANELS ========== */
+
+.panel {
+    display: none;
+    background: var(--panel-bg);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 24px;
+    box-shadow: 0 3px 12px #173a5d08;
+}
+
+.panel.active {
+    display: block;
+}
+
+.panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 21px;
+}
+
+footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 17px;
+    background: var(--line);
+}
+
+
+/* ========== RESPONSIVENESS ========== */
+
+@media(max-width:680px) {
+    .topbar {
+        padding: 0 16px;
+    }
+    .topbar-title {
+        display: none;
+    }
+    .container {
+        padding: 23px 14px;
+    }
+    .intro,
+    .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+    h1 {
+        font-size: 25px;
+    }
+    .panel {
+        padding: 15px;
+    }
+    .total-card {
+        width: 100%;
+        text-align: left;
+    }
+    .tabs {
+        overflow-x: auto;
+    }
+    .tab {
+        padding-left: 13px;
+        padding-right: 13px;
+        white-space: nowrap;
+    }
+    .no-print {
+        display: flex;
+    }
+}
+
 /* ========== BUTTONS ========== */
 
 .actions {
@@ -186,10 +426,6 @@ tr.collapsed-row {
     display: none !important;
 }
 
-/*
- * Label do recurso + tooltip.
- * O ícone ? sempre mantém 16px de largura e não invade o select.
- */
 .cell-label {
     display: flex;
     align-items: center;
@@ -441,27 +677,6 @@ input[type="number"] {
     margin-top: 0;
 }
 
-.toggle-collapse-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px;
-    border: none;
-    border-radius: 4px;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    transition: transform 0.2s, color 0.2s;
-}
-
-.toggle-collapse-btn:hover {
-    background: var(--line);
-    color: var(--cyan);
-}
-
-.toggle-collapse-btn.collapsed {
-    transform: rotate(-90deg);
-}
-
 /* ========== TOAST ========== */
 
 .toast {
@@ -606,84 +821,23 @@ input[type="number"] {
     white-space: nowrap;
 }
 
-/* ==========================================================
-   NUVION — 7 COLUNAS
-   ========================================================== */
+/* NUVION — 7 COLUNAS */
+.blk-nuvion th:nth-child(1), .blk-nuvion td:nth-child(1) { width: 16%; }
+.blk-nuvion th:nth-child(2), .blk-nuvion td:nth-child(2) { width: 22%; }
+.blk-nuvion th:nth-child(3), .blk-nuvion td:nth-child(3) { width: 10%; }
+.blk-nuvion th:nth-child(4), .blk-nuvion td:nth-child(4) { width: 14%; }
+.blk-nuvion th:nth-child(5), .blk-nuvion td:nth-child(5) { width: 14%; }
+.blk-nuvion th:nth-child(6), .blk-nuvion td:nth-child(6) { width: 12%; }
+.blk-nuvion th:nth-child(7), .blk-nuvion td:nth-child(7) { width: 12%; }
 
-#nuvion th:nth-child(1),
-#nuvion td:nth-child(1) {
-    width: 16%;
-}
-
-#nuvion th:nth-child(2),
-#nuvion td:nth-child(2) {
-    width: 22%;
-}
-
-#nuvion th:nth-child(3),
-#nuvion td:nth-child(3) {
-    width: 10%;
-}
-
-#nuvion th:nth-child(4),
-#nuvion td:nth-child(4) {
-    width: 14%;
-}
-
-#nuvion th:nth-child(5),
-#nuvion td:nth-child(5) {
-    width: 14%;
-}
-
-#nuvion th:nth-child(6),
-#nuvion td:nth-child(6) {
-    width: 12%;
-}
-
-#nuvion th:nth-child(7),
-#nuvion td:nth-child(7) {
-    width: 12%;
-}
-
-/* ==========================================================
-   CLOUDLETS — 7 COLUNAS
-   Primeira coluna maior devido aos labels extensos.
-   ========================================================== */
-
-.env-block th:nth-child(1),
-.env-block td:nth-child(1) {
-    width: 22%;
-}
-
-.env-block th:nth-child(2),
-.env-block td:nth-child(2) {
-    width: 21%;
-}
-
-.env-block th:nth-child(3),
-.env-block td:nth-child(3) {
-    width: 10%;
-}
-
-.env-block th:nth-child(4),
-.env-block td:nth-child(4) {
-    width: 14%;
-}
-
-.env-block th:nth-child(5),
-.env-block td:nth-child(5) {
-    width: 13%;
-}
-
-.env-block th:nth-child(6),
-.env-block td:nth-child(6) {
-    width: 11%;
-}
-
-.env-block th:nth-child(7),
-.env-block td:nth-child(7) {
-    width: 9%;
-}
+/* CLOUDLETS — 7 COLUNAS */
+.env-block th:nth-child(1), .env-block td:nth-child(1) { width: 22%; }
+.env-block th:nth-child(2), .env-block td:nth-child(2) { width: 21%; }
+.env-block th:nth-child(3), .env-block td:nth-child(3) { width: 10%; }
+.env-block th:nth-child(4), .env-block td:nth-child(4) { width: 14%; }
+.env-block th:nth-child(5), .env-block td:nth-child(5) { width: 13%; }
+.env-block th:nth-child(6), .env-block td:nth-child(6) { width: 11%; }
+.env-block th:nth-child(7), .env-block td:nth-child(7) { width: 9%; }
 
 .env-block td:first-child {
     font-size: 11px;
@@ -699,54 +853,25 @@ input[type="number"] {
     margin-left: 0;
 }
 
-/* ==========================================================
-   STORIN — 6 COLUNAS
-   ========================================================== */
+/* STORIN — 6 COLUNAS */
+.blk-storin th:nth-child(1), .blk-storin td:nth-child(1) { width: 21%; }
+.blk-storin th:nth-child(2), .blk-storin td:nth-child(2) { width: 25%; }
+.blk-storin th:nth-child(3), .blk-storin td:nth-child(3) { width: 10%; }
+.blk-storin th:nth-child(4), .blk-storin td:nth-child(4) { width: 15%; }
+.blk-storin th:nth-child(5), .blk-storin td:nth-child(5) { width: 16%; }
+.blk-storin th:nth-child(6), .blk-storin td:nth-child(6) { width: 13%; }
 
-#storin th:nth-child(1),
-#storin td:nth-child(1) {
-    width: 21%;
-}
-
-#storin th:nth-child(2),
-#storin td:nth-child(2) {
-    width: 25%;
-}
-
-#storin th:nth-child(3),
-#storin td:nth-child(3) {
-    width: 10%;
-}
-
-#storin th:nth-child(4),
-#storin td:nth-child(4) {
-    width: 15%;
-}
-
-#storin th:nth-child(5),
-#storin td:nth-child(5) {
-    width: 16%;
-}
-
-#storin th:nth-child(6),
-#storin td:nth-child(6) {
-    width: 13%;
-}
-
-#storin .cell-label {
+.blk-storin .cell-label {
     min-width: 0;
     flex-wrap: nowrap;
 }
 
-#storin .cell-label .tooltip-icon {
+.blk-storin .cell-label .tooltip-icon {
     flex: 0 0 16px;
     margin-left: 0;
 }
 
-/* ==========================================================
-   CABEÇALHO DE GRUPO DE VM
-   Compatível com .vm-group-row / .vm-group-header.
-   ========================================================== */
+/* CABEÇALHO DE GRUPO DE VM */
 
 .table-wrap .vm-group-row td {
     padding: 8px 10px;
@@ -791,9 +916,7 @@ input[type="number"] {
     color: #ef4444;
 }
 
-/* ==========================================================
-   RESPONSIVIDADE — TABELAS COMO CARDS EM TELAS MENORES
-   ========================================================== */
+/* RESPONSIVIDADE — TABELAS COMO CARDS EM TELAS MENORES */
 
 @media (max-width: 900px) {
     .table-wrap {
@@ -839,33 +962,13 @@ input[type="number"] {
         text-transform: uppercase;
     }
 
-    .table-wrap td:nth-child(1)::before {
-        content: "Recurso";
-    }
-
-    .table-wrap td:nth-child(2)::before {
-        content: "Seleção";
-    }
-
-    .table-wrap td:nth-child(3)::before {
-        content: "Preço unitário";
-    }
-
-    .table-wrap td:nth-child(4)::before {
-        content: "Unidade";
-    }
-
-    .table-wrap td:nth-child(5)::before {
-        content: "Quantidade";
-    }
-
-    .table-wrap td:nth-child(6)::before {
-        content: "Multiplicador";
-    }
-
-    .table-wrap td:nth-child(7)::before {
-        content: "Subtotal";
-    }
+    .table-wrap td:nth-child(1)::before { content: "Recurso"; }
+    .table-wrap td:nth-child(2)::before { content: "Seleção"; }
+    .table-wrap td:nth-child(3)::before { content: "Preço unitário"; }
+    .table-wrap td:nth-child(4)::before { content: "Unidade"; }
+    .table-wrap td:nth-child(5)::before { content: "Quantidade"; }
+    .table-wrap td:nth-child(6)::before { content: "Multiplicador"; }
+    .table-wrap td:nth-child(7)::before { content: "Subtotal"; }
 
     .table-wrap .cell-label {
         display: block;

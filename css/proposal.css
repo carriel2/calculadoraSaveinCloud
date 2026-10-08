@@ -1,0 +1,193 @@
+/* Partes próprias do gerador de propostas (dados, resumo, editor e documento A4). */
+
+/* ---------- Aba "Dados do cliente" ---------- */
+.form-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px 16px; }
+.form-grid label { grid-column: span 2; display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.form-grid label.span-3 { grid-column: span 6; }
+.form-grid label.span-15 { grid-column: span 3; }
+.form-grid em { font-style: normal; font-weight: 500; }
+.form-grid .field { min-width: 0; text-align: left; font-size: 13px; }
+textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
+.example-link { color: var(--blue2); font-size: 12px; font-weight: 700; }
+.example-link:hover { color: var(--cyan); }
+
+/* ---------- Blocos de produto (página única) ---------- */
+.section-head { margin: 34px 0 14px; }
+.calc-block { margin-bottom: 18px; }
+.calc-block .panel-head { gap: 16px; }
+.blk-title { flex: 1; min-width: 0; }
+.blk-name {
+    display: block; width: 100%; max-width: 520px; margin: 0; padding: 2px 6px; margin-left: -7px;
+    font: inherit; font-size: 22px; font-weight: 700; color: var(--ink);
+    background: transparent; border: 1px dashed transparent; border-radius: 6px;
+}
+.blk-name:hover { border-color: var(--input-border); }
+.blk-name:focus { outline: none; border-color: var(--cyan); background: var(--input-bg); }
+.blk-side { display: flex; align-items: center; gap: 8px; }
+.blk-actions { display: flex; gap: 2px; }
+.icon-btn.danger-icon { color: #ef4444; }
+.icon-btn.danger-icon:hover { color: #dc2626; background: #fde8e8; }
+
+.empty-blocks {
+    display: flex; align-items: center; gap: 12px; padding: 18px 22px; margin-bottom: 14px;
+    border: 1px dashed var(--input-border); border-radius: 11px; color: var(--muted);
+}
+.empty-blocks p { margin: 0; }
+.empty-blocks .material-symbols-outlined { color: var(--cyan); }
+.empty-blocks[hidden] { display: none; }
+
+.add-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.add-btn {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px; text-align: left;
+    font: inherit; color: var(--blue2); background: var(--panel-bg);
+    border: 1px dashed var(--input-border); border-radius: 11px; cursor: pointer;
+    transition: border-color .2s, background .2s, color .2s;
+}
+.add-btn:hover:not(:disabled) { border-color: var(--cyan); color: var(--cyan); background: var(--table-bg); }
+.add-btn:disabled { opacity: .45; cursor: not-allowed; }
+.add-btn .material-symbols-outlined { font-size: 26px; }
+.add-btn strong { display: block; font-size: 13.5px; }
+.add-btn small { display: block; font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+
+/* ---------- Resumo ---------- */
+.summary-panel { display: block; margin-top: 30px; }
+.summary-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.summary-item {
+    display: flex; flex-direction: column; gap: 4px; padding: 11px 13px; border-radius: 8px;
+    background: var(--table-bg); border: 1px solid var(--line); font-size: 12px; font-weight: 700; color: var(--muted);
+}
+.summary-item strong { color: var(--text-highlight); font-size: 15px; }
+.summary-item.strong { border-color: var(--blue2); }
+.summary-item .field { min-width: 0; padding: 5px 8px; text-align: left; }
+.generate-actions { margin-top: 18px; }
+.save-status { margin: 0 0 0 6px; }
+
+/* ---------- Modais e mensagens ---------- */
+.import-field { min-width: 0; text-align: left; font-size: 12px; margin-bottom: 12px; word-break: break-all; }
+.error-text { color: #ef4444 !important; font-size: 13px !important; margin: -4px 0 12px !important; }
+
+/* ---------- Barra do editor ---------- */
+.editor-toolbar {
+    position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
+    width: 21cm; max-width: calc(100% - 32px); margin: 0 auto; padding: 6px;
+    background: var(--panel-bg); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 4px 14px #173a5d14;
+}
+.editor-toolbar[hidden] { display: none; }
+.editor-toolbar button {
+    padding: 5px 10px; font: inherit; font-size: 13px; color: var(--ink); background: transparent;
+    border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+}
+.editor-toolbar button:hover { background: var(--line); }
+.editor-toolbar .sep { width: 1px; background: var(--line); margin: 4px; }
+
+/* ---------- Documento (padrão Save in Cloud) ----------
+   Cores fixas: o documento é sempre claro, mesmo no tema escuro do app. */
+#report {
+    --d-navy: #0b3b66;
+    --d-blue: #0d5c9d;
+    --d-tint: #eaf3fc;
+    --d-line: #d3deea;
+    --d-text: #1f2937;
+    --d-muted: #5a6e82;
+    --d-grad: linear-gradient(90deg, #22a6f0 0%, #4f7cf6 50%, #9b5cf0 100%);
+    width: 21cm; max-width: 100%; margin: 30px auto 70px;
+    font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+    font-size: 14px; line-height: 1.6; color: var(--d-text); counter-reset: sheet;
+}
+.sheet {
+    background: #fff; border: 1px solid var(--line);
+    width: 21cm; max-width: 100%; min-height: 29.7cm;
+    padding: 1.6cm 1.7cm; margin: 0 auto 40px;
+    box-shadow: 0 2px 12px #0b3b6610;
+    position: relative; counter-increment: sheet; outline: none;
+}
+.sheet::before {
+    content: 'Página ' counter(sheet) ' · editável';
+    position: absolute; top: -22px; left: 2px; font-family: Inter, "Segoe UI", sans-serif;
+    font-size: 11px; color: var(--muted);
+}
+.sheet:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px #27b4da30; }
+.sheet.overflowing { border-color: #ef4444; }
+.sheet.overflowing::before { content: 'Página ' counter(sheet) ' · conteúdo excede a altura da página (continua na próxima página do PDF)'; color: #ef4444; }
+
+#report .doc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; position: relative; }
+#report .doc-head::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--d-grad); border-radius: 2px; }
+#report .doc-head img { height: 38px; width: auto; display: block; }
+#report .doc-title { font-size: 30px; line-height: 1.2; font-weight: 700; color: var(--d-navy); margin: 0; }
+#report section { margin-top: 26px; }
+#report h2 { font-size: 17px; font-weight: 700; color: var(--d-navy); margin: 0 0 8px; }
+#report h3 { font-size: 15px; font-weight: 700; color: var(--d-navy); margin: 0 0 8px; }
+#report h4 { font-size: 14px; font-weight: 700; color: var(--d-navy); margin: 18px 0 6px; }
+#report p { margin: 8px 0; text-align: justify; }
+#report ul, #report ol { padding-left: 22px; margin: 8px 0; }
+#report li { margin-bottom: 5px; }
+#report li::marker { color: var(--d-blue); font-weight: 700; }
+
+/* neutraliza os estilos globais de tabela da calculadora */
+#report table { width: 100%; border-collapse: collapse; }
+#report th, #report td {
+    position: static; box-shadow: none; z-index: auto;
+    padding: 7px 10px; border: 1px solid var(--d-line); background: #fff;
+    color: var(--d-text); font-size: 12.5px; font-weight: 400; text-align: left; vertical-align: middle;
+}
+#report td:first-child { color: var(--d-text); font-weight: 400; }
+
+#report table.info { margin: 18px 0 8px; font-size: 13.5px; }
+#report table.info td { background: var(--d-tint); border: none; width: 50%; padding: 9px 14px; font-size: 13.5px; }
+#report table.info b { color: var(--d-navy); }
+
+#report table.inv { margin: 10px 0 16px; line-height: 1.35; }
+#report table.inv.items { table-layout: fixed; }
+#report table.inv.items td { padding: 5px 9px; }
+#report table.inv .grp th { background: var(--d-navy); border-color: var(--d-navy); color: #fff; font-weight: 700; font-size: 13px; }
+#report table.inv .cols th { background: var(--d-tint); color: var(--d-navy); font-weight: 700; font-size: 12px; }
+#report table.inv .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+#report table.inv td small { color: var(--d-muted); font-size: 11px; }
+#report table.inv td.res { color: var(--d-navy); font-weight: 700; font-size: 11.5px; white-space: nowrap; }
+#report table.inv tfoot td { background: #f8fafc; font-weight: 700; color: var(--d-navy); border-top: 1px solid var(--d-line); }
+#report table.inv tr.sub td { background: var(--d-tint); font-weight: 700; color: var(--d-navy); }
+#report table.inv tr.grand td { background: var(--d-navy); border-color: var(--d-navy); color: #fff; font-size: 14.5px; font-weight: 700; }
+#report .platform { margin-top: 18px; }
+#report .doc-notes { font-size: 12.5px; color: #4b5b6b; }
+#report .sign p { text-align: left; }
+
+.print-footer { display: none; }
+
+/* ---------- Impressão (A4) ---------- */
+@page { size: A4; margin: 14mm 15mm 18mm; }
+@media print {
+    body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .app-chrome, .app-footer, .editor-toolbar, .toast, .modal-overlay { display: none !important; }
+    #report { display: block !important; width: auto; max-width: none; margin: 0; padding: 0; font-size: 12.5px; }
+    .sheet {
+        border: none !important; box-shadow: none !important; width: auto; max-width: none;
+        min-height: 0; margin: 0; padding: 0; page-break-after: always;
+    }
+    .sheet:last-child { page-break-after: auto; }
+    .sheet::before { content: none !important; }
+    #report table.inv, #report table.info, #report .sign { page-break-inside: avoid; }
+    #report tr { page-break-inside: avoid; }
+    #report h2, #report h3, #report h4 { page-break-after: avoid; }
+    #report th, #report td { padding: 5px 8px; font-size: 11px; }
+    .print-footer {
+        display: block; position: fixed; bottom: 0; left: 0; right: 0; text-align: center;
+        font-size: 9px; color: #5a6e82; padding-top: 4px; background: #fff;
+    }
+}
+
+/* ---------- Telas menores ---------- */
+@media (max-width: 900px) {
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .form-grid label, .form-grid label.span-15 { grid-column: span 1; }
+    .form-grid label.span-3 { grid-column: span 2; }
+    .summary-grid, .add-bar { grid-template-columns: 1fr 1fr; }
+    .calc-block .panel-head { flex-direction: column; align-items: stretch; }
+    .blk-side { justify-content: space-between; }
+    .intro .actions { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+    .form-grid, .summary-grid, .add-bar { grid-template-columns: 1fr; }
+    .form-grid label, .form-grid label.span-3, .form-grid label.span-15 { grid-column: span 1; }
+    .sheet { padding: 1cm 16px; }
+}
