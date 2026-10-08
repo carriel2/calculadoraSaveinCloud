@@ -167,7 +167,7 @@
                     <span class="hint save-status" id="saveStatus"></span>
                 </div>
                 <p class="hint" id="printHint" hidden>A proposta abaixo é <strong>editável</strong>: clique em qualquer trecho para ajustar o texto. Cada folha é uma página do PDF.
-                    Na impressão, escolha "Salvar como PDF", desative "Cabeçalhos e rodapés" e mantenha "Gráficos de fundo" ativado.</p>
+                    Na impressão, escolha "Salvar como PDF", margens "Padrão" ou "Nenhuma", desative "Cabeçalhos e rodapés" e mantenha "Gráficos de fundo" ativado (é o que imprime o papel timbrado).</p>
             </section>
         </main>
     </div>
@@ -187,11 +187,11 @@
         <button type="button" data-cmd="removeFormat" title="Limpar formatação">Limpar</button>
         <button type="button" data-cmd="undo" title="Desfazer (Ctrl+Z)">↶</button>
         <button type="button" data-cmd="redo" title="Refazer (Ctrl+Y)">↷</button>
+        <span class="sep"></span>
+        <button type="button" data-act="paginate" title="Redistribui o conteúdo pelas folhas do papel timbrado">Reorganizar páginas</button>
     </div>
 
     <div id="report" hidden></div>
-
-    <div class="print-footer">• Save in Cloud • &nbsp;|&nbsp; saveincloud.com &nbsp;|&nbsp; Documento confidencial</div>
 
     <footer class="app-footer">© Save in Cloud · Os valores são uma estimativa comercial e precisam ser validados.</footer>
 

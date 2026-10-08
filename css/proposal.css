@@ -84,23 +84,27 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 /* ---------- Documento (padrão Save in Cloud) ----------
    Cores fixas: o documento é sempre claro, mesmo no tema escuro do app. */
 #report {
-    --d-navy: #0b3b66;
-    --d-blue: #0d5c9d;
-    --d-tint: #eaf3fc;
-    --d-line: #d3deea;
-    --d-text: #1f2937;
+    /* cores do papel timbrado Save in Cloud */
+    --d-navy: #1d1466;
+    --d-blue: #5b3db0;
+    --d-tint: #ece8f7;
+    --d-line: #d9d4e8;
+    --d-text: #11162c;
     --d-muted: #5a6e82;
-    --d-grad: linear-gradient(90deg, #22a6f0 0%, #4f7cf6 50%, #9b5cf0 100%);
-    width: 21cm; max-width: 100%; margin: 30px auto 70px;
-    font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
-    font-size: 14px; line-height: 1.6; color: var(--d-text); counter-reset: sheet;
+    --d-grad: linear-gradient(90deg, #05045c 0%, #3d2a8f 50%, #9259cc 100%);
+    width: 210mm; max-width: 100%; margin: 30px auto 70px;
+    font-family: Aptos, "Segoe UI", Calibri, Arial, sans-serif;
+    font-size: 13px; line-height: 1.55; color: var(--d-text); counter-reset: sheet;
 }
+/* Cada .sheet é uma folha A4 com o papel timbrado de fundo. O padding reserva o
+   cabeçalho (faixa com logo/contatos) e o rodapé (endereço/site) da arte. */
 .sheet {
-    background: #fff; border: 1px solid var(--line);
-    width: 21cm; max-width: 100%; min-height: 29.7cm;
-    padding: 1.6cm 1.7cm; margin: 0 auto 40px;
-    box-shadow: 0 2px 12px #0b3b6610;
-    position: relative; counter-increment: sheet; outline: none;
+    width: 210mm; height: 297mm; max-width: 100%;
+    padding: 36mm 20mm 36mm; margin: 0 auto 40px;
+    background: #f2f2f2 url("../assets/papel-timbrado.png") center / 100% 100% no-repeat;
+    border: 1px solid var(--line);
+    box-shadow: 0 2px 12px #0b3b6618;
+    position: relative; counter-increment: sheet; outline: none; overflow: visible;
 }
 .sheet::before {
     content: 'Página ' counter(sheet) ' · editável';
@@ -109,15 +113,16 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 }
 .sheet:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px #27b4da30; }
 .sheet.overflowing { border-color: #ef4444; }
-.sheet.overflowing::before { content: 'Página ' counter(sheet) ' · conteúdo excede a altura da página (continua na próxima página do PDF)'; color: #ef4444; }
+.sheet.overflowing::before { content: 'Página ' counter(sheet) ' · o conteúdo invade o rodapé: use "Reorganizar páginas"'; color: #ef4444; }
 
-#report .doc-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 12px; position: relative; }
-#report .doc-head::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--d-grad); border-radius: 2px; }
-#report .doc-head img { height: 38px; width: auto; display: block; }
-#report .doc-title { font-size: 30px; line-height: 1.2; font-weight: 700; color: var(--d-navy); margin: 0; }
-#report section { margin-top: 26px; }
-#report h2 { font-size: 17px; font-weight: 700; color: var(--d-navy); margin: 0 0 8px; }
-#report h3 { font-size: 15px; font-weight: 700; color: var(--d-navy); margin: 0 0 8px; }
+#report .doc-title {
+    font-size: 26px; line-height: 1.2; font-weight: 700; color: var(--d-navy);
+    margin: 0 0 4px; padding-bottom: 10px; position: relative;
+}
+#report .doc-title::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--d-grad); border-radius: 2px; }
+#report h2 { font-size: 16px; font-weight: 700; color: var(--d-navy); margin: 22px 0 6px; }
+#report h3 { font-size: 15px; font-weight: 700; color: var(--d-navy); margin: 18px 0 8px; }
+.sheet > :first-child { margin-top: 0 !important; }
 #report h4 { font-size: 14px; font-weight: 700; color: var(--d-navy); margin: 18px 0 6px; }
 #report p { margin: 8px 0; text-align: justify; }
 #report ul, #report ol { padding-left: 22px; margin: 8px 0; }
@@ -134,7 +139,8 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 #report td:first-child { color: var(--d-text); font-weight: 400; }
 
 #report table.info { margin: 18px 0 8px; font-size: 13.5px; }
-#report table.info td { background: var(--d-tint); border: none; width: 50%; padding: 9px 14px; font-size: 13.5px; }
+#report table.info td { background: #fff; border: none; border-left: 3px solid var(--d-blue); width: 50%; padding: 9px 14px; font-size: 13px; }
+#report table.info tr + tr td { border-top: 1px solid var(--d-tint); }
 #report table.info b { color: var(--d-navy); }
 
 #report table.inv { margin: 10px 0 16px; line-height: 1.35; }
@@ -148,32 +154,25 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 #report table.inv tfoot td { background: #f8fafc; font-weight: 700; color: var(--d-navy); border-top: 1px solid var(--d-line); }
 #report table.inv tr.sub td { background: var(--d-tint); font-weight: 700; color: var(--d-navy); }
 #report table.inv tr.grand td { background: var(--d-navy); border-color: var(--d-navy); color: #fff; font-size: 14.5px; font-weight: 700; }
-#report .platform { margin-top: 18px; }
-#report .doc-notes { font-size: 12.5px; color: #4b5b6b; }
+#report .doc-notes { font-size: 12px; color: #3d4560; }
+#report .sign { margin-top: 6px; }
 #report .sign p { text-align: left; }
 
-.print-footer { display: none; }
-
-/* ---------- Impressão (A4) ---------- */
-@page { size: A4; margin: 14mm 15mm 18mm; }
+/* ---------- Impressão (A4, papel timbrado sangrado) ----------
+   Margem zero: cada .sheet já tem exatamente 210×297mm, com o timbrado de fundo
+   e o padding reservando cabeçalho e rodapé. A paginação é feita no JS. */
+@page { size: A4; margin: 0; }
 @media print {
-    body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .app-chrome, .app-footer, .editor-toolbar, .toast, .modal-overlay { display: none !important; }
-    #report { display: block !important; width: auto; max-width: none; margin: 0; padding: 0; font-size: 12.5px; }
+    #report { display: block !important; width: 210mm; max-width: none; margin: 0; padding: 0; }
     .sheet {
-        border: none !important; box-shadow: none !important; width: auto; max-width: none;
-        min-height: 0; margin: 0; padding: 0; page-break-after: always;
+        width: 210mm; height: 297mm; max-width: none; margin: 0;
+        border: none !important; box-shadow: none !important; overflow: hidden;
+        page-break-after: always; break-after: page;
     }
-    .sheet:last-child { page-break-after: auto; }
+    .sheet:last-child { page-break-after: auto; break-after: auto; }
     .sheet::before { content: none !important; }
-    #report table.inv, #report table.info, #report .sign { page-break-inside: avoid; }
-    #report tr { page-break-inside: avoid; }
-    #report h2, #report h3, #report h4 { page-break-after: avoid; }
-    #report th, #report td { padding: 5px 8px; font-size: 11px; }
-    .print-footer {
-        display: block; position: fixed; bottom: 0; left: 0; right: 0; text-align: center;
-        font-size: 9px; color: #5a6e82; padding-top: 4px; background: #fff;
-    }
 }
 
 /* ---------- Telas menores ---------- */
@@ -189,5 +188,4 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 @media (max-width: 560px) {
     .form-grid, .summary-grid, .add-bar { grid-template-columns: 1fr; }
     .form-grid label, .form-grid label.span-3, .form-grid label.span-15 { grid-column: span 1; }
-    .sheet { padding: 1cm 16px; }
 }

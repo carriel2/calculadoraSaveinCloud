@@ -14,8 +14,8 @@ não requer banco de dados, backend, API ou IA.
      **+ Adicionar Cloudlets Standard/Premium** (ambiente) e **+ Adicionar Storin**. Cada bloco tem a tabela
      da calculadora, nome editável (vira o título da tabela na proposta), subtotal e botões de duplicar/remover.
    * **Resumo:** total por produto, total mensal e total do contrato (total mensal × prazo).
-2. **Documento editável:** "Gerar proposta" monta Objetivo, Solução proposta, Escopo, Investimento (uma tabela
-   por bloco), Resumo, Considerações e Próximos passos. Tudo pode ser editado no navegador, com barra de formatação.
+2. **Documento editável no papel timbrado:** "Gerar proposta" monta Objetivo, Solução proposta, Escopo, Investimento (uma tabela
+   por bloco), Resumo, Considerações e Próximos passos sobre o papel timbrado da Save in Cloud (`assets/papel-timbrado.png`), distribuídos automaticamente pelas folhas A4 sem invadir cabeçalho e rodapé. Tudo pode ser editado no navegador; "Reorganizar páginas" redistribui o conteúdo após edições.
 3. **PDF:** "Baixar PDF" abre a impressão (Salvar como PDF; desative cabeçalhos/rodapés e mantenha gráficos de fundo).
 4. **Salvar / Abrir:** rascunho automático no navegador e arquivo `.json` com a proposta (inclui as edições do texto).
 5. **Importar calculadora:** aceita links `?q=` no formato do botão "Link" da calculadora anterior.

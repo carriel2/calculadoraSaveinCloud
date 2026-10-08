@@ -187,42 +187,28 @@
         const responsavel = s.responsavel
             ? `<p><strong>Responsável Save in Cloud:</strong> ${esc(s.responsavel)}${s.emailResp ? ` &nbsp;|&nbsp; <strong>Contato:</strong> ${esc(s.emailResp)}` : ''}</p>` : '';
 
+        // Conteúdo em blocos soltos; paginate() distribui pelas folhas do papel timbrado.
+        // data-break força o bloco a começar numa folha nova.
         return `
-        <article class="sheet" contenteditable="true" spellcheck="true" lang="pt-BR">
-            <header class="doc-head">
-                <h1 class="doc-title">${esc(s.titulo || 'Proposta Comercial')}</h1>
-                <img src="assets/logo.png" alt="Save in Cloud">
-            </header>
+        <article class="sheet">
+            <h1 class="doc-title">${esc(s.titulo || 'Proposta Comercial')}</h1>
             <table class="info">
                 <tr><td><b>Cliente:</b> ${cliente}</td><td><b>Contato:</b> ${contato || '—'}</td></tr>
                 <tr><td><b>Data:</b> ${fmtDate(s.data)}</td><td><b>Validade:</b> ${num(s.validade)} dias</td></tr>
             </table>
-            <section>
-                <h2>1. Objetivo</h2>
-                <p>Apresentar uma solução de infraestrutura em nuvem para a ${cliente}${s.foco ? `, com foco em ${esc(s.foco)}` : ''}.</p>
-            </section>
-            <section>
-                <h2>2. Solução proposta</h2>
-                <p>A solução será dimensionada conforme os requisitos técnicos e comerciais validados com o cliente:</p>
-                <ul>${products.map(p => PRODUCT_TEXT[p]).join('')}</ul>
-            </section>
-            <section>
-                <h2>3. Escopo de implantação</h2>
-                <ol>${lines(s.escopo).map(l => `<li>${esc(l)}</li>`).join('')}</ol>
-            </section>
-        </article>
+            <h2>1. Objetivo</h2>
+            <p>Apresentar uma solução de infraestrutura em nuvem para a ${cliente}${s.foco ? `, com foco em ${esc(s.foco)}` : ''}.</p>
+            <h2>2. Solução proposta</h2>
+            <p>A solução será dimensionada conforme os requisitos técnicos e comerciais validados com o cliente:</p>
+            <ul>${products.map(p => PRODUCT_TEXT[p]).join('')}</ul>
+            <h2>3. Escopo de implantação</h2>
+            <ol>${lines(s.escopo).map(l => `<li>${esc(l)}</li>`).join('')}</ol>
 
-        <article class="sheet" contenteditable="true" spellcheck="true" lang="pt-BR">
-            <section>
-                <h2>4. Investimento</h2>
-                <p>Valores mensais estimados com base na calculadora Save in Cloud (referência: 1 mês = 730 horas).</p>
-                ${investimento}
-            </section>
-        </article>
+            <h2 data-break="1">4. Investimento</h2>
+            <p>Valores mensais estimados com base na calculadora Save in Cloud (referência: 1 mês = 730 horas).</p>
+            ${investimento}
 
-        <article class="sheet" contenteditable="true" spellcheck="true" lang="pt-BR">
-            <section>
-                <h3>Resumo do investimento</h3>
+            <h3 data-break="1">Resumo do investimento</h3>
                 <table class="inv">
                     <thead><tr class="cols"><th>Plataforma</th><th class="num">Valor mensal</th></tr></thead>
                     <tbody>
@@ -232,28 +218,89 @@
                         <tr class="grand"><td>TOTAL GERAL — ${prazo} ${prazo === 1 ? 'mês' : 'meses'}</td><td class="num">${esc(money(total))}</td></tr>
                     </tbody>
                 </table>
-                ${consideracoes.length ? `<div class="doc-notes"><h4>Considerações a respeito da estimativa</h4><ol>${consideracoes.map(l => `<li>${esc(l)}</li>`).join('')}</ol></div>` : ''}
-            </section>
-            <section class="sign">
+            ${consideracoes.length ? `<div class="doc-notes"><h4>Considerações a respeito da estimativa</h4><ol>${consideracoes.map(l => `<li>${esc(l)}</li>`).join('')}</ol></div>` : ''}
+            <div class="sign">
                 <h2>5. Próximos passos</h2>
                 <p>Após a aprovação, as partes confirmarão o escopo, o cronograma e as condições contratuais para iniciar a implantação.</p>
                 ${responsavel}
                 <p><strong>Aceite do cliente:</strong> _____________________________________ &nbsp; <strong>Data:</strong> ____/____/______</p>
-            </section>
+            </div>
         </article>`;
     }
 
-    // Sinaliza na tela folhas que passam de uma página A4.
-    const A4_PX = 29.7 * 96 / 2.54;
-    const checkOverflow = () => report.querySelectorAll('.sheet').forEach(sh => sh.classList.toggle('overflowing', sh.offsetHeight > A4_PX + 2));
+    /* ---- paginação no papel timbrado ----
+       Cada .sheet é uma folha A4 com o timbrado de fundo; a área útil é o content-box (fora do cabeçalho e rodapé). */
+    function sheetLimit(sh) {
+        const cs = getComputedStyle(sh);
+        return sh.getBoundingClientRect().bottom - parseFloat(cs.paddingBottom) - parseFloat(cs.borderBottomWidth);
+    }
+    function overflows(sh) {
+        const last = sh.lastElementChild;
+        if (!last) return false;
+        return last.getBoundingClientRect().bottom + parseFloat(getComputedStyle(last).marginBottom) > sheetLimit(sh) + 1;
+    }
+    const checkOverflow = () => report.querySelectorAll('.sheet').forEach(sh => sh.classList.toggle('overflowing', overflows(sh)));
+
+    function newSheet() {
+        const a = document.createElement('article');
+        a.className = 'sheet';
+        a.contentEditable = 'true';
+        a.spellcheck = true;
+        a.lang = 'pt-BR';
+        report.appendChild(a);
+        return a;
+    }
+
+    // Redistribui todos os blocos pelas folhas: mantém as edições (move os próprios nós) e
+    // nunca deixa um título sozinho no fim da folha.
+    function paginate() {
+        if (report.hidden) return;
+        const blocks = [];
+        report.querySelectorAll('.sheet').forEach(sh => [...sh.children].forEach(el => {
+            if (el.tagName === 'SECTION') { // propostas salvas no formato anterior
+                const kids = [...el.children];
+                if (el.classList.contains('sign')) {
+                    const d = document.createElement('div');
+                    d.className = 'sign';
+                    d.append(...kids);
+                    blocks.push(d);
+                } else {
+                    blocks.push(...kids);
+                }
+            } else if (el.tagName === 'HEADER') {
+                blocks.push(...[...el.children].filter(k => k.tagName !== 'IMG'));
+            } else {
+                blocks.push(el);
+            }
+        }));
+        report.innerHTML = '';
+        let sheet = newSheet();
+        blocks.forEach(b => {
+            if (b.dataset.break && sheet.children.length) sheet = newSheet();
+            sheet.appendChild(b);
+            if (sheet.children.length > 1 && overflows(sheet)) {
+                sheet.removeChild(b);
+                const carry = [];
+                while (sheet.children.length > 1 && /^H[1-6]$/.test(sheet.lastElementChild.tagName)) carry.unshift(sheet.removeChild(sheet.lastElementChild));
+                sheet = newSheet();
+                carry.forEach(c => sheet.appendChild(c));
+                sheet.appendChild(b);
+            }
+        });
+        checkOverflow();
+        scheduleSave();
+    }
 
     let reportDirty = false;
-    function showReport(html) {
+    function showReport(html, repaginate = true) {
         report.innerHTML = html;
         report.hidden = false; $('#toolbar').hidden = false;
         $('#printBtn').hidden = false; $('#printHint').hidden = false;
         $('#generateLabel').textContent = 'Regerar proposta';
-        requestAnimationFrame(checkOverflow);
+        report.querySelectorAll('.sheet').forEach(sh => { sh.contentEditable = 'true'; sh.spellcheck = true; sh.lang = 'pt-BR'; });
+        const run = () => (repaginate ? paginate() : checkOverflow());
+        // espera o timbrado/fontes para medir certo
+        (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => setTimeout(run, 0));
     }
     function hideReport() {
         report.innerHTML = ''; report.hidden = true; $('#toolbar').hidden = true;
@@ -283,6 +330,7 @@
         const b = e.target.closest('button'); if (!b) return;
         if (b.dataset.cmd) document.execCommand(b.dataset.cmd, false, null);
         if (b.dataset.block) document.execCommand('formatBlock', false, b.dataset.block);
+        if (b.dataset.act === 'paginate') { paginate(); showToast('Páginas reorganizadas.'); }
         reportDirty = true; checkOverflow(); scheduleSave();
     });
 
@@ -291,6 +339,7 @@
     $('#printBtn').addEventListener('click', () => {
         const prev = document.title;
         document.title = fileBase(); // vira o nome sugerido do PDF
+        paginate(); // garante que nada invada o cabeçalho/rodapé do timbrado
         window.print();
         document.title = prev;
     });
@@ -380,7 +429,7 @@
     Calc.init(state.calc, () => { updateSummary(); scheduleSave(); });
     updateSummary();
     const savedReport = saved && store.get(LS_REPORT);
-    if (savedReport) { showReport(savedReport); reportDirty = true; }
+    if (savedReport) { showReport(savedReport, false); reportDirty = true; }
 
     // Também aceita abrir a página com ?q= da calculadora (mesmo formato do link "Link" dela).
     const q = new URLSearchParams(location.search).get('q');
