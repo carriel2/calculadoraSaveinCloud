@@ -186,7 +186,7 @@
 
         const consideracoes = lines(s.consideracoes);
         const responsavel = s.responsavel
-            ? `<p><strong>Responsável Save in Cloud:</strong> ${esc(s.responsavel)}${s.emailResp ? ` &nbsp;|&nbsp; <strong>Contato:</strong> ${esc(s.emailResp)}` : ''}</p>` : '';
+            ? `<p><strong>Responsável SaveInCloud:</strong> ${esc(s.responsavel)}${s.emailResp ? ` &nbsp;|&nbsp; <strong>Contato:</strong> ${EMAIL_RE.test(s.emailResp.trim()) ? `<a href="mailto:${esc(s.emailResp.trim())}">${esc(s.emailResp)}</a>` : esc(s.emailResp)}` : ''}</p>` : '';
 
         // Conteúdo em blocos soltos; paginate() distribui pelas folhas do papel timbrado.
         // O conteúdo flui contínuo; data-break (botão "Quebra de página") força uma folha nova.
@@ -206,7 +206,7 @@
             <ol>${lines(s.escopo).map(l => `<li>${esc(l)}</li>`).join('')}</ol>
 
             <h2>4. Investimento</h2>
-            <p class="keep-next">Valores mensais estimados com base na calculadora Save in Cloud (referência: 1 mês = 730 horas).</p>
+            <p class="keep-next">Valores mensais estimados com base na calculadora SaveInCloud (referência: 1 mês = 730 horas).</p>
             ${investimento}
 
             <h3>Resumo do investimento</h3>
@@ -345,12 +345,202 @@
         report.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
-    report.addEventListener('input', () => { reportDirty = true; checkOverflow(); scheduleSave(); });
+    const markEdited = () => { reportDirty = true; checkOverflow(); scheduleSave(); };
+    report.addEventListener('input', markEdited);
+
+    /* =========================================================
+     * Links e marca-texto no editor
+     * ========================================================= */
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const PHONE_RE = /^\+?[\d\s().-]{8,}$/;
+    // Aceita site, e-mail ou telefone; nunca esquemas perigosos (javascript:, data: ...).
+    function normalizeUrl(raw) {
+        const u = String(raw || '').trim();
+        if (!u) return null;
+        if (/^(https?:\/\/|mailto:|tel:)/i.test(u)) return u;
+        if (/^[a-z][a-z0-9+.-]*:/i.test(u)) return null;
+        if (EMAIL_RE.test(u)) return 'mailto:' + u;
+        if (PHONE_RE.test(u)) return 'tel:' + u.replace(/[^\d+]/g, '');
+        if (/^[\w-]+(\.[\w-]+)+(\/\S*)?$/.test(u)) return 'https://' + u;
+        return null;
+    }
+    const isSafeHref = href => /^(https?:|mailto:|tel:)/i.test(href || '');
+    const displayHref = href => String(href || '').replace(/^mailto:|^tel:/i, '').replace(/^https?:\/\//i, '');
+    function decorateLink(a) {
+        if (/^https?:/i.test(a.getAttribute('href') || '')) { a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        else { a.removeAttribute('target'); a.removeAttribute('rel'); }
+    }
+
+    // A seleção se perde ao focar os campos do modal: guarda e restaura o intervalo.
+    let savedRange = null;
+    let editingLink = null;
+    function saveSelection() {
+        const sel = window.getSelection();
+        savedRange = sel.rangeCount && report.contains(sel.anchorNode) ? sel.getRangeAt(0).cloneRange() : null;
+    }
+    function restoreSelection() {
+        if (!savedRange) return false;
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(savedRange);
+        return true;
+    }
+    const linkAtSelection = () => {
+        const sel = window.getSelection();
+        const node = sel.rangeCount ? sel.anchorNode : null;
+        const el = node && (node.nodeType === 1 ? node : node.parentElement);
+        const a = el && el.closest('a');
+        return a && report.contains(a) ? a : null;
+    };
+
+    const linkModal = $('#linkModal');
+    function openLinkModal(existing) {
+        hideBubble();
+        saveSelection();
+        if (!existing && !savedRange) { showToast('Clique no documento onde o link deve entrar (ou selecione uma palavra).'); return; }
+        editingLink = existing || null;
+        const selectedText = savedRange ? savedRange.toString() : '';
+        $('#linkTitle').textContent = existing ? 'Editar link' : 'Inserir link';
+        $('#linkText').value = existing ? existing.textContent : selectedText;
+        $('#linkUrl').value = existing ? displayHref(existing.getAttribute('href')) : (normalizeUrl(selectedText) ? selectedText.trim() : '');
+        $('#linkRemove').hidden = !existing;
+        $('#linkError').hidden = true;
+        linkModal.classList.add('show');
+        ($('#linkUrl').value ? $('#linkText') : $('#linkUrl')).focus();
+    }
+    const closeLinkModal = () => { linkModal.classList.remove('show'); editingLink = null; };
+
+    function applyLink() {
+        const href = normalizeUrl($('#linkUrl').value);
+        if (!href) { $('#linkError').hidden = false; return; }
+        const text = $('#linkText').value.trim() || displayHref(href);
+        if (editingLink) {
+            editingLink.setAttribute('href', href);
+            if (editingLink.textContent !== text) editingLink.textContent = text;
+            decorateLink(editingLink);
+        } else {
+            restoreSelection();
+            const range = savedRange;
+            const a = document.createElement('a');
+            a.setAttribute('href', href);
+            decorateLink(a);
+            if (range.collapsed || range.toString() !== text) {
+                // sem seleção (ou texto alterado no modal): insere um link novo no cursor
+                a.textContent = text;
+                range.deleteContents();
+                range.insertNode(a);
+            } else {
+                // palavra selecionada vira link, preservando a formatação dela
+                a.appendChild(range.extractContents());
+                range.insertNode(a);
+            }
+            const sel = window.getSelection();
+            const after = document.createRange();
+            after.setStartAfter(a);
+            after.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(after);
+        }
+        closeLinkModal();
+        markEdited();
+    }
+    function removeLink(a) {
+        if (!a) return;
+        a.replaceWith(...a.childNodes);
+        hideBubble();
+        markEdited();
+    }
+    $('#linkOk').addEventListener('click', applyLink);
+    $('#linkCancel').addEventListener('click', closeLinkModal);
+    $('#linkRemove').addEventListener('click', () => { const a = editingLink; closeLinkModal(); removeLink(a); });
+    linkModal.addEventListener('click', e => { if (e.target === linkModal) closeLinkModal(); });
+    linkModal.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); applyLink(); }
+        if (e.key === 'Escape') closeLinkModal();
+    });
+
+    // Balão ao clicar num link: abrir, editar ou remover. Ctrl/Cmd + clique abre direto.
+    const bubble = $('#linkBubble');
+    let bubbleLink = null;
+    function showBubble(a) {
+        bubbleLink = a;
+        const href = a.getAttribute('href');
+        const url = $('#linkBubbleUrl');
+        url.textContent = displayHref(href) || '(sem endereço)';
+        url.href = isSafeHref(href) ? href : '#';
+        bubble.hidden = false;
+        const r = a.getBoundingClientRect();
+        const left = Math.min(window.scrollX + r.left, window.scrollX + document.documentElement.clientWidth - bubble.offsetWidth - 8);
+        bubble.style.left = Math.max(8, left) + 'px';
+        bubble.style.top = (window.scrollY + r.bottom + 6) + 'px';
+    }
+    function hideBubble() { bubble.hidden = true; bubbleLink = null; }
+    function openLink(a) {
+        const href = a && a.getAttribute('href');
+        if (isSafeHref(href)) window.open(href, '_blank', 'noopener');
+    }
+    report.addEventListener('click', e => {
+        const a = e.target.closest('a');
+        if (!a || !report.contains(a)) { hideBubble(); return; }
+        if (e.ctrlKey || e.metaKey) { e.preventDefault(); openLink(a); return; }
+        showBubble(a);
+    });
+    bubble.addEventListener('mousedown', e => e.preventDefault());
+    bubble.addEventListener('click', e => {
+        const b = e.target.closest('button');
+        if (!b || !bubbleLink) return;
+        if (b.dataset.bubble === 'open') openLink(bubbleLink);
+        if (b.dataset.bubble === 'edit') openLinkModal(bubbleLink);
+        if (b.dataset.bubble === 'remove') removeLink(bubbleLink);
+    });
+    document.addEventListener('mousedown', e => { if (!bubble.hidden && !bubble.contains(e.target) && !e.target.closest('#report a')) hideBubble(); });
+    window.addEventListener('scroll', () => { if (!bubble.hidden) hideBubble(); }, { passive: true });
+
+    // Endereços digitados viram link sozinhos ao apertar espaço ou Enter (ex.: www.site.com, nome@empresa.com).
+    const AUTOLINK_RE = /((?:https?:\/\/|www\.)[^\s<]+[^\s<.,;:!?)\]]|[^\s@<>()]+@[^\s@<>()]+\.[a-z]{2,})$/i;
+    report.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openLinkModal(linkAtSelection()); return; }
+        if (e.key !== ' ' && e.key !== 'Enter') return;
+        const sel = window.getSelection();
+        if (!sel.rangeCount || !sel.isCollapsed) return;
+        const node = sel.anchorNode;
+        if (!node || node.nodeType !== 3 || node.parentElement.closest('a')) return;
+        const before = node.textContent.slice(0, sel.anchorOffset);
+        const m = before.match(AUTOLINK_RE);
+        if (!m) return;
+        const href = normalizeUrl(m[1]);
+        if (!href) return;
+        const range = document.createRange();
+        range.setStart(node, sel.anchorOffset - m[1].length);
+        range.setEnd(node, sel.anchorOffset);
+        const a = document.createElement('a');
+        a.setAttribute('href', href);
+        decorateLink(a);
+        range.surroundContents(a);
+        const after = document.createRange();
+        after.setStartAfter(a);
+        after.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(after);
+        markEdited();
+    });
+
+    // Marca-texto: aplica a cor de fundo na seleção (ou remove).
+    function highlight(color) {
+        const sel = window.getSelection();
+        if (!sel.rangeCount || sel.isCollapsed || !report.contains(sel.anchorNode)) { showToast('Selecione o trecho que deve receber o marca-texto.'); return false; }
+        document.execCommand('styleWithCSS', false, true);
+        document.execCommand('hiliteColor', false, color === 'none' ? 'transparent' : color);
+        document.execCommand('styleWithCSS', false, false);
+        return true;
+    }
 
     const toolbar = $('#toolbar');
-    toolbar.addEventListener('mousedown', e => { if (e.target.closest('button')) e.preventDefault(); }); // mantém a seleção
+    toolbar.addEventListener('mousedown', e => e.preventDefault()); // mantém a seleção do documento
     toolbar.addEventListener('click', e => {
         const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.act === 'link') { openLinkModal(linkAtSelection()); return; }
+        if (b.dataset.hl) { if (!highlight(b.dataset.hl)) return; }
         if (b.dataset.cmd) document.execCommand(b.dataset.cmd, false, null);
         if (b.dataset.block) document.execCommand('formatBlock', false, b.dataset.block);
         if (b.dataset.act === 'paginate') { paginate(); showToast('Páginas reorganizadas.'); }
@@ -365,7 +555,7 @@
     });
 
     const slug = v => String(v || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\w]+/g, '_').replace(/^_|_$/g, '');
-    const fileBase = () => `Proposta_Comercial_SaveinCloud_${slug(state.cliente) || 'cliente'}`;
+    const fileBase = () => `Proposta_Comercial_SaveInCloud_${slug(state.cliente) || 'cliente'}`;
     $('#printBtn').addEventListener('click', () => {
         const prev = document.title;
         document.title = fileBase(); // vira o nome sugerido do PDF

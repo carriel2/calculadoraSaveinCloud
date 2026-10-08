@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Gerador de propostas comerciais Save in Cloud: Nuvion, Cloudlets e Storin.">
-    <title>Propostas | Save in Cloud</title>
+    <meta name="description" content="Gerador de propostas comerciais SaveInCloud: Nuvion, Cloudlets e Storin.">
+    <title>Propostas | SaveInCloud</title>
 
     <link rel="stylesheet" href="css/calc.css">
     <link rel="stylesheet" href="css/proposal.css">
@@ -28,6 +28,24 @@
         </div>
     </div>
 
+    <div id="linkModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="linkTitle">Inserir link</h3>
+            <label class="modal-field">Texto exibido
+                <input id="linkText" class="field" type="text" placeholder="Ex.: Site da SaveInCloud">
+            </label>
+            <label class="modal-field">Endereço (URL ou e-mail)
+                <input id="linkUrl" class="field" type="text" placeholder="https://saveincloud.com ou nome@empresa.com">
+            </label>
+            <p class="error-text" id="linkError" hidden>Informe um endereço válido (site, e-mail ou telefone).</p>
+            <div class="modal-actions">
+                <button id="linkRemove" class="button secondary" type="button" hidden>Remover link</button>
+                <button id="linkCancel" class="button secondary" type="button">Cancelar</button>
+                <button id="linkOk" class="button" type="button">Aplicar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="importModal" class="modal-overlay">
         <div class="modal-content">
             <h3>Importar da calculadora</h3>
@@ -43,7 +61,7 @@
 
     <div class="app-chrome">
         <header class="topbar">
-            <div class="brand"><img src="assets/logo.png" alt="Save in Cloud" class="logo-img"></div>
+            <div class="brand"><img src="assets/logo.png" alt="SaveInCloud" class="logo-img"></div>
             <nav class="topnav" aria-label="Navegação">
                 <a href="./" class="topnav-link active" aria-current="page">Propostas</a>
                 <a href="calculadora/" class="topnav-link">Calculadora</a>
@@ -95,7 +113,7 @@
                     <label>Data <input class="field" type="date" data-bind="data"></label>
                     <label>Validade (dias) <input class="field" type="number" min="1" data-bind="validade"></label>
                     <label>Título do documento <input class="field" type="text" data-bind="titulo"></label>
-                    <label>Responsável Save in Cloud <input class="field" type="text" data-bind="responsavel" placeholder="Nome"></label>
+                    <label>Responsável SaveInCloud <input class="field" type="text" data-bind="responsavel" placeholder="Nome"></label>
                     <label>E-mail do responsável <input class="field" type="text" data-bind="emailResp" placeholder="nome@saveincloud.com"></label>
                     <label class="span-3">Foco da solução <em>(entra no texto do Objetivo)</em>
                         <input class="field" type="text" data-bind="foco" placeholder="Ex.: Armazenamento de Backups, Máquinas Virtuais e Redundância para DR">
@@ -191,6 +209,18 @@
         <button type="button" data-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button>
         <button type="button" data-cmd="underline" title="Sublinhado (Ctrl+U)"><u>S</u></button>
         <span class="sep"></span>
+        <button type="button" data-act="link" title="Inserir ou editar link (Ctrl+K). Selecione uma palavra para transformá-la em link.">
+            <span class="material-symbols-outlined tb-icon">link</span> Link
+        </button>
+        <span class="hl-group" title="Marca-texto: selecione o trecho e escolha a cor">
+            <span class="material-symbols-outlined tb-icon">ink_highlighter</span>
+            <button type="button" class="swatch" data-hl="#fff176" style="background:#fff176" title="Marca-texto amarelo"></button>
+            <button type="button" class="swatch" data-hl="#b9f6ca" style="background:#b9f6ca" title="Marca-texto verde"></button>
+            <button type="button" class="swatch" data-hl="#ffcdd2" style="background:#ffcdd2" title="Marca-texto rosa"></button>
+            <button type="button" class="swatch" data-hl="#d1c4e9" style="background:#d1c4e9" title="Marca-texto lilás"></button>
+            <button type="button" class="swatch swatch-none" data-hl="none" title="Remover marca-texto"></button>
+        </span>
+        <span class="sep"></span>
         <button type="button" data-block="h2" title="Título de seção">Título</button>
         <button type="button" data-block="h4" title="Subtítulo">Subtítulo</button>
         <button type="button" data-block="p" title="Parágrafo normal">Texto</button>
@@ -208,7 +238,15 @@
 
     <div id="report" hidden></div>
 
-    <footer class="app-footer">© Save in Cloud · Os valores são uma estimativa comercial e precisam ser validados.</footer>
+    <!-- balão que aparece ao clicar num link dentro do documento -->
+    <div class="link-bubble" id="linkBubble" hidden>
+        <a id="linkBubbleUrl" href="#" target="_blank" rel="noopener noreferrer"></a>
+        <button type="button" data-bubble="open" title="Abrir em nova aba (ou Ctrl+clique no link)"><span class="material-symbols-outlined">open_in_new</span></button>
+        <button type="button" data-bubble="edit" title="Editar link"><span class="material-symbols-outlined">edit</span></button>
+        <button type="button" data-bubble="remove" title="Remover link (mantém o texto)"><span class="material-symbols-outlined">link_off</span></button>
+    </div>
+
+    <footer class="app-footer">© SaveInCloud · Os valores são uma estimativa comercial e precisam ser validados.</footer>
 
     <script src="js/data.js"></script>
     <script src="js/calc.js"></script>

@@ -74,22 +74,47 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 /* ---------- Barra do editor ---------- */
 .editor-toolbar {
     position: sticky; top: 0; z-index: 20; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px;
-    width: 21cm; max-width: calc(100% - 32px); margin: 0 auto; padding: 6px;
+    width: max-content; max-width: calc(100% - 32px); margin: 0 auto; padding: 6px;
     background: var(--panel-bg); border: 1px solid var(--line); border-radius: 10px;
     box-shadow: 0 4px 14px #173a5d14;
 }
 .editor-toolbar[hidden] { display: none; }
 .editor-toolbar button {
-    padding: 5px 10px; font: inherit; font-size: 13px; color: var(--ink); background: transparent;
+    padding: 5px 7px; font: inherit; font-size: 12.5px; color: var(--ink); background: transparent;
     border: 1px solid transparent; border-radius: 6px; cursor: pointer;
 }
 .editor-toolbar button:hover { background: var(--line); }
-.editor-toolbar .sep { width: 1px; background: var(--line); margin: 4px; }
+.editor-toolbar .sep { width: 1px; background: var(--line); margin: 4px 2px; }
+.editor-toolbar button { display: inline-flex; align-items: center; gap: 4px; }
+.editor-toolbar .tb-icon { font-size: 17px; }
+.hl-group { display: inline-flex; align-items: center; gap: 3px; padding: 0 4px; color: var(--muted); }
+.editor-toolbar .swatch {
+    width: 18px; height: 18px; padding: 0; border-radius: 50%;
+    border: 1px solid #0002; cursor: pointer;
+}
+.editor-toolbar .swatch:hover { transform: scale(1.15); border-color: var(--ink); background-blend-mode: normal; }
+.editor-toolbar .swatch-none { background: #fff linear-gradient(135deg, transparent 45%, #ef4444 45%, #ef4444 55%, transparent 55%) !important; }
 
-/* ---------- Documento (padrão Save in Cloud) ----------
+/* Balão de link */
+.link-bubble {
+    position: absolute; z-index: 30; display: flex; align-items: center; gap: 2px; max-width: 380px;
+    padding: 4px 4px 4px 10px; border-radius: 8px; background: var(--panel-bg);
+    border: 1px solid var(--line); box-shadow: 0 6px 18px #0b3b6626; font-size: 12.5px;
+}
+.link-bubble[hidden] { display: none; }
+.link-bubble a { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--blue2); margin-right: 4px; }
+.link-bubble button { display: grid; place-items: center; padding: 4px; border: 0; border-radius: 6px; background: transparent; color: var(--ink); cursor: pointer; }
+.link-bubble button:hover { background: var(--line); }
+.link-bubble .material-symbols-outlined { font-size: 18px; }
+
+/* Campos do modal de link */
+.modal-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.modal-field .field { min-width: 0; text-align: left; }
+
+/* ---------- Documento (padrão SaveInCloud) ----------
    Cores fixas: o documento é sempre claro, mesmo no tema escuro do app. */
 #report {
-    /* cores do papel timbrado Save in Cloud */
+    /* cores do papel timbrado SaveInCloud */
     --d-navy: #1d1466;
     --d-blue: #5b3db0;
     --d-tint: #ece8f7;
@@ -173,6 +198,8 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 #report .doc-notes { font-size: 12px; color: #3d4560; }
 #report .sign { margin-top: 6px; }
 #report .sign p { text-align: left; }
+#report a { color: var(--d-blue); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+#report a:hover { color: var(--d-navy); }
 
 /* ---------- Impressão (A4, papel timbrado sangrado) ----------
    Margem zero: cada .sheet já tem exatamente 210×297mm, com o timbrado de fundo
@@ -180,7 +207,7 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 @page { size: A4; margin: 0; }
 @media print {
     html, body { background: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .app-chrome, .app-footer, .editor-toolbar, .toast, .modal-overlay { display: none !important; }
+    .app-chrome, .app-footer, .editor-toolbar, .toast, .modal-overlay, .link-bubble { display: none !important; }
     #report { display: block !important; width: 210mm; max-width: none; margin: 0; padding: 0; zoom: 1 !important; }
     .sheet {
         width: 210mm; height: 297mm; max-width: none; margin: 0;
