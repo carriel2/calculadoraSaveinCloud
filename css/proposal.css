@@ -201,12 +201,15 @@ textarea.field { resize: vertical; line-height: 1.5; cursor: text; }
 
 /* Assinaturas: ficam no pé da folha (acima do rodapé do timbrado), como numa proposta impressa. */
 .sheet:has(> .signatures) { display: flex; flex-direction: column; }
-#report .signatures { margin-top: auto; padding-top: 28px; }
-#report .signatures .sig-intro { margin: 0 0 4px; text-align: left; }
-#report .signatures .sig-place { margin: 0 0 54px; text-align: left; white-space: nowrap; overflow: hidden; }
-#report .sig-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18mm; }
-#report .sig { display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.35; }
-#report .sig-line { width: 100%; border-top: 1px solid var(--d-text); margin-bottom: 6px; }
+#report .signatures { margin-top: auto; padding-top: 24px; }
+#report .signatures .sig-intro { margin: 0; text-align: left; }
+#report .sig-line { width: 100%; border-top: 1px solid var(--d-text); margin-bottom: 5px; }
+/* Local e Data: espaço para escrever à mão acima de cada linha */
+#report .sig-fields { display: grid; grid-template-columns: 3fr 2fr; gap: 12mm; margin-top: 16mm; }
+#report .sig-field span { display: block; color: var(--d-muted); font-size: 11.5px; }
+/* Assinatura do cliente: área alta, cabe assinatura à caneta ou carimbo de assinatura digital */
+#report .sig { width: 115mm; margin: 0 auto; display: flex; flex-direction: column; align-items: center; text-align: center; line-height: 1.35; }
+#report .sig-area { width: 100%; height: 32mm; }
 #report .sig strong { color: var(--d-navy); font-size: 13px; }
 #report .sig span { color: var(--d-muted); font-size: 12px; }
 #report a { color: var(--d-blue); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }

@@ -226,19 +226,16 @@
                 ${responsavel}
             </div>
             <div class="signatures">
-                <p class="sig-intro">De acordo com os termos desta proposta,</p>
-                <p class="sig-place">Local e data: ______________________________________, _____ de ____________________ de ________.</p>
-                <div class="sig-cols">
-                    <div class="sig">
-                        <div class="sig-line"></div>
-                        <strong>SaveInCloud</strong>
-                        <span>${esc(s.responsavel || 'Responsável comercial')}</span>
-                    </div>
-                    <div class="sig">
-                        <div class="sig-line"></div>
-                        <strong>${cliente}</strong>
-                        <span>${[s.contato, s.cargo].filter(Boolean).map(esc).join(' · ') || 'Nome e cargo do responsável'}</span>
-                    </div>
+                <p class="sig-intro">De acordo com os termos desta proposta.</p>
+                <div class="sig-fields">
+                    <div class="sig-field"><div class="sig-line"></div><span>Local</span></div>
+                    <div class="sig-field"><div class="sig-line"></div><span>Data</span></div>
+                </div>
+                <div class="sig">
+                    <div class="sig-area"></div>
+                    <div class="sig-line"></div>
+                    <strong>${cliente}</strong>
+                    <span>${[s.contato, s.cargo].filter(Boolean).map(esc).join(' · ') || 'Nome e cargo do responsável'}</span>
                 </div>
             </div>
         </article>`;
