@@ -1,3 +1,9 @@
-README.MD
+README.md
 .dockerignore
 Dockerfile
+.git
+.github
+.gitignore
+k8s
+scripts
+docker-compose.yaml

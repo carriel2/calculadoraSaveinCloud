@@ -34,7 +34,8 @@
     const get = (id, fallback = '') => state[id] !== undefined ? state[id] : fallback;
     const escape = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
     const optionHtml = (opts, selected, placeholder = 'Selecione...') => `<option value="">${placeholder}</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name===selected?'selected':''}>${escape(o.name)}</option>`).join('');
-    const find = (list, name) => list.find(x => x.name === name) || null;
+    const baseName = n => String(n).replace(/\+RAM$/, '');
+    const find = (list, name) => list.find(x => x.name === name) || list.find(x => baseName(x.name) === baseName(name)) || null;
 
     const compactSelectionName = name => String(name)
         .replace('Volume Block Storage ', '')
@@ -323,7 +324,7 @@
             return `
                 <option
                     value="${escape(vm.name)}"
-                    ${vm.name === selected ? 'selected' : ''}
+                    ${baseName(vm.name) === baseName(selected) ? 'selected' : ''}
                 >
                     ${escape(label)}
                 </option>

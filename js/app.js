@@ -41,7 +41,7 @@
         calc: {
             _blocks: [{ t: 'nuvion', g: 1 }, { t: 'nuvion', g: 2 }, { t: 'cl', p: 'standard', e: 0 }, { t: 'storin' }],
             'n-g1-name': 'Aplicação',
-            'n-g1-vm-sel': 'ST-8-32', 'n-g1-vm-qty': 730,
+            'n-g1-vm-sel': 'ST-8-32+RAM', 'n-g1-vm-qty': 730,
             'n-g1-disk-sel': 'Volume Block Storage SSD Standard', 'n-g1-disk-qty': 500,
             'n-g1-ip-sel': 'IPV4 Alocado', 'n-g1-ip-qty': 730,
             'n-g1-extra-sel': 'Load Balancer Single', 'n-g1-extra-qty': 1,

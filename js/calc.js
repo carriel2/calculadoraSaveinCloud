@@ -11,7 +11,9 @@ window.Calc = (() => {
     const moneyPrice = v => brlPrice.format(v || 0);
     const roundMoney = v => Math.round(Number(((v || 0) * 100).toPrecision(12))) / 100;
     const escape = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c]));
-    const find = (list, name) => list.find(x => x.name === name) || null;
+    // Os nomes vêm do site e o selo "+RAM" pode aparecer/sumir; propostas salvas com o nome antigo continuam válidas.
+    const baseName = n => String(n).replace(/\+RAM$/, '');
+    const find = (list, name) => list.find(x => x.name === name) || list.find(x => baseName(x.name) === baseName(name)) || null;
 
     let state = {};
     let onChange = () => {};
@@ -28,7 +30,7 @@ window.Calc = (() => {
         .replace('Trafego de Saída ', 'Saída ')
         .replace('Requisições ', '')
         .replace(' (menos discos de bkp)', '');
-    const selectionOptionHtml = (opts, selected) => `<option value="">Selecione...</option>` + opts.map(o => `<option value="${escape(o.name)}" ${o.name === selected ? 'selected' : ''}>${escape(compactSelectionName(o.name))}</option>`).join('');
+    const selectionOptionHtml = (opts, selected) => `<option value="">Selecione...</option>` + opts.map(o => `<option value="${escape(o.name)}" ${baseName(o.name) === baseName(selected) ? 'selected' : ''}>${escape(compactSelectionName(o.name))}</option>`).join('');
 
     function parseVmName(name) {
         const [, vcpu, ram] = name.replace('+RAM', '').split('-');
@@ -37,7 +39,7 @@ window.Calc = (() => {
     }
     const formatVmOptionLabel = vm => { const s = parseVmName(vm.name); return `${vm.name} · ${s.vcpu} vCPU · ${s.ram} RAM`; };
     const vmOptionHtml = (opts, selected) => `<option value="">Selecione...</option>` + opts.map(vm =>
-        `<option value="${escape(vm.name)}" ${vm.name === selected ? 'selected' : ''}>${escape(formatVmOptionLabel(vm))}</option>`).join('');
+        `<option value="${escape(vm.name)}" ${baseName(vm.name) === baseName(selected) ? 'selected' : ''}>${escape(formatVmOptionLabel(vm))}</option>`).join('');
 
     const makeQty = (cls, label, val, disabled = '') => `
         <div class="qty-control ${disabled ? 'disabled' : ''}">

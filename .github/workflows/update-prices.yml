@@ -1,0 +1,48 @@
+# Sincroniza os preços de Nuvion/Storin com o site da SaveInCloud e dispara o deploy se algo mudou.
+name: Atualizar preços Nuvion/Storin
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # todo dia 06:00 (BRT)
+  workflow_dispatch:
+
+jobs:
+  update-prices:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # commit do data.js
+      actions: write    # disparar o deploy.yml
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Scrape prices
+      id: scrape
+      run: |
+        set +e
+        python scripts/update_prices.py js/data.js
+        code=$?
+        set -e
+        if [ $code -eq 10 ]; then echo "changed=true" >> "$GITHUB_OUTPUT"; elif [ $code -ne 0 ]; then exit $code; fi
+
+    - name: Commit data.js
+      if: steps.scrape.outputs.changed == 'true'
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add js/data.js
+        git commit -m "chore: atualiza preços Nuvion/Storin a partir do site"
+        git push
+
+    # Push feito com GITHUB_TOKEN não dispara outros workflows; workflow_dispatch é a exceção.
+    - name: Trigger deploy
+      if: steps.scrape.outputs.changed == 'true'
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: gh workflow run deploy.yml --ref main
