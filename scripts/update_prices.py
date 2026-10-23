@@ -65,14 +65,19 @@ def section(text, start, end):
 
 
 def scrape_vms(text):
-    # "PRI-4-32 | +RAM | 4 | 32 GB | R$ 0,95 | ..." -> ("PRI-4-32+RAM", 0.95)
-    row = re.compile(r"\b((?:ST|PRI|HC)-\d+-[\d.]+) \| (\+RAM \| )?\d+ \| [\d.,]+ [MG]B \| " + MONEY)
+    # "PRI-4-32 | +RAM | 4 | 32 GB | R$ 0,95 | R$ 693,50/mês" -> ("PRI-4-32+RAM", 0.95, 693.50)
+    row = re.compile(r"\b((?:ST|PRI|HC)-\d+-[\d.]+) \| (\+RAM \| )?\d+ \| [\d.,]+ [MG]B \| " + MONEY + r" \| " + MONEY + r"/mês")
     vms, seen = [], set()
-    for name, ram, price in row.findall(text):
+    for name, ram, hourly, monthly in row.findall(text):
         name += "+RAM" if ram else ""
-        if name not in seen:
-            seen.add(name)
-            vms.append({"name": name, "price": brl(price), "unit": "por hora"})
+        if name in seen:
+            continue
+        seen.add(name)
+        # O site exibe o R$/hora arredondado em 3 casas; o R$/mês (hora × 730) é o valor preciso.
+        price = round(brl(monthly) / HOURS_PER_MONTH, 6)
+        if abs(price - brl(hourly)) > 0.001:
+            raise ScrapeError(f"{name}: R$/mês ({monthly}) não corresponde ao R$/hora ({hourly})")
+        vms.append({"name": name, "price": price, "unit": "por hora"})
     if len(vms) < 10:
         raise ScrapeError(f"poucas VMs encontradas ({len(vms)}), layout do site mudou?")
     return vms
